@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFetchPrograms } from '@/composables/modules/programs/useFetchPrograms'
-const { fetchPrograms, programs: allPrograms, loading: pending } = useFetchPrograms()
+const { programs: allPrograms, loading: pending } = useFetchPrograms()
 
 // Cast to any[] to avoid 'never' errors if the ref is not properly typed in the composable
 const programs = computed(() => (allPrograms.value as any[])?.slice(0, 3) || [])

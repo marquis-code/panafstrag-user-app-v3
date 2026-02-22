@@ -10,27 +10,30 @@ export const useRegister = () => {
   const registerUser = async (payload: any) => {
     loading.value = true;
     error.value = null;
+
     try {
       const res = await auth_api.register(payload) as any;
-      if (res.type === 'SUCCESS') {
+
+      if ([200, 201].includes(res?.status)) {
         showToast({
           title: 'Success',
           message: 'Account created successfully',
           toastType: 'success',
+          duration: 3000,
         });
+
         return res.data;
-      } else {
-        error.value = res.message;
-        showToast({
-          title: 'Error',
-          message: res.message || 'Registration failed',
-          toastType: 'error',
-        });
-        throw new Error(res.message);
       }
+
+      return res;
     } catch (err: any) {
-      error.value = err.message;
-      throw err;
+      error.value = err?.message || 'Registration failed';
+      showToast({
+        title: 'Error',
+        message: err?.message || 'Registration failed',
+        toastType: 'error',
+        duration: 3000,
+      });
     } finally {
       loading.value = false;
     }

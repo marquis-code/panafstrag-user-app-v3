@@ -10,20 +10,24 @@ export const useCreateBoardMember = () => {
     loading.value = true;
     try {
       const res = await board_api.createMember(payload) as any;
-      if (res.type === 'SUCCESS') {
+
+      if ([200, 201].includes(res?.status)) {
         showToast({
           title: 'Success',
           message: 'Board member created successfully',
           toastType: 'success',
-        });
-      } else {
-        showToast({
-          title: 'Error',
-          message: res.message || 'Failed to create member',
-          toastType: 'error',
+          duration: 3000,
         });
       }
+
       return res;
+    } catch (err: any) {
+      showToast({
+        title: 'Error',
+        message: err?.message || 'Failed to create board member',
+        toastType: 'error',
+        duration: 3000,
+      });
     } finally {
       loading.value = false;
     }

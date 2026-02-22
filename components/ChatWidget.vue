@@ -26,9 +26,9 @@
         <!-- Messages -->
         <div ref="messageContainer" class="flex-1 overflow-y-auto p-8 space-y-6 bg-gray-50/50">
           <div v-for="msg in (messages as any[])" :key="msg._id" :class="['flex flex-col', (msg.sender as any)._id === user?._id ? 'items-end' : 'items-start']">
-            <div :class="['max-w-[85%] px-5 py-3 rounded-xl text-sm font-medium shadow-sm border', 
-              (msg.sender as any)._id === user?._id 
-                ? 'bg-black text-white border-black rounded-tr-none' 
+            <div :class="['max-w-[85%] px-5 py-3 rounded-xl text-sm font-medium shadow-sm border',
+              (msg.sender as any)._id === user?._id
+                ? 'bg-black text-white border-black rounded-tr-none'
                 : 'bg-white text-gray-800 border-gray-100 rounded-tl-none']">
               {{ msg.content }}
             </div>
@@ -39,10 +39,10 @@
         <!-- Input -->
         <div class="p-6 bg-white border-t border-gray-100">
           <div class="flex gap-3">
-            <input 
-              v-model="newMessage" 
+            <input
+              v-model="newMessage"
               @keyup.enter="handleSend"
-              placeholder="Enter message..." 
+              placeholder="Enter message..."
               class="flex-1 px-5 py-3 bg-gray-50 border border-gray-100 rounded-xl text-xs font-medium focus:border-black focus:ring-0 outline-none transition-all placeholder:text-gray-300"
             />
             <button @click="handleSend" class="p-3 bg-black text-white rounded-xl hover:bg-gray-800 transition-all active:scale-95">
@@ -56,7 +56,7 @@
     </Transition>
 
     <!-- Trigger Button -->
-    <button 
+    <button
       @click="toggleChat"
       class="w-16 h-16 bg-black text-white rounded-2xl shadow-2xl flex items-center justify-center hover:-translate-y-2 active:scale-90 transition-all group overflow-hidden relative"
     >
@@ -72,8 +72,11 @@
 </template>
 
 <script setup lang="ts">
+import { useChat } from '@/composables/useChat'
+import { useUser } from '@/composables/modules/auth/user'
 const { messages, connect, sendMessage, isConnected } = useChat()
-const { user, isLoggedIn } = useAuth()
+const { user, token } = useUser()
+const isLoggedIn = computed(() => !!token.value)
 const isOpen = ref(false)
 const newMessage = ref('')
 const messageContainer = ref<HTMLElement | null>(null)

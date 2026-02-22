@@ -10,14 +10,24 @@ export const useDeleteProgram = () => {
     loading.value = true;
     try {
       const res = await programs_api.deleteProgram(id) as any;
-      if (res.type === 'SUCCESS') {
+
+      if ([200, 201].includes(res?.status)) {
         showToast({
           title: 'Success',
           message: 'Program deleted successfully',
           toastType: 'success',
+          duration: 3000,
         });
       }
+
       return res;
+    } catch (err: any) {
+      showToast({
+        title: 'Error',
+        message: err?.message || 'Failed to delete program',
+        toastType: 'error',
+        duration: 3000,
+      });
     } finally {
       loading.value = false;
     }

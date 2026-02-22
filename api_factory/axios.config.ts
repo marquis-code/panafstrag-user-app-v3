@@ -1,12 +1,16 @@
 import axios, { type AxiosResponse } from "axios";
-// import { useCookie, useState, navigateTo } from "#app"; // In some Nuxt setups this is needed
-// However, explicitly importing our own composables is better in .ts files
-import { useCustomToast } from "@/composables/core/useCustomToast";
+import { useUser } from "@/composables/modules/auth/user";
+import { useCustomToast } from '@/composables/core/useCustomToast'
+const { showToast } = useCustomToast();
 
-const $GATEWAY_ENDPOINT_WITHOUT_VERSION = import.meta.env.VITE_BASE_URL as string;
+const { token, logOut } = useUser();
+
+const $GATEWAY_ENDPOINT_WITHOUT_VERSION = import.meta.env
+  .VITE_BASE_URL as string;
 const $GATEWAY_ENDPOINT = import.meta.env.VITE_BASE_URL;
 const $GATEWAY_ENDPOINT_V2 = import.meta.env.VITE_BASE_URL + "/v2";
-const $IMAGE_UPLOAD_ENDPOINT = import.meta.env.VITE_IMAGE_UPLOAD_BASE_URL as string;
+const $IMAGE_UPLOAD_ENDPOINT = import.meta.env
+  .VITE_IMAGE_UPLOAD_BASE_URL as string;
 
 export const GATEWAY_ENDPOINT = axios.create({
   baseURL: $GATEWAY_ENDPOINT,
@@ -18,11 +22,15 @@ export const GATEWAY_ENDPOINT_V2 = axios.create({
 
 export const GATEWAY_ENDPOINT_WITH_AUTH = axios.create({
   baseURL: $GATEWAY_ENDPOINT,
+  headers: {
+    Authorization: `Bearer ${token.value}`,
+  },
 });
 
 export const GATEWAY_ENDPOINT_WITH_AUTH_FORM_DATA = axios.create({
   baseURL: $GATEWAY_ENDPOINT,
   headers: {
+    Authorization: `Bearer ${token.value}`,
     "Content-Type": "multipart/form-data",
   },
 });
@@ -30,15 +38,15 @@ export const GATEWAY_ENDPOINT_WITH_AUTH_FORM_DATA = axios.create({
 export const GATEWAY_ENDPOINT_WITHOUT_VERSION = axios.create({
   baseURL: $GATEWAY_ENDPOINT_WITHOUT_VERSION,
 });
-
 export const GATEWAY_ENDPOINT_WITHOUT_VERSION_WITH_AUTH = axios.create({
   baseURL: $GATEWAY_ENDPOINT_WITHOUT_VERSION,
+  headers: {
+    Authorization: `Bearer ${token.value}`,
+  },
 });
-
 export const IMAGE_UPLOAD_ENDPOINT = axios.create({
   baseURL: $IMAGE_UPLOAD_ENDPOINT,
 });
-
 export interface CustomAxiosResponse extends AxiosResponse {
   value?: any;
   type?: string;
@@ -54,16 +62,8 @@ const instanceArray = [
 
 instanceArray.forEach((instance) => {
   instance.interceptors.request.use((config: any) => {
-    try {
-      const nuxtApp = useNuxtApp();
-      config.nuxtApp = nuxtApp;
-      
-      const token = useCookie('auth_token').value;
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch (e) {
-      // Background or non-nuxt context
+    if (token.value) {
+      config.headers.Authorization = `Bearer ${token.value}`;
     }
     return config;
   });
@@ -73,73 +73,73 @@ instanceArray.forEach((instance) => {
       return response;
     },
     (err: any) => {
-      const nuxtApp = err.config?.nuxtApp || useNuxtApp();
-      
-      if (!nuxtApp) return Promise.reject(err);
-
-      return nuxtApp.runWithContext(async () => {
-        const { showToast } = useCustomToast();
-        const token = useCookie('auth_token');
-        const user = useState('auth_user');
-
-        const logOut = () => {
-          token.value = null;
-          user.value = null;
-          return navigateTo('/login');
+      if (typeof err.response === "undefined") {
+        showToast({
+          title: "Error",
+          message: "kindly check your network connection",
+          toastType: "error",
+          duration: 3000
+        });
+        return {
+          type: "ERROR",
+          ...err.response,
         };
-
-        if (typeof err.response === "undefined") {
+      }
+      if (err.response.status === 401) {
+        console.log(err.response.data.error)
+        logOut();
+        showToast({
+          title: "Error",
+          message: err?.response?.data?.message || err?.response?.data?.error || "An error occured",
+          toastType: "error",
+          duration: 3000
+        });
+        return {
+          type: "ERROR",
+          ...err.response,
+        };
+      } else if (statusCodeStartsWith(err.response.status, 4)) {
+        if (err.response.data.message) {
           showToast({
             title: "Error",
-            message: "kindly check your network connection",
+            message: err?.response?.data?.message || err?.response?.data?.error || "An error occured",
             toastType: "error",
             duration: 3000
           });
-          return {
-            type: "ERROR",
-            ...err.response,
-          };
         }
-        
-        if (err.response.status === 401) {
-          await logOut();
-          showToast({
-            title: "Error",
-            message: err?.response?.data?.message || err?.response?.data?.error || "Session expired",
-            toastType: "error",
-            duration: 3000
-          });
-          return {
-            type: "ERROR",
-            ...err.response,
-          };
-        } else if (err.response.status >= 400 && err.response.status < 500) {
-          if (err.response.data.message || err.response.data.error) {
-            showToast({
-              title: "Error",
-              message: err?.response?.data?.message || err?.response?.data?.error || "An error occured",
-              toastType: "error",
-              duration: 3000
-            });
-          }
-          return {
-            type: "ERROR",
-            ...err.response,
-          };
-        } else if (err.response.status === 500) {
-          showToast({
-            title: "Error",
-            message: "Internal server error. Please try again later.",
-            toastType: "error",
-            duration: 3000
-          });
-          return {
-            type: "ERROR",
-            ...err.response,
-          };
-        }
-        return Promise.reject(err);
-      });
+        return {
+          type: "ERROR",
+          ...err.response,
+        };
+      } else if (err.response.status === 500) {
+        showToast({
+          title: "Error",
+          message: err?.response?.data?.message || err?.response?.data?.error || "An error occured",
+          toastType: "error",
+          duration: 3000
+        });
+        return {
+          type: "ERROR",
+          ...err.response,
+        };
+      } else if (err.response.status === 409) {
+        showToast({
+          title: "Error",
+          message: err?.response?.data?.message || err?.response?.data?.error || "An error occured",
+          toastType: "error",
+          duration: 3000
+        });
+      }
     }
   );
 });
+
+const statusCodeStartsWith = (
+  statusCode: number,
+  startNumber: number
+): boolean => {
+  const statusCodeString = statusCode.toString();
+  const startNumberString = startNumber.toString();
+
+  return statusCodeString.startsWith(startNumberString);
+};

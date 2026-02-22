@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.VITE_BASE_URL || 'http://localhost:3001',
+      apiBase: process.env.VITE_BASE_URL,
     },
-  }
+  },
 })

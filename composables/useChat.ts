@@ -1,8 +1,9 @@
 import { io, Socket } from 'socket.io-client';
+import { useUser } from './modules/auth/user';
 
 export const useChat = () => {
   const config = useRuntimeConfig();
-  const { user } = useAuth();
+  const { user } = useUser();
   const socket = ref<Socket | null>(null);
   const messages = ref<any[]>([]);
   const isConnected = ref(false);
