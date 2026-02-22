@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="container px-6 lg:px-0 mx-auto">
     <!-- Page Hero -->
-    <section class="border-b border-gray-100 py-24">
+    <section class="border-b pt-16 border-gray-100 py-24">
       <div class="max-w-4xl">
         <p class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 mb-6">Contact</p>
         <h1 class="text-6xl md:text-8xl font-black uppercase leading-none tracking-tight mb-8">

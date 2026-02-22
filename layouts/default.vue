@@ -34,29 +34,49 @@
         </NuxtLink>
 
         <!-- Desktop nav links -->
-        <div class="hidden lg:flex items-center">
-          <div class="flex items-center">
-            <NuxtLink
-              v-for="(item, i) in navItems"
-              :key="item.path"
-              :to="item.path"
-              class="nav-link group relative px-5 py-2 text-[11px] font-black uppercase tracking-[0.25em] transition-colors duration-200 hover:text-black/50"
-              active-class="!text-black"
-            >
-              <!-- Animated underline -->
+        <div class="hidden lg:flex items-center gap-2">
+          <NuxtLink to="/" class="nav-link group relative px-5 py-2 text-[11px] font-black uppercase tracking-[0.25em] transition-colors duration-200 hover:text-black/50" active-class="!text-black">
+            Home
+            <span class="absolute bottom-0 left-5 right-5 h-[1.5px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+          </NuxtLink>
+
+          <!-- Dropdown: The Institute -->
+          <div class="relative group" @mouseenter="instituteHover = true" @mouseleave="instituteHover = false">
+            <button class="nav-link group relative px-5 py-2 text-[11px] font-black uppercase tracking-[0.25em] transition-colors duration-200 hover:text-black/50 flex items-center gap-1">
+              The Institute
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 transition-transform duration-300" :class="instituteHover ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
               <span class="absolute bottom-0 left-5 right-5 h-[1.5px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-              <!-- Number accent -->
-              <span class="absolute -top-0.5 left-3 text-[7px] font-black text-black/20 tracking-normal tabular-nums opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                0{{ i + 1 }}
-              </span>
-              {{ item.label }}
-            </NuxtLink>
+            </button>
+            <div class="absolute top-[calc(100%-8px)] left-0 w-64 bg-black text-white p-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] opacity-0 translate-y-6 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50 border border-white/10">
+              <div class="mb-4 flex items-center gap-3">
+                <div class="h-[1px] w-4 bg-white/30"></div>
+                <span class="text-[8px] font-black uppercase tracking-[0.4em] text-white/30 italic">Organization</span>
+              </div>
+              <div class="flex flex-col gap-4">
+                <NuxtLink v-for="item in instituteItems" :key="item.path" :to="item.path" class="text-[10px] font-black uppercase tracking-[0.2em] hover:text-gray-400 transition-all duration-300 py-2 border-b border-white/5 last:border-0 hover:pl-2">
+                  {{ item.label }}
+                </NuxtLink>
+              </div>
+            </div>
           </div>
+
+          <NuxtLink
+            v-for="item in primaryItems"
+            :key="item.path"
+            :to="item.path"
+            class="nav-link group relative px-5 py-2 text-[11px] font-black uppercase tracking-[0.25em] transition-colors duration-200 hover:text-black/50"
+            active-class="!text-black"
+          >
+            <span class="absolute bottom-0 left-5 right-5 h-[1.5px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+            {{ item.label }}
+          </NuxtLink>
 
           <!-- CTA pill -->
           <NuxtLink
             to="/contact"
-            class="ml-8 px-6 py-2.5 bg-black text-white text-[10px] font-black uppercase tracking-[0.25em] hover:bg-black/80 active:scale-95 transition-all duration-200 rounded-none"
+            class="ml-8 px-6 py-2.5 bg-black text-white text-[10px] font-black uppercase tracking-[0.25em] hover:bg-black/80 active:scale-95 transition-all duration-200 rounded-none shadow-[0_10px_20px_-10px_rgba(0,0,0,0.5)]"
           >
             Contact →
           </NuxtLink>
@@ -103,37 +123,46 @@
         </div>
 
         <!-- Nav items -->
-        <div class="flex-1 flex flex-col justify-center px-10 pt-28 pb-16 relative z-10">
-          <div class="mb-10">
-            <span class="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">Navigation</span>
+        <div class="flex-1 flex flex-col justify-center px-10 pt-28 pb-16 relative z-10 overflow-y-auto">
+          <div class="mb-10 flex items-center justify-between">
+            <span class="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">Intelligence Network</span>
+            <div class="h-[1px] flex-1 bg-white/10 ml-6"></div>
           </div>
 
-          <nav class="flex flex-col">
-            <NuxtLink
-              v-for="(item, i) in navItems"
-              :key="item.path"
-              :to="item.path"
-              @click="isMobileOpen = false"
-              class="mobile-nav-item group flex items-baseline gap-4 py-4 border-b border-white/10 hover:pl-4 transition-all duration-300"
-            >
-              <span class="text-[10px] font-black text-white/20 tabular-nums w-6 flex-shrink-0">0{{ i + 1 }}</span>
-              <span class="text-4xl sm:text-5xl font-black uppercase tracking-tight group-hover:text-white/60 transition-colors duration-200">
-                {{ item.label }}
-              </span>
-              <span class="ml-auto text-white/20 group-hover:text-white/60 transition-colors duration-200 text-2xl">→</span>
-            </NuxtLink>
-          </nav>
+          <!-- Section: Principal -->
+          <div class="grid md:grid-cols-2 gap-12">
+            <div class="space-y-8">
+              <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 italic">01. Principal</h3>
+              <nav class="flex flex-col gap-4">
+                <NuxtLink to="/" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors">Home</NuxtLink>
+                <NuxtLink to="/programs" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors">Programs</NuxtLink>
+                <NuxtLink to="/archives" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors">Archives</NuxtLink>
+                <NuxtLink to="/contact" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors flex items-center gap-3 italic">
+                  Contact <span class="text-lg">→</span>
+                </NuxtLink>
+              </nav>
+            </div>
+
+            <!-- Section: The Institute -->
+            <div class="space-y-8">
+              <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 italic">02. The Institute</h3>
+              <nav class="flex flex-col gap-4">
+                <NuxtLink v-for="item in instituteItems" :key="item.path" :to="item.path" @click="isMobileOpen = false" class="text-2xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors opacity-60 hover:opacity-100">
+                  {{ item.label }}
+                </NuxtLink>
+              </nav>
+            </div>
+          </div>
 
           <!-- Bottom info row -->
-          <div class="mt-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div class="mt-24 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 opacity-30">
             <div class="flex flex-col gap-1">
-              <span class="text-[9px] font-black uppercase tracking-[0.4em] text-white/30">Established</span>
-              <span class="text-2xl font-black text-white/60">1992</span>
+              <span class="text-[9px] font-black uppercase tracking-[0.4em]">Established</span>
+              <span class="text-2xl font-black">1992</span>
             </div>
             <div class="flex gap-6">
-              <a href="#" class="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-colors">Twitter</a>
-              <a href="#" class="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-colors">LinkedIn</a>
-              <a href="#" class="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-colors">ResearchGate</a>
+              <a href="#" class="text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Twitter</a>
+              <a href="#" class="text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">LinkedIn</a>
             </div>
           </div>
         </div>
@@ -193,12 +222,25 @@
 const isMobileOpen = ref(false)
 const scrolled = ref(false)
 
-const navItems = [
-  { label: 'Home', path: '/' },
+const instituteHover = ref(false)
+
+const instituteItems = [
   { label: 'The Board', path: '/board' },
+  { label: 'Organogram', path: '/organogram' },
+  { label: 'Focus Areas', path: '/focus-areas' },
   { label: 'Cells', path: '/cells' },
+  { label: 'Language Groups', path: '/language-groups' },
+]
+
+const primaryItems = [
   { label: 'Programs', path: '/programs' },
   { label: 'Archives', path: '/archives' },
+]
+
+const navItems = [
+  { label: 'Home', path: '/' },
+  ...instituteItems,
+  ...primaryItems,
   { label: 'Contact', path: '/contact' },
 ]
 

@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import { useFetchPrograms } from '@/composables/modules/programs/useFetchPrograms'
+import { useFetchObjectives } from '@/composables/modules/objective/useObjective'
+import { useFetchResponsibilities } from '@/composables/modules/responsibility/useResponsibility'
+
 const { programs: allPrograms, loading: pending } = useFetchPrograms()
+const { objectives, fetchObjectives } = useFetchObjectives()
+const { responsibilities, fetchResponsibilities } = useFetchResponsibilities()
+
+onMounted(() => {
+  fetchObjectives()
+  fetchResponsibilities()
+})
 
 // Cast to any[] to avoid 'never' errors if the ref is not properly typed in the composable
 const programs = computed(() => (allPrograms.value as any[])?.slice(0, 3) || [])
@@ -29,7 +39,7 @@ useHead({
 </script>
 
 <template>
-  <div class="space-y-32 pb-32 bg-white">
+  <div class="space-y-32 px-6 lg:px-0 pb-32 bg-white">
     <HeroSection />
 
     <!-- Features Section -->
@@ -47,6 +57,42 @@ useHead({
           <p class="text-gray-500 leading-relaxed font-medium">
             {{ feature.description }}
           </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Objectives & Responsibilities -->
+    <section class="container mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-24">
+        <!-- Objectives -->
+        <div class="space-y-12 animate-fade-in-up delay-400">
+           <div class="border-b border-gray-100 pb-8">
+             <h2 class="text-3xl font-black tracking-tighter uppercase italic">Institutional <span class="not-italic text-gray-400">Objectives.</span></h2>
+           </div>
+           <div class="space-y-6">
+              <div v-for="(obj, i) in (objectives as any[])" :key="i" class="flex gap-6 group">
+                <span class="text-gray-200 font-black text-4xl group-hover:text-black transition-colors duration-500">{{ (i+1).toString().padStart(2, '0') }}</span>
+                <p class="text-gray-500 font-medium leading-relaxed pt-2">{{ obj.description }}</p>
+              </div>
+              <div v-if="!objectives?.length" class="py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
+                <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Strategic objectives pending...</p>
+              </div>
+           </div>
+        </div>
+
+        <!-- Responsibilities -->
+        <div class="space-y-12 animate-fade-in-up delay-500">
+           <div class="border-b border-gray-100 pb-8">
+             <h2 class="text-3xl font-black tracking-tighter uppercase italic">Core <span class="not-italic text-gray-400">Responsibilities.</span></h2>
+           </div>
+           <div class="grid sm:grid-cols-1 gap-6">
+              <div v-for="(res, i) in (responsibilities as any[])" :key="i" class="p-8 bg-gray-50 rounded-2xl hover:bg-black hover:text-white transition-all duration-500 group">
+                <p class="font-bold text-sm leading-relaxed">{{ res.description }}</p>
+              </div>
+              <div v-if="!responsibilities?.length" class="py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
+                <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Commitments under review...</p>
+              </div>
+           </div>
         </div>
       </div>
     </section>
