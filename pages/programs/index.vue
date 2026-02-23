@@ -56,39 +56,34 @@ useHead({
 
       <!-- Aggressive Filter Toolbar -->
       <div class="flex flex-col md:flex-row items-center gap-6 animate-fade-in-up delay-100 relative z-20">
-        <!-- Type Filter -->
-        <div class="flex p-1 bg-gray-50 rounded-xl border border-gray-100">
-          <button
-            v-for="f in ['all', 'upcoming', 'past']" :key="f"
-            @click="filter = f"
-            class="px-8 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] transition-all"
-            :class="filter === f ? 'bg-black text-white' : 'text-gray-400 hover:text-black'"
-          >
-            {{ f }}
-          </button>
+        <!-- New Year-centric Filter -->
+        <div class="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100">
+           <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mr-2">Archive Year:</span>
+           <div class="w-48">
+              <CustomDropdown
+                v-model="selectedYear"
+                :options="[{ label: 'ALL YEARS', value: 'all' }, ...years]"
+                placeholder="SELECT YEAR"
+              />
+           </div>
         </div>
 
         <!-- Temporal Search -->
         <div class="flex items-center gap-3 w-full md:w-auto">
-          <div class="w-40 xl:w-48">
-            <CustomDropdown
-              v-model="selectedYear"
-              :options="[{ label: 'ALL YEARS', value: 'all' }, ...years]"
-              placeholder="SELECT YEAR"
-            />
-          </div>
-          
           <Transition
             enter-active-class="transition duration-300 ease-out"
             enter-from-class="opacity-0 -translate-x-4"
             enter-to-class="opacity-100 translate-x-0"
           >
-            <div v-if="selectedYear !== 'all'" class="w-40 xl:w-48">
-              <CustomDropdown
-                v-model="selectedMonth"
-                :options="[{ label: 'ALL MONTHS', value: 'all' }, ...monthOptions]"
-                placeholder="SELECT MONTH"
-              />
+            <div v-if="selectedYear !== 'all'" class="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100">
+              <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mr-2">Month:</span>
+              <div class="w-48">
+                <CustomDropdown
+                  v-model="selectedMonth"
+                  :options="[{ label: 'ALL MONTHS', value: 'all' }, ...monthOptions]"
+                  placeholder="SELECT MONTH"
+                />
+              </div>
             </div>
           </Transition>
         </div>
@@ -103,16 +98,13 @@ useHead({
       <div v-for="(program, i) in filteredPrograms" :key="program._id"
         class="group relative animate-fade-in-up"
         :class="`delay-${(i % 3 + 1) * 100}`">
-        <div class="aspect-video bg-gray-100 rounded-xl overflow-hidden relative mb-8">
+        <div class="aspect-video bg-gray-100 rounded-xl overflow-hidden relative mb-8 shadow-sm">
           <img v-if="program.imageUrl" :src="program.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-          <div v-else class="w-full h-full flex items-center justify-center text-gray-200 font-black text-4xl italic">PAS</div>
+          <img v-else src="@/assets/images/program-placeholder.png" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-50 group-hover:opacity-100" />
 
           <div class="absolute top-4 right-4 flex gap-2">
-            <span class="px-3 py-1 bg-black text-white text-[9px] font-black uppercase tracking-widest">
+            <span class="px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-widest">
               {{ program.type }}
-            </span>
-             <span v-if="program.status === 'completed'" class="px-3 py-1 bg-green-600 text-white text-[9px] font-black uppercase tracking-widest">
-              {{ program.status }}
             </span>
           </div>
         </div>
@@ -120,12 +112,12 @@ useHead({
           <div class="flex items-center justify-between">
              <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ program.startDate || new Date(program.date).toLocaleDateString('en-US', { dateStyle: 'long' }) }}</p>
           </div>
-          <h4 class="text-2xl font-black tracking-tighter uppercase group-hover:text-gray-500 transition-colors leading-tight line-clamp-2 italic">{{ program.title }}</h4>
+          <h4 class="text-2xl font-black tracking-tighter uppercase group-hover:text-[#2E7D32] transition-colors leading-tight line-clamp-2 italic">{{ program.title }}</h4>
           <p v-if="program.theme" class="text-[10px] font-bold text-gray-400 uppercase italic line-clamp-2 leading-relaxed pb-2 border-b border-gray-100">{{ program.theme }}</p>
           <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3">{{ program.description }}</p>
 
           <div class="pt-6 flex flex-wrap gap-4 items-center">
-            <NuxtLink :to="`/programs/${program._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-black pb-1 hover:gap-5 hover:border-gray-300 transition-all">
+            <NuxtLink :to="`/programs/${program._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-black pb-1 hover:gap-5 hover:border-[#2E7D32] transition-all">
               VIEW FULL DETAILS —>
             </NuxtLink>
             <a v-if="program.registerLink" :href="program.registerLink" target="_blank" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-gray-400 pb-1 hover:gap-5 hover:border-gray-200 transition-all opacity-60 hover:opacity-100">
