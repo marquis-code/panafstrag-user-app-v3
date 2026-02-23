@@ -76,6 +76,7 @@
                         >
                           <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[6px] border-t-white/30 mb-2"></div>
                           <span class="text-[10px] font-black leading-tight uppercase line-clamp-4">{{ leaf.title }}</span>
+                          <p v-if="leaf.description" class="text-[9px] mt-2 opacity-80 leading-relaxed font-semibold uppercase">{{ leaf.description }}</p>
                         </div>
                       </div>
                    </div>
@@ -86,26 +87,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Notes Section -->
-    <section class="container mx-auto px-6 mt-32 animate-fade-in-up delay-500">
-      <div class="max-w-6xl mx-auto bg-[#FFFFE0] border border-gray-200 p-12 font-bold text-[11px] text-gray-800 leading-relaxed shadow-sm uppercase tracking-tight">
-        <h4 class="uppercase tracking-widest text-xs mb-8 font-black text-[#2E7D32]">Notes:</h4>
-        <div class="space-y-6">
-          <p>1. AFRICANA THE DEFINITION OF AFRICANA (GLOBAL AFRICAN) STUDIES, ACCORDING TO PENN STATE UNIVERSITY, USA, IS A MULTI-DISCIPLINARY FIELD OF STUDY WHICH RIGOROUSLY EXAMINES:</p>
-          <div class="space-y-4">
-            <p>• THE HISTORICAL, CULTURAL, ECONOMIC, SCIENTIFIC, AND RELIGIOUS NETWORKS OF THE AFRICAN CONTINENT.</p>
-            <p>• THE DISPERSAL OF AFRICANS ACROSS THE ATLANTIC TO EUROPE, NORTH AMERICA, LATIN AMERICA AND THE CARIBBEAN; THE DISPERSAL OF AFRICANS ACROSS THE MEDITERRANEAN RED SEA TO THE MIDDLE EAST, THE MOVEMENT OF AFRICANS ACROSS THE SAHARA DESSERT TO NORTH AFRICA AND BEYOND AND THE MOVEMENT OF AFRICANS ACROSS THE INDIAN OCEAN TO ASIA.</p>
-            <p>• THE EXPANSION OF TRADE BETWEEN AFRICA AND EUROPE, NORTH AND SOUTH AMERICA, MIDDLE EAST AND ASIA. (HTTPS://AFRICANA.SAS.UPENN.EDU/DEPARTMENT)</p>
-          </div>
-          <div class="space-y-4 pt-4 border-t border-black/5">
-            <p>- EACH CELL CAN BE BROKEN INTO SUB-CELLS IF NECESSARY, ACCORDING TO EXPERTISE & SKILLS</p>
-            <p>- ALL CELLS TO PLEASE HAVE LANGUAGE REPRESENTATION</p>
-            <p>- CO-LEADERS ARE VOLUNTARY COORDINATORS OF CELLS & GROUPS TO BE PROPOSED TO THE BOARD FOR APPROVAL.</p>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 

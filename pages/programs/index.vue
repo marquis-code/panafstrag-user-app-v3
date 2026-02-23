@@ -27,12 +27,37 @@ const filteredPrograms = computed(() => {
     progs = progs.filter(p => p.type === filter.value)
   }
   if (selectedYear.value !== 'all') {
-    progs = progs.filter(p => p.year === parseInt(selectedYear.value))
+    progs = progs.filter(p => {
+      const pYear = new Date(p.date).getFullYear()
+      return pYear === parseInt(selectedYear.value)
+    })
   }
   if (selectedMonth.value !== 'all') {
-    progs = progs.filter(p => p.month === parseInt(selectedMonth.value))
+    progs = progs.filter(p => {
+      const pMonth = new Date(p.date).getMonth() + 1
+      return pMonth === parseInt(selectedMonth.value)
+    })
   }
   return progs
+})
+
+const groupedProgramsByYear = computed(() => {
+  const progs = filteredPrograms.value
+  const groups: Record<number, any[]> = {}
+  
+  for (const prog of progs) {
+    const year = new Date(prog.date).getFullYear()
+    if (!groups[year]) groups[year] = []
+    groups[year].push(prog)
+  }
+
+  return Object.keys(groups)
+    .map(Number)
+    .sort((a, b) => b - a)
+    .map(year => ({
+      year,
+      programs: groups[year]
+    }))
 })
 
 watch(selectedYear, (newVal) => {
@@ -94,40 +119,50 @@ useHead({
       <LoadingState />
     </div>
 
-    <div v-else-if="filteredPrograms?.length" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-      <div v-for="(program, i) in filteredPrograms" :key="program._id"
-        class="group relative animate-fade-in-up"
-        :class="`delay-${(i % 3 + 1) * 100}`">
-        <div class="aspect-video bg-gray-100 rounded-xl overflow-hidden relative mb-8 shadow-sm">
-          <img v-if="program.imageUrl" :src="program.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-          <img v-else src="@/assets/images/program-placeholder.png" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-50 group-hover:opacity-100" />
-
-          <div class="absolute top-4 right-4 flex gap-2">
-            <span class="px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-widest">
-              {{ program.type }}
-            </span>
-          </div>
+    <div v-else-if="groupedProgramsByYear?.length" class="space-y-24">
+      <div v-for="group in groupedProgramsByYear" :key="group.year" class="space-y-12">
+        <div class="border-b border-gray-100 pb-4">
+          <h2 class="text-3xl font-black uppercase tracking-tighter italic">
+            Archive Year: <span class="not-italic text-gray-400">{{ group.year }}</span>
+          </h2>
         </div>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-             <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ program.startDate || new Date(program.date).toLocaleDateString('en-US', { dateStyle: 'long' }) }}</p>
-          </div>
-          <h4 class="text-2xl font-black tracking-tighter uppercase group-hover:text-[#2E7D32] transition-colors leading-tight line-clamp-2 italic">{{ program.title }}</h4>
-          <p v-if="program.theme" class="text-[10px] font-bold text-gray-400 uppercase italic line-clamp-2 leading-relaxed pb-2 border-b border-gray-100">{{ program.theme }}</p>
-          <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3">{{ program.description }}</p>
 
-          <div class="pt-6 flex flex-wrap gap-4 items-center">
-            <NuxtLink :to="`/programs/${program._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-black pb-1 hover:gap-5 hover:border-[#2E7D32] transition-all">
-              VIEW FULL DETAILS —>
-            </NuxtLink>
-            <a v-if="program.registerLink" :href="program.registerLink" target="_blank" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-gray-400 pb-1 hover:gap-5 hover:border-gray-200 transition-all opacity-60 hover:opacity-100">
-              REGISTER NOW
-            </a>
-            <a v-if="program.uploadedVideoUrl && program.uploadedVideoUrl !== 'null'" :href="program.uploadedVideoUrl" target="_blank" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-red-600 pb-1 hover:gap-5 hover:border-red-300 transition-all text-red-600">
-              WATCH VIDEO
-            </a>
-            <div v-if="program.uploadedDocumentFiles?.length" class="w-full block pt-4">
-               <a v-for="(doc, idx) in (program.uploadedDocumentFiles as string[])" :key="idx" :href="doc" target="_blank" class="block text-[9px] font-black text-gray-400 hover:text-black transition-colors uppercase tracking-[0.2em] mb-1 italic">Download Resource {{ Number(idx) + 1 }}</a>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div v-for="(program, i) in group.programs" :key="program._id"
+            class="group relative animate-fade-in-up"
+            :class="`delay-${(i % 3 + 1) * 100}`">
+            <div class="aspect-video bg-gray-100 rounded-xl overflow-hidden relative mb-8 shadow-sm">
+              <img v-if="program.imageUrl" :src="program.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+              <img v-else src="@/assets/images/program-placeholder.png" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-50 group-hover:opacity-100" />
+
+              <div class="absolute top-4 right-4 flex gap-2">
+                <span class="px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-widest">
+                  {{ program.type }}
+                </span>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ program.startDate || new Date(program.date).toLocaleDateString('en-US', { dateStyle: 'long' }) }}</p>
+              </div>
+              <h4 class="text-2xl font-black tracking-tighter uppercase group-hover:text-[#2E7D32] transition-colors leading-tight line-clamp-2 italic">{{ program.title }}</h4>
+              <p v-if="program.theme" class="text-[10px] font-bold text-gray-400 uppercase italic line-clamp-2 leading-relaxed pb-2 border-b border-gray-100">{{ program.theme }}</p>
+              <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3">{{ program.description }}</p>
+
+              <div class="pt-6 flex flex-wrap gap-4 items-center">
+                <NuxtLink :to="`/programs/${program._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-black pb-1 hover:gap-5 hover:border-[#2E7D32] transition-all">
+                  VIEW FULL DETAILS —>
+                </NuxtLink>
+                <a v-if="program.registerLink" :href="program.registerLink" target="_blank" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-gray-400 pb-1 hover:gap-5 hover:border-gray-200 transition-all opacity-60 hover:opacity-100">
+                  REGISTER NOW
+                </a>
+                <a v-if="program.uploadedVideoUrl && program.uploadedVideoUrl !== 'null'" :href="program.uploadedVideoUrl" target="_blank" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-red-600 pb-1 hover:gap-5 hover:border-red-300 transition-all text-red-600">
+                  WATCH VIDEO
+                </a>
+                <div v-if="program.uploadedDocumentFiles?.length" class="w-full block pt-4">
+                   <a v-for="(doc, idx) in (program.uploadedDocumentFiles as string[])" :key="idx" :href="doc" target="_blank" class="block text-[9px] font-black text-gray-400 hover:text-black transition-colors uppercase tracking-[0.2em] mb-1 italic">Download Resource {{ Number(idx) + 1 }}</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

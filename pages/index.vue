@@ -103,7 +103,7 @@ useHead({
            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-16">
               <div v-for="(obj, i) in (objectives as any[])" :key="i" class="space-y-4 group">
                 <span class="text-[#2E7D32] font-black text-4xl md:text-5xl opacity-20 group-hover:opacity-100 transition-all duration-500">{{ (i+1).toString().padStart(2, '0') }}</span>
-                <p class="text-gray-500 font-bold leading-relaxed text-sm md:text-base uppercase tracking-tight">{{ obj.description }}</p>
+                <p class="text-gray-500 font-bold leading-relaxed text-sm md:text-base tracking-tight">{{ obj.description }}</p>
               </div>
               <div v-if="!objectives?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
                 <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Strategic objectives pending...</p>
@@ -119,7 +119,7 @@ useHead({
            </div>
            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
               <div v-for="(res, i) in (responsibilities as any[])" :key="i" class="p-8 md:p-12 bg-gray-50 rounded-2xl hover:bg-[#2E7D32] hover:text-white transition-all duration-500 group shadow-sm">
-                <p class="font-bold text-xs md:text-sm leading-relaxed uppercase tracking-widest">{{ res.description }}</p>
+                <p class="font-bold text-xs md:text-sm leading-relaxed tracking-widest">{{ res.description }}</p>
               </div>
               <div v-if="!responsibilities?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
                 <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Commitments under review...</p>
