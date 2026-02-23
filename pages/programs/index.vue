@@ -2,11 +2,41 @@
 import { useFetchPrograms } from '@/composables/modules/programs/useFetchPrograms'
 const { fetchPrograms, programs: allPrograms, loading: pending } = useFetchPrograms()
 
-const filter = ref('all')
+const route = useRoute()
+const filter = ref(route.query.type as string || 'all')
+const selectedYear = ref(route.query.year as string || 'all')
+const selectedMonth = ref(route.query.month as string || 'all')
+
+const years = computed(() => {
+  const currentYear = new Date().getFullYear()
+  const startYear = 1990
+  const y = []
+  for (let i = currentYear; i >= startYear; i--) {
+    y.push({ label: i.toString(), value: i.toString() })
+  }
+  return y
+})
+
+const monthOptions = [
+  'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
+].map((m, i) => ({ label: m, value: (i + 1).toString() }))
 const filteredPrograms = computed(() => {
-  const progs = (allPrograms.value as any[]) || []
-  if (filter.value === 'all') return progs
-  return progs.filter(p => p.type === filter.value)
+  let progs = (allPrograms.value as any[]) || []
+  if (filter.value !== 'all') {
+    progs = progs.filter(p => p.type === filter.value)
+  }
+  if (selectedYear.value !== 'all') {
+    progs = progs.filter(p => p.year === parseInt(selectedYear.value))
+  }
+  if (selectedMonth.value !== 'all') {
+    progs = progs.filter(p => p.month === parseInt(selectedMonth.value))
+  }
+  return progs
+})
+
+watch(selectedYear, (newVal) => {
+  if (newVal === 'all') selectedMonth.value = 'all'
 })
 
 useHead({
@@ -24,16 +54,44 @@ useHead({
         </p>
       </div>
 
-      <!-- Filter -->
-      <div class="flex p-1 bg-gray-50 rounded-xl border border-gray-100 animate-fade-in-up delay-100">
-        <button
-          v-for="f in ['all', 'upcoming', 'past']" :key="f"
-          @click="filter = f"
-          class="px-8 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] transition-all"
-          :class="filter === f ? 'bg-black text-white' : 'text-gray-400 hover:text-black'"
-        >
-          {{ f }}
-        </button>
+      <!-- Aggressive Filter Toolbar -->
+      <div class="flex flex-col md:flex-row items-center gap-6 animate-fade-in-up delay-100 relative z-20">
+        <!-- Type Filter -->
+        <div class="flex p-1 bg-gray-50 rounded-xl border border-gray-100">
+          <button
+            v-for="f in ['all', 'upcoming', 'past']" :key="f"
+            @click="filter = f"
+            class="px-8 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] transition-all"
+            :class="filter === f ? 'bg-black text-white' : 'text-gray-400 hover:text-black'"
+          >
+            {{ f }}
+          </button>
+        </div>
+
+        <!-- Temporal Search -->
+        <div class="flex items-center gap-3 w-full md:w-auto">
+          <div class="w-40 xl:w-48">
+            <CustomDropdown
+              v-model="selectedYear"
+              :options="[{ label: 'ALL YEARS', value: 'all' }, ...years]"
+              placeholder="SELECT YEAR"
+            />
+          </div>
+          
+          <Transition
+            enter-active-class="transition duration-300 ease-out"
+            enter-from-class="opacity-0 -translate-x-4"
+            enter-to-class="opacity-100 translate-x-0"
+          >
+            <div v-if="selectedYear !== 'all'" class="w-40 xl:w-48">
+              <CustomDropdown
+                v-model="selectedMonth"
+                :options="[{ label: 'ALL MONTHS', value: 'all' }, ...monthOptions]"
+                placeholder="SELECT MONTH"
+              />
+            </div>
+          </Transition>
+        </div>
       </div>
     </div>
 

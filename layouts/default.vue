@@ -170,39 +170,39 @@
     </Transition>
 
     <!-- ═══ MAIN CONTENT ═══ -->
-    <main class="pt-[calc(2rem+5rem)]">
+    <main class="pt-[calc(1rem+4rem)] md:pt-[calc(2rem+5rem)]">
       <slot />
     </main>
 
     <!-- ═══ FOOTER ═══ -->
-    <footer class="bg-black text-white py-24">
+    <footer class="bg-black text-white py-16 md:py-24">
       <div class="container mx-auto px-6">
-        <div class="grid md:grid-cols-4 gap-16 mb-24">
-          <div class="col-span-2">
-            <Logo class="invert brightness-0 mb-8" />
-            <p class="text-gray-400 max-w-sm leading-relaxed text-sm">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-16 mb-16 md:24">
+          <div class="col-span-1 md:col-span-2">
+            <Logo class="invert brightness-0 mb-6 md:mb-8" />
+            <p class="text-gray-400 max-w-sm leading-relaxed text-xs md:text-sm">
               Strategic and Policy Research Group dedicated to the sustainable development and security of the African continent.
             </p>
           </div>
           <div>
-            <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-8">Navigation</h4>
-            <div class="flex flex-col gap-4">
+            <h4 class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-6 md:mb-8">Navigation</h4>
+            <div class="flex flex-col gap-3 md:gap-4">
               <NuxtLink v-for="item in navItems" :key="item.path" :to="item.path"
-                class="text-sm font-bold hover:text-gray-400 transition-colors">
+                class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">
                 {{ item.label }}
               </NuxtLink>
             </div>
           </div>
           <div>
-            <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-8">Social</h4>
-            <div class="flex flex-col gap-4">
-              <a href="#" class="text-sm font-bold hover:text-gray-400 transition-colors">Twitter (X)</a>
-              <a href="#" class="text-sm font-bold hover:text-gray-400 transition-colors">LinkedIn</a>
-              <a href="#" class="text-sm font-bold hover:text-gray-400 transition-colors">ResearchGate</a>
+            <h4 class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-6 md:mb-8">Social</h4>
+            <div class="flex flex-col gap-3 md:gap-4">
+              <a href="#" class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">Twitter (X)</a>
+              <a href="#" class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">LinkedIn</a>
+              <a href="#" class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">ResearchGate</a>
             </div>
           </div>
         </div>
-        <div class="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="pt-8 md:pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8">
           <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">
             © {{ new Date().getFullYear() }} PANAFSTRAG.
           </p>

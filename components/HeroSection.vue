@@ -23,16 +23,16 @@
           <span class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300">ESTABLISHED 1992</span>
         </div>
 
-        <h1 class="text-6xl lg:text-9xl font-black mb-10 leading-[0.85] tracking-tighter text-white animate-fade-in-up delay-100 italic">
+        <h1 class="text-4xl sm:text-6xl lg:text-9xl font-black mb-6 md:mb-10 leading-[0.85] tracking-tighter text-white animate-fade-in-up delay-100 italic">
           STRATEGIC <br />
           <span class="not-italic text-gray-400">RESEARCH.</span>
         </h1>
 
-        <p class="text-xl text-gray-300 mb-16 max-w-2xl mx-auto leading-relaxed font-medium animate-fade-in-up delay-200">
+        <p class="text-lg md:text-xl text-gray-300 mb-10 md:mb-16 max-w-2xl mx-auto leading-relaxed font-medium animate-fade-in-up delay-200">
           Providing deep strategic insights and policy recommendations to foster sustainable development and security across the African continent.
         </p>
 
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-in-up delay-300">
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 animate-fade-in-up delay-300">
           <NuxtLink to="/programs" class="group relative px-10 py-5 bg-white text-black font-black text-[10px] tracking-[0.3em] uppercase rounded-xl overflow-hidden transition-all hover:scale-105 active:scale-95">
             <span class="relative z-10 transition-colors group-hover:text-white">EXPLORE PROGRAMS</span>
             <div class="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
