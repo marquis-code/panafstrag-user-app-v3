@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useFetchLanguageGroups } from '@/composables/modules/languageGroups/useFetchLanguageGroups'
+import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 const { fetchLanguageGroups, languageGroups, loading: pending } = useFetchLanguageGroups()
+const { homeContent } = useHomeContent()
 
 useHead({
   title: 'Language Groups | PANAFSTRAG',
@@ -10,10 +12,8 @@ useHead({
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic">Language <span class="not-italic text-gray-400">Groups.</span></h1>
-      <p class="text-gray-500 text-lg font-medium leading-relaxed">
-        PANAFSTRAG Language Groups bring together Africana people sharing common official languages or mother tongues to foster collaboration without linguistic obstacles.
-      </p>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.languageGroupsPageTitle || 'Language <span class=\'not-italic text-gray-400\'>Groups.</span>'"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.languageGroupsPageDescription || 'PANAFSTRAG Language Groups bring together Africana people sharing common official languages or mother tongues to foster collaboration without linguistic obstacles.'"></p>
     </div>
 
     <div v-if="pending">
@@ -31,9 +31,7 @@ useHead({
             </div>
             <h3 class="text-2xl font-black tracking-tighter uppercase group-hover:text-gray-500 transition-colors leading-tight italic">{{ group.name }}</h3>
           </div>
-          <p class="text-gray-500 text-sm font-medium leading-relaxed">
-            {{ group.description }}
-          </p>
+          <p class="text-gray-500 text-sm font-medium leading-relaxed" v-html="group.description"></p>
           <div v-if="group.url" class="pt-4">
              <a :href="group.url" target="_blank" class="text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-black inline-block pb-1 hover:border-gray-300 transition-all">Visit Platform →</a>
           </div>
@@ -49,31 +47,23 @@ useHead({
       />
     </div>
 
-    <div class="max-w-4xl mx-auto mt-32 space-y-12 bg-gray-50 p-12 rounded-2xl border border-gray-100">
+    <div v-if="homeContent" class="max-w-4xl mx-auto mt-32 space-y-12 bg-gray-50 p-12 rounded-2xl border border-gray-100">
       <div class="grid md:grid-cols-2 gap-12">
         <div>
-          <h3 class="text-xl font-black uppercase italic mb-4">Function</h3>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            The Group provides a platform for easy production of knowledge and ideas without language obstacles. It provides a common linguistic, Ourstory, economic, social and cultural platform for Africana people in all official languages.
-          </p>
+          <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupFunctionTitle || 'Function'"></h3>
+          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupFunction || 'The Group provides a platform for easy production of knowledge and ideas without language obstacles. It provides a common linguistic, Ourstory, economic, social and cultural platform for Africana people in all official languages.'"></p>
         </div>
         <div>
-          <h3 class="text-xl font-black uppercase italic mb-4">Membership</h3>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            Co-Leaders of each Group forward nominees with C.Vs to the Board for ratification. It is open to volunteers ready to offer actionable thoughts and work within PANAFSTRAG Cells.
-          </p>
+          <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupMembershipTitle || 'Membership'"></h3>
+          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupMembership || 'Co-Leaders of each Group forward nominees with C.Vs to the Board for ratification. It is open to volunteers ready to offer actionable thoughts and work within PANAFSTRAG Cells.'"></p>
         </div>
         <div>
-          <h3 class="text-xl font-black uppercase italic mb-4">Leadership</h3>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            Co-Leaders (1 man & 1 woman) are appointed from the Board, with one from the Continent and the other from the 6th Region. They represent each Group on the Board.
-          </p>
+          <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupLeadershipTitle || 'Leadership'"></h3>
+          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupLeadership || 'Co-Leaders (1 man & 1 woman) are appointed from the Board, with one from the Continent and the other from the 6th Region. They represent each Group on the Board.'"></p>
         </div>
         <div>
-          <h3 class="text-xl font-black uppercase italic mb-4">Fees</h3>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            No fees are payable but donations for projects and activities of the Cells are encouraged. Language Groups organize activities through the Cells.
-          </p>
+          <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupFeesTitle || 'Fees'"></h3>
+          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupFees || 'No fees are payable but donations for projects and activities of the Cells are encouraged. Language Groups organize activities through the Cells.'"></p>
         </div>
       </div>
     </div>

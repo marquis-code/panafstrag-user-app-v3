@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useFetchCells } from '@/composables/modules/cells/useFetchCells'
+import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
+
 const { fetchCells, cells, loading: pending } = useFetchCells()
+const { homeContent } = useHomeContent()
 
 useHead({
   title: 'Cells | PANAFSTRAG',
@@ -10,10 +13,8 @@ useHead({
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic">Institutional <span class="not-italic text-gray-400">Cells.</span></h1>
-      <p class="text-gray-500 text-lg font-medium leading-relaxed">
-        Our specialized cells focus on regional and thematic research areas, ensuring localized expertise and global relevance in strategic policy.
-      </p>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.cellsPageTitle || 'Institutional <span class=\'not-italic text-gray-400\'>Cells</span>'"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.cellsPageDescription || 'Our specialized cells focus on regional and thematic research areas, ensuring localized expertise and global relevance in strategic policy.'"></p>
     </div>
 
     <div v-if="pending">
@@ -36,18 +37,7 @@ useHead({
             <span class="text-gray-400 text-[10px] font-black uppercase tracking-widest">{{ cell.location }}</span>
           </div>
           <h3 class="text-2xl font-black tracking-tighter uppercase group-hover:text-gray-500 transition-colors leading-tight italic">{{ cell.name }}</h3>
-          <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3">
-            {{ cell.description }}
-          </p>
-          <div class="pt-6 border-t border-gray-100 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-xs font-black italic">
-              {{ cell.leadName?.charAt(0) }}
-            </div>
-            <div>
-              <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Lead Researcher</p>
-              <p class="text-xs font-black uppercase tracking-tight">{{ cell.leadName }}</p>
-            </div>
-          </div>
+          <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3" v-html="cell.description"></p>
         </div>
       </div>
     </div>

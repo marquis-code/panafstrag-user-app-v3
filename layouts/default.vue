@@ -80,7 +80,21 @@
           >
             Contact →
           </NuxtLink>
+
+          <!-- Desktop Search Trigger -->
+          <button @click="isSearchOpen = true" class="ml-4 flex items-center justify-center p-2.5 rounded-full border border-black/10 hover:bg-black/5 transition-colors group" title="Global Search">
+             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-black/60 group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+             </svg>
+          </button>
         </div>
+
+        <!-- Mobile Search Trigger (Pill) -->
+        <button @click="isSearchOpen = true" class="md:hidden ml-auto mr-4 p-2 text-black hover:bg-black/5 rounded-lg transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
 
         <!-- Mobile hamburger -->
         <button
@@ -175,52 +189,112 @@
     </main>
 
     <!-- ═══ FOOTER ═══ -->
-    <footer class="bg-black text-white py-16 md:py-24">
-      <div class="container mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-16 mb-16 md:24">
-          <div class="col-span-1 md:col-span-2">
-            <Logo class="invert brightness-0 mb-6 md:mb-8" />
-            <p class="text-gray-400 max-w-sm leading-relaxed text-xs md:text-sm">
-              Strategic and Policy Research Group dedicated to the sustainable development and security of the African continent.
+    <footer class="relative bg-[#0F1A13] text-white pt-24 pb-12 overflow-hidden mt-20">
+      <!-- Glow Effects -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-[#2E7D32] to-transparent opacity-30"></div>
+      <div class="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#2E7D32] rounded-full blur-[150px] opacity-5 pointer-events-none"></div>
+
+      <div class="container mx-auto px-6 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 mb-20">
+          <!-- Brand Column -->
+          <div class="col-span-1 lg:col-span-4 flex flex-col items-start lg:pr-10">
+            <Logo class="invert brightness-0 mb-8 transform hover:scale-105 transition-transform duration-500 origin-left" />
+            <p class="text-gray-400 leading-relaxed text-sm font-medium mb-10 max-w-sm">
+              An independent intelligence network and strategic policy research group dedicated to sustainable development, global positioning, and the strategic security of the African continent and its diaspora.
             </p>
+            <div class="flex items-center gap-4">
+              <span class="w-2 h-2 rounded-full bg-[#2E7D32] animate-pulse"></span>
+              <span class="text-[9px] font-black uppercase tracking-[0.4em] text-gray-500">Global Coverage</span>
+            </div>
           </div>
-          <div>
-            <h4 class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-6 md:mb-8">Navigation</h4>
-            <div class="flex flex-col gap-3 md:gap-4">
-              <NuxtLink v-for="item in navItems" :key="item.path" :to="item.path"
-                class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">
-                {{ item.label }}
+
+          <!-- Navigation Links Grid -->
+          <div class="col-span-1 lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-10">
+            <!-- Organization -->
+            <div class="flex flex-col gap-6">
+              <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Organization</h4>
+              <nav class="flex flex-col gap-4">
+                <NuxtLink v-for="item in instituteItems" :key="item.path" :to="item.path"
+                  class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 relative group inline-flex max-w-max">
+                  <span class="relative z-10">{{ item.label }}</span>
+                  <span class="absolute left-0 -bottom-1 w-full h-px bg-[#2E7D32] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+                </NuxtLink>
+              </nav>
+            </div>
+
+            <!-- Focus Areas -->
+            <div class="flex flex-col gap-6">
+              <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Activities</h4>
+              <nav class="flex flex-col gap-4">
+                <NuxtLink v-for="item in primaryItems" :key="item.path" :to="item.path"
+                  class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 relative group inline-flex max-w-max">
+                  <span class="relative z-10">{{ item.label }}</span>
+                  <span class="absolute left-0 -bottom-1 w-full h-px bg-[#2E7D32] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+                </NuxtLink>
+              </nav>
+            </div>
+
+            <!-- Socials -->
+            <div class="flex flex-col gap-6">
+              <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Connect</h4>
+              <nav class="flex flex-col gap-4">
+                <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
+                  Twitter (X)
+                </a>
+                <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
+                  LinkedIn
+                </a>
+                <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
+                  ResearchGate
+                </a>
+              </nav>
+            </div>
+
+            <!-- Get Involved (CTA) -->
+            <div class="flex flex-col gap-6">
+              <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Participate</h4>
+              <p class="text-xs text-gray-400 leading-relaxed font-medium">Join our strategic network of thinkers and leaders.</p>
+              <NuxtLink to="/contact" class="mt-2 text-[10px] font-black uppercase text-center tracking-[0.2em] bg-white text-black py-4 px-6 hover:bg-[#2E7D32] hover:text-white transition-colors duration-500 w-full shadow-[0_0_20px_rgba(46,125,50,0.2)] hover:shadow-[0_0_30px_rgba(46,125,50,0.5)]">
+                JOIN NOW
               </NuxtLink>
             </div>
           </div>
-          <div>
-            <h4 class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-6 md:mb-8">Social</h4>
-            <div class="flex flex-col gap-3 md:gap-4">
-              <a href="#" class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">Twitter (X)</a>
-              <a href="#" class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">LinkedIn</a>
-              <a href="#" class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">ResearchGate</a>
-            </div>
-          </div>
         </div>
-        <div class="pt-8 md:pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8">
-          <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">
-            © {{ new Date().getFullYear() }} PANAFSTRAG.
+
+        <!-- Divider -->
+        <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8"></div>
+
+        <!-- Bottom Bar -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+          <p class="text-gray-600 text-[10px] font-black uppercase tracking-[0.3em]">
+            © {{ new Date().getFullYear() }} PANAFSTRAG. All Rights Reserved.
           </p>
-          <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">
-            ESTABLISHED 1992.
-          </p>
+          <div class="flex gap-6">
+            <NuxtLink to="/privacy-policy" class="text-gray-600 text-[9px] font-black uppercase tracking-[0.2em] hover:text-white transition-colors">Privacy Policy</NuxtLink>
+            <NuxtLink to="/terms" class="text-gray-600 text-[9px] font-black uppercase tracking-[0.2em] hover:text-white transition-colors">Terms of Service</NuxtLink>
+          </div>
         </div>
       </div>
     </footer>
 
     <!-- Chat Widget -->
+    <!-- Chat Widget -->
     <ChatWidget />
+
+    <!-- Global Search Modal -->
+    <SearchModal :isOpen="isSearchOpen" @close="isSearchOpen = false" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+
 const isMobileOpen = ref(false)
 const scrolled = ref(false)
+const isSearchOpen = ref(false)
 
 const instituteHover = ref(false)
 

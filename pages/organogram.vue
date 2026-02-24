@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 import { useFetchOrganogram } from '@/composables/modules/organogram/useFetchOrganogram'
 
+const { homeContent } = useHomeContent()
 const { organogramNodes, loading: pending } = useFetchOrganogram()
 
 const tier1 = computed(() => (organogramNodes.value as any[]).filter(n => n.level === 1))
@@ -24,8 +26,7 @@ useHead({
       <div class="container mx-auto px-6">
         <div class="text-center max-w-4xl mx-auto">
           <span class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 mb-4 block">Institutional Structure</span>
-          <h1 class="text-[5vw] lg:text-7xl font-black tracking-tighter uppercase italic leading-none">
-            ORGANO<span class="not-italic text-gray-400">GRAM.</span>
+          <h1 class="text-[5vw] lg:text-7xl font-black tracking-tighter uppercase italic leading-none" v-html="homeContent?.organogramPageTitle || 'ORGANO<span class=\'not-italic text-gray-400\'>GRAM</span>'">
           </h1>
         </div>
       </div>
@@ -34,7 +35,7 @@ useHead({
     <!-- Organogram Tree -->
     <div class="container mx-auto px-6 py-20 overflow-x-auto">
       <div v-if="pending" class="flex justify-center py-20">
-        <div class="w-12 h-12 border-4 border-[#42A5F5] border-t-transparent rounded-full animate-spin"></div>
+        <div class="w-12 h-12 border-4 border-[#2E7D32] border-t-transparent rounded-full animate-spin"></div>
       </div>
 
       <div v-else class="min-w-[1200px] flex flex-col items-center relative">
@@ -43,21 +44,27 @@ useHead({
         <div v-for="node in tier1" :key="node._id" class="flex flex-col items-center w-full relative">
           <div class="node-governance p-8 text-center min-w-[400px] shadow-2xl relative z-20 animate-fade-in-up">
             <h2 class="text-xl font-black uppercase tracking-tight mb-2">{{ node.title }}</h2>
-            <p class="text-[11px] font-bold leading-relaxed whitespace-pre-line opacity-80">{{ node.description }}</p>
+            <p class="text-[11px] font-black leading-relaxed whitespace-pre-line opacity-80 uppercase" v-html="node.description"></p>
           </div>
 
-          <!-- Vertical Line connecting T1 to T2 -->
-          <div class="w-[2px] h-12 bg-black"></div>
+          <!-- Vertical Line with Arrow connecting T1 to T2 -->
+          <div class="flex flex-col items-center">
+            <div class="w-[2px] h-12 bg-black"></div>
+            <div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-black"></div>
+          </div>
 
           <!-- Tier 2: Secretariat -->
           <div v-for="sec in tier2" :key="sec._id" class="flex flex-col items-center w-full relative">
             <div class="node-secretariat p-6 text-left min-w-[300px] shadow-xl relative z-20 animate-fade-in-up delay-100">
               <h3 class="text-lg font-black uppercase tracking-tight mb-2">{{ sec.title }}:</h3>
-              <p class="text-[11px] font-bold leading-relaxed whitespace-pre-line opacity-90">{{ sec.description }}</p>
+              <p class="text-[11px] font-black leading-relaxed whitespace-pre-line opacity-90 uppercase" v-html="sec.description"></p>
             </div>
 
-            <!-- Vertical Line connecting T2 to Horizontal branch -->
-            <div class="w-[2px] h-12 bg-black"></div>
+            <!-- Vertical Line with Arrow connecting T2 to Horizontal branch -->
+            <div class="flex flex-col items-center">
+              <div class="w-[2px] h-12 bg-black"></div>
+              <div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-black"></div>
+            </div>
 
             <!-- Horizontal Branching Line Container -->
             <div class="relative w-full flex flex-col items-center">
@@ -67,8 +74,11 @@ useHead({
               <!-- Tier 3: Hubs -->
               <div class="flex justify-between w-[60%] relative mt-0">
                 <div v-for="(hub, hIndex) in tier3" :key="hub._id" class="flex flex-col items-center flex-1 relative">
-                   <!-- Dropdown vertical line from horizontal bar to Hub -->
-                   <div class="w-[2px] h-12 bg-black"></div>
+                   <!-- Dropdown vertical line with Arrow from horizontal bar to Hub -->
+                   <div class="flex flex-col items-center">
+                     <div class="w-[2px] h-12 bg-black"></div>
+                     <div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-black"></div>
+                   </div>
 
                    <div class="node-hub px-8 py-4 shadow-lg mb-12 animate-fade-in-up" :style="{ animationDelay: `${200 + hIndex * 100}ms` }">
                      <h4 class="text-sm font-black tracking-[0.2em] uppercase">{{ hub.title }}</h4>
@@ -82,9 +92,11 @@ useHead({
                       <!-- Tier 4: Leaf Nodes Grid -->
                       <div class="flex flex-wrap justify-center gap-4 pt-12">
                         <div v-for="leaf in getNodesByParent(hub._id)" :key="leaf._id"
-                          class="node-leaf p-4 text-center shadow-md animate-fade-in-up hover:scale-105 transition-transform border border-black/10"
+                          class="node-leaf p-4 text-center shadow-md animate-fade-in-up hover:scale-105 transition-transform border border-black/10 flex flex-col items-center"
                         >
+                          <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[6px] border-t-white/30 mb-2"></div>
                           <span class="text-[10px] font-black leading-tight uppercase line-clamp-4">{{ leaf.title }}</span>
+                          <p v-if="leaf.description" class="text-[9px] mt-2 opacity-80 leading-relaxed font-semibold uppercase" v-html="leaf.description"></p>
                         </div>
                       </div>
                    </div>
@@ -95,44 +107,26 @@ useHead({
         </div>
       </div>
     </div>
-
-    <!-- Notes Section -->
-    <section class="container mx-auto px-6 mt-32 animate-fade-in-up delay-500">
-      <div class="max-w-6xl mx-auto bg-[#FFFFE0] border border-gray-200 p-12 font-bold text-[11px] text-gray-800 leading-relaxed shadow-sm">
-        <h4 class="uppercase tracking-widest text-xs mb-8">NOTES:</h4>
-        <div class="space-y-6">
-          <p>1. AFRICANA The definition of Africana (Global African) Studies, according to Penn State University, USA, is a multi-disciplinary field of study which rigorously examines:</p>
-          <div class="space-y-4">
-            <p>• The historical, cultural, economic, scientific, and religious networks of the African Continent.</p>
-            <p>• The dispersal of Africans across the Atlantic to Europe, North America, Latin America and the Caribbean; the dispersal of Africans across the Mediterranean Red Sea to the Middle East, the movement of Africans across the Sahara Dessert to North Africa and beyond and the movement of Africans across the Indian Ocean to Asia.</p>
-            <p>• The expansion of Trade between Africa and Europe, North and South America, Middle East and Asia. (https://africana.sas.upenn.edu/department)</p>
-          </div>
-          <div class="space-y-4 pt-4">
-            <p>- EACH CELL CAN BE BROKEN INTO SUB-CELLS IF NECESSARY, ACCORDING TO EXPERTISE & SKILLS</p>
-            <p>- ALL CELLS TO PLEASE HAVE LANGUAGE REPRESENTATION</p>
-            <p>- CO-LEADERS ARE VOLUNTARY COORDINATORS OF CELLS & GROUPS TO BE PROPOSED TO THE BOARD FOR APPROVAL.</p>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 
+
+
 <style scoped>
 .node-governance {
-  @apply bg-[#E1E2FF] border border-black/20;
+  @apply bg-[#E8F5E9] border-2 border-[#2E7D32]/30;
 }
 
 .node-secretariat {
-  @apply bg-[#42A5F5] text-white border border-black/20;
+  @apply bg-[#2E7D32] text-white border border-black/10;
 }
 
 .node-hub {
-  @apply bg-[#42A5F5] text-white border border-black/20 min-w-[200px] text-center;
+  @apply bg-[#2E7D32]/90 text-white border border-black/10 min-w-[200px] text-center;
 }
 
 .node-leaf {
-  @apply bg-[#42A5F5] text-white flex items-center justify-center min-h-[100px] w-[150px] border border-black/20;
+  @apply bg-[#2E7D32]/80 text-white flex items-center justify-center min-h-[100px] w-[150px] border border-black/10 shadow-sm;
 }
 
 /* Connectors using absolute positioning for better control than after/before in some cases */
