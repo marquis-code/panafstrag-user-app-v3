@@ -38,15 +38,6 @@ useHead({
           </div>
           <h3 class="text-2xl font-black tracking-tighter uppercase group-hover:text-gray-500 transition-colors leading-tight italic">{{ cell.name }}</h3>
           <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3" v-html="cell.description"></p>
-          <div class="pt-6 border-t border-gray-100 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-xs font-black italic">
-              {{ cell.leadName?.charAt(0) }}
-            </div>
-            <div>
-              <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Lead Researcher</p>
-              <p class="text-xs font-black uppercase tracking-tight">{{ cell.leadName }}</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

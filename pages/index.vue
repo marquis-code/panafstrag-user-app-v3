@@ -125,6 +125,7 @@ useHead({
     <section class="container mx-auto px-6">
       <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 md:mb-16 border-b border-gray-100 pb-6 md:pb-8 gap-4">
         <div>
+          <span v-if="homeContent?.programsSubTitle" class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block" v-html="homeContent.programsSubTitle"></span>
           <h2 class="text-3xl md:text-4xl font-black tracking-tighter uppercase italic" v-html="homeContent?.programsTitle || 'Recent <span class=\'not-italic text-gray-400\'>Programs.</span>'"></h2>
         </div>
         <NuxtLink to="/programs" class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] hover:text-[#2E7D32] transition-colors self-start md:self-auto">View All Programs —></NuxtLink>

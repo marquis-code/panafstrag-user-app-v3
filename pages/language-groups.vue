@@ -50,19 +50,19 @@ useHead({
     <div v-if="homeContent" class="max-w-4xl mx-auto mt-32 space-y-12 bg-gray-50 p-12 rounded-2xl border border-gray-100">
       <div class="grid md:grid-cols-2 gap-12">
         <div>
-          <h3 class="text-xl font-black uppercase italic mb-4">Function</h3>
+          <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupFunctionTitle || 'Function'"></h3>
           <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupFunction || 'The Group provides a platform for easy production of knowledge and ideas without language obstacles. It provides a common linguistic, Ourstory, economic, social and cultural platform for Africana people in all official languages.'"></p>
         </div>
         <div>
-          <h3 class="text-xl font-black uppercase italic mb-4">Membership</h3>
+          <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupMembershipTitle || 'Membership'"></h3>
           <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupMembership || 'Co-Leaders of each Group forward nominees with C.Vs to the Board for ratification. It is open to volunteers ready to offer actionable thoughts and work within PANAFSTRAG Cells.'"></p>
         </div>
         <div>
-          <h3 class="text-xl font-black uppercase italic mb-4">Leadership</h3>
+          <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupLeadershipTitle || 'Leadership'"></h3>
           <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupLeadership || 'Co-Leaders (1 man & 1 woman) are appointed from the Board, with one from the Continent and the other from the 6th Region. They represent each Group on the Board.'"></p>
         </div>
         <div>
-          <h3 class="text-xl font-black uppercase italic mb-4">Fees</h3>
+          <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupFeesTitle || 'Fees'"></h3>
           <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupFees || 'No fees are payable but donations for projects and activities of the Cells are encouraged. Language Groups organize activities through the Cells.'"></p>
         </div>
       </div>
