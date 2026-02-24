@@ -71,7 +71,7 @@
                    <div class="flex items-start justify-between gap-4">
                      <div>
                        <h4 class="font-black text-sm uppercase italic line-clamp-1 group-hover/link:text-[#2E7D32] transition-colors">{{ item.title }}</h4>
-                       <p class="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed font-medium">{{ item.description }}</p>
+                       <p class="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed font-medium" v-html="item.description"></p>
                      </div>
                      <span class="flex-shrink-0 text-[8px] font-black text-white bg-[#2E7D32] px-2 py-1 uppercase tracking-widest rounded-md opacity-0 group-hover/link:opacity-100 transition-opacity">
                         VIEW

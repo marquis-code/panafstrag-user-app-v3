@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useFetchPrograms } from '@/composables/modules/programs/useFetchPrograms'
-const { fetchPrograms, programs: allPrograms, loading: pending } = useFetchPrograms()
+import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
+
+const { programs: allPrograms, loading: pending } = useFetchPrograms()
+const { homeContent } = useHomeContent()
 
 const route = useRoute()
 const filter = ref(route.query.type as string || 'all')
@@ -21,6 +24,7 @@ const monthOptions = [
   'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
   'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
 ].map((m, i) => ({ label: m, value: (i + 1).toString() }))
+
 const filteredPrograms = computed(() => {
   let progs = (allPrograms.value as any[]) || []
   if (filter.value !== 'all') {
@@ -60,24 +64,17 @@ const groupedProgramsByYear = computed(() => {
     }))
 })
 
-watch(selectedYear, (newVal) => {
-  if (newVal === 'all') selectedMonth.value = 'all'
-})
-
 useHead({
-  title: 'Programs & Events | PANAFSTRAG',
+  title: 'Programs | PANAFSTRAG',
 })
 </script>
 
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20">
-      <div class="max-w-2xl animate-fade-in-up">
-        <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic">Programs <span class="not-italic text-gray-400">& Events.</span></h1>
-        <p class="text-gray-500 text-lg font-medium leading-relaxed">
-          Explore our upcoming seminars, policy dialogues, and past research dissemination events across the continent.
-        </p>
-      </div>
+    <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
+      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.programsPageTitle || 'Our <span class=\'not-italic text-gray-400\'>Programs.</span>'"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.programsPageDescription || 'Explore our latest initiatives, strategic research projects, and policy recommendation programs across the continent.'"></p>
+    </div>
 
       <!-- Aggressive Filter Toolbar -->
       <div class="flex flex-col md:flex-row items-center gap-6 animate-fade-in-up delay-100 relative z-20">
@@ -113,7 +110,6 @@ useHead({
           </Transition>
         </div>
       </div>
-    </div>
 
     <div v-if="pending">
       <LoadingState />
@@ -147,7 +143,7 @@ useHead({
               </div>
               <h4 class="text-2xl font-black tracking-tighter uppercase group-hover:text-[#2E7D32] transition-colors leading-tight line-clamp-2 italic">{{ program.title }}</h4>
               <p v-if="program.theme" class="text-[10px] font-bold text-gray-400 uppercase italic line-clamp-2 leading-relaxed pb-2 border-b border-gray-100">{{ program.theme }}</p>
-              <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3">{{ program.description }}</p>
+              <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3" v-html="program.description"></p>
 
               <div class="pt-6 flex flex-wrap gap-4 items-center">
                 <NuxtLink :to="`/programs/${program._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-black pb-1 hover:gap-5 hover:border-[#2E7D32] transition-all">

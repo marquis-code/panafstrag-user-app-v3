@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useFetchArchives } from '@/composables/modules/archives/useFetchArchives'
-const { fetchArchives, archives, loading: pending } = useFetchArchives()
+import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
+
+const { archives: allArchives, loading: pending } = useFetchArchives()
+const { homeContent } = useHomeContent()
 
 const route = useRoute()
 const filter = ref(route.query.type as string || 'all')
@@ -25,17 +28,42 @@ const years = computed(() => {
 })
 
 const filteredArchives = computed(() => {
-  let result = archives.value as any[]
+  let progs = (allArchives.value as any[]) || []
   if (filter.value !== 'all') {
-    result = result.filter(a => a.type === filter.value)
+    progs = progs.filter(p => p.type === filter.value)
   }
   if (selectedYear.value !== 'all') {
-    result = result.filter(a => a.year === parseInt(selectedYear.value))
+    progs = progs.filter(p => {
+      const pYear = new Date(p.date).getFullYear()
+      return pYear === parseInt(selectedYear.value)
+    })
   }
   if (selectedMonth.value !== 'all') {
-    result = result.filter(a => a.month === parseInt(selectedMonth.value))
+    progs = progs.filter(p => {
+      const pMonth = new Date(p.date).getMonth() + 1
+      return pMonth === parseInt(selectedMonth.value)
+    })
   }
-  return result
+  return progs
+})
+
+const groupedArchivesByYear = computed(() => {
+  const progs = filteredArchives.value
+  const groups: Record<number, any[]> = {}
+  
+  for (const prog of progs) {
+    const year = new Date(prog.date).getFullYear()
+    if (!groups[year]) groups[year] = []
+    groups[year].push(prog)
+  }
+
+  return Object.keys(groups)
+    .map(Number)
+    .sort((a, b) => b - a)
+    .map(year => ({
+      year,
+      programs: groups[year]
+    }))
 })
 
 useHead({
@@ -44,12 +72,10 @@ useHead({
 </script>
 
 <template>
-  <div class="space-y-8 md:space-y-16 px-6 lg:px-0 pt-8 md:pt-16 container mx-auto pb-32">
-    <div class="max-w-3xl mx-auto text-center mb-12 md:mb-24 animate-fade-in-up">
-      <h1 class="text-3xl md:text-5xl font-black mb-4 md:mb-6 tracking-tighter uppercase italic">Resource <span class="not-italic text-gray-400">Archives.</span></h1>
-      <p class="text-gray-500 text-base md:text-lg font-medium leading-relaxed">
-        Access our comprehensive collection of strategic research, annual reports, policy papers, and institutional media resources.
-      </p>
+  <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
+    <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
+      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.archivesPageTitle || 'Institutional <span class=\'not-italic text-gray-400\'>Archives.</span>'"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.archivesPageDescription || 'A comprehensive repository of past strategic evaluations, policy briefs, and historical documents from the last three decades of PANAFSTRAG operations.'"></p>
     </div>
 
     <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-8 md:mb-16 animate-fade-in-up delay-100 relative z-20">

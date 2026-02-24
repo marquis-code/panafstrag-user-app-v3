@@ -84,9 +84,7 @@ useHead({
             </div>
             <div v-else-if="program" class="prose prose-xl max-w-none">
               <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-300 mb-12 italic">Intel Summary & Objectives</h4>
-              <p class="text-gray-600 font-medium leading-[1.8] text-lg whitespace-pre-wrap">
-                {{ program.description }}
-              </p>
+              <p class="text-gray-600 font-medium leading-[1.8] text-lg whitespace-pre-wrap" v-html="program.description"></p>
 
               <!-- Video Content -->
               <div v-if="program.uploadedVideoUrl && program.uploadedVideoUrl !== 'null'" class="mt-20 pt-20 border-t border-gray-100">

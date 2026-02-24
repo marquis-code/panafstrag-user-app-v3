@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { useFetchFocusAreas } from '@/composables/modules/focusAreas/useFetchFocusAreas'
-const { fetchFocusAreas, focusAreas, loading: pending } = useFetchFocusAreas()
+import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 
+const { fetchFocusAreas, focusAreas, loading: pending } = useFetchFocusAreas()
+const { homeContent } = useHomeContent()
+
+const isModalOpen = ref(false)
 const selectedArea = ref<any>(null)
 
 const openModal = (area: any) => {
   selectedArea.value = area
+  isModalOpen.value = true
 }
 
 const closeModal = () => {
   selectedArea.value = null
+  isModalOpen.value = false
 }
 
 useHead({
@@ -18,12 +24,10 @@ useHead({
 </script>
 
 <template>
-  <div class="space-y-8 md:space-y-16 px-6 lg:px-0 pt-8 md:pt-16 container mx-auto pb-32">
-    <div class="max-w-3xl mx-auto text-center mb-12 md:mb-24 animate-fade-in-up">
-      <h1 class="text-3xl md:text-5xl font-black mb-4 md:mb-6 tracking-tighter uppercase italic">Focus <span class="not-italic text-gray-400">Areas.</span></h1>
-      <p class="text-gray-500 text-base md:text-lg font-medium leading-relaxed uppercase tracking-tight">
-        PANAFSTRAG focus areas for studies and research with actionable Policy Briefs and Recommendations.
-      </p>
+  <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
+    <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
+      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.focusAreasPageTitle || 'Strategic <span class=\'not-italic text-gray-400\'>Focus Areas.</span>'"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.focusAreasPageDescription || 'PANAFSTRAG focuses on multi-disciplinary research and strategic evaluations to address the complex challenges of stability and development in Africa.'"></p>
     </div>
 
     <div v-if="pending">
@@ -40,9 +44,7 @@ useHead({
         </div>
         <div>
           <h3 class="text-xl md:text-2xl font-black tracking-tighter uppercase group-hover:text-[#2E7D32] transition-colors leading-tight italic mb-3 md:mb-4">{{ area.name }}</h3>
-          <p v-if="area.description" class="text-gray-500 group-hover:text-gray-400 text-xs md:text-sm font-medium leading-relaxed uppercase tracking-tight line-clamp-2">
-            {{ area.description }}
-          </p>
+          <p v-if="area.description" class="text-gray-500 group-hover:text-gray-400 text-xs md:text-sm font-medium leading-relaxed uppercase tracking-tight line-clamp-2" v-html="area.description"></p>
           <div class="mt-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] transform transition-transform group-hover:translate-x-2">
             Explore Intelligence —>
           </div>
@@ -92,9 +94,7 @@ useHead({
 
                 <div class="space-y-6">
                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">In-Depth Analysis</h4>
-                   <p class="text-lg text-gray-800 font-medium leading-relaxed uppercase tracking-tight">
-                     {{ selectedArea.description }}
-                   </p>
+                   <p class="text-lg text-gray-800 font-medium leading-relaxed uppercase tracking-tight" v-html="selectedArea.description"></p>
                 </div>
 
                 <!-- Strategic Points (Placeholder/Static for now if not in schema) -->

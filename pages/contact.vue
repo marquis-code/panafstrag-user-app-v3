@@ -1,14 +1,50 @@
+<script setup lang="ts">
+import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
+
+const { homeContent } = useHomeContent()
+
+const form = reactive({
+  name: '',
+  email: '',
+  subject: '',
+  message: ''
+})
+
+const loading = ref(false)
+const submitted = ref(false)
+
+const config = useRuntimeConfig()
+const handleSubmit = async () => {
+  loading.value = true
+  try {
+    await $fetch(`${config.public.apiBase}/enquiries`, {
+      method: 'POST',
+      body: { ...form }
+    })
+    submitted.value = true
+    Object.assign(form, { name: '', email: '', subject: '', message: '' })
+    setTimeout(() => submitted.value = false, 5000)
+  } catch (error) {
+    alert('Failed to send message. Please try again later.')
+  } finally {
+    loading.value = false
+  }
+}
+
+useHead({
+  title: 'Contact | PANAFSTRAG',
+})
+</script>
+
 <template>
   <div class="container px-6 lg:px-0 mx-auto">
     <!-- Page Hero -->
     <section class="border-b pt-8 md:pt-16 border-gray-100 py-12 md:py-24">
       <div class="max-w-4xl">
         <p class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 mb-4 md:mb-6">Contact</p>
-        <h1 class="text-4xl md:text-8xl font-black uppercase leading-none tracking-tight mb-6 md:mb-8">
-          Get In<br /><span class="text-gray-300">Touch.</span>
+        <h1 class="text-4xl md:text-8xl font-black uppercase leading-none tracking-tight mb-6 md:mb-8" v-html="homeContent?.contactPageTitle || 'Get In<br /><span class=\'text-gray-300\'>Touch</span>'">
         </h1>
-        <p class="text-gray-500 text-base md:text-lg max-w-xl leading-relaxed">
-          Reach out to PANAFSTRAG for research inquiries, partnership opportunities, or media requests.
+        <p class="text-gray-500 text-base md:text-lg max-w-xl leading-relaxed" v-html="homeContent?.contactPageDescription || 'Reach out to PANAFSTRAG for research inquiries, partnership opportunities, or media requests.'">
         </p>
       </div>
     </section>
@@ -136,32 +172,4 @@
   </div>
 </template>
 
-<script setup lang="ts">
-const form = reactive({
-  name: '',
-  email: '',
-  subject: '',
-  message: ''
-})
 
-const loading = ref(false)
-const submitted = ref(false)
-
-const config = useRuntimeConfig()
-const handleSubmit = async () => {
-  loading.value = true
-  try {
-    await $fetch(`${config.public.apiBase}/enquiries`, {
-      method: 'POST',
-      body: { ...form }
-    })
-    submitted.value = true
-    Object.assign(form, { name: '', email: '', subject: '', message: '' })
-    setTimeout(() => submitted.value = false, 5000)
-  } catch (error) {
-    alert('Failed to send message. Please try again later.')
-  } finally {
-    loading.value = false
-  }
-}
-</script>

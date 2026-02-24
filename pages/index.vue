@@ -54,27 +54,20 @@ useHead({
 
     <!-- About Us Section -->
     <section v-if="homeContent" class="container mx-auto px-6">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div class="space-y-8 animate-fade-in-up">
-          <h2 class="text-3xl md:text-5xl font-black tracking-tighter uppercase italic leading-tight">
-            {{ homeContent.aboutUsTitle || 'About Us.' }}
-          </h2>
-          <p class="text-gray-500 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-line">
-            {{ homeContent.aboutUsDescription || 'Pan-Africana Strategic and Policy Research Group was founded in 1992...' }}
-          </p>
+      <div class="max-w-4xl mx-auto text-center space-y-10 md:space-y-14 animate-fade-in-up">
+        <div class="border-b border-gray-100 pb-8 md:pb-10">
+          <span class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block">{{ homeContent.aboutUsSubTitle || 'Who We Are' }}</span>
+          <h2 class="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-tight" v-html="homeContent.aboutUsTitle || 'About <span class=\'not-italic text-gray-400\'>PANAFSTRAG</span>'"></h2>
         </div>
-        <div class="relative group aspect-square bg-[#E1E2FF]/30 rounded-3xl overflow-hidden shadow-2xl animate-fade-in-up delay-200">
-           <div class="absolute inset-0 bg-gradient-to-tr from-[#2E7D32]/20 to-transparent"></div>
-           <div class="absolute inset-x-8 bottom-8 p-12 bg-white border border-gray-100 shadow-2xl rounded-2xl">
-              <span class="text-[10px] font-black uppercase tracking-[0.4em] text-[#2E7D32]">International Secretariat</span>
-              <p class="mt-4 text-xs font-bold text-gray-400 uppercase leading-relaxed tracking-widest">Global Policy Framework & Multi-Disciplinary Research Hub</p>
-           </div>
+        
+        <div class="max-w-3xl mx-auto">
+          <p class="text-gray-500 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-line" v-html="homeContent.aboutUsDescription || 'Pan-Africana Strategic and Policy Research Group was founded in 1992 to provide an in-depth study and analysis of the challenges of political stability, safety and development in Africa and propose policy options and strategies for these issues while synergising the potentials of its diaspora for executing these policies.'"></p>
         </div>
       </div>
     </section>
 
     <!-- Features Section -->
-    <section class="container mx-auto px-6">
+    <!-- <section class="container mx-auto px-6">
       <div class="grid md:grid-cols-3 gap-8 md:gap-12">
         <div v-for="(feature, i) in features" :key="i"
           class="glass-card group animate-fade-in-up"
@@ -90,20 +83,20 @@ useHead({
           </p>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- Objectives & Responsibilities -->
     <section class="container mx-auto px-6 space-y-32">
         <!-- Objectives -->
         <div class="space-y-8 md:space-y-12 animate-fade-in-up">
            <div class="border-b border-gray-100 pb-6 md:pb-12 text-center md:text-left">
-             <span class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block">Strategic Alignment</span>
-             <h2 class="text-3xl md:text-6xl font-black tracking-tighter uppercase italic">Institutional <br class="md:hidden" /> <span class="not-italic text-gray-400">Objectives.</span></h2>
+             <span class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block" v-html="homeContent?.objectivesSubTitle || 'Strategic Alignment'"></span>
+             <h2 class="text-3xl md:text-6xl font-black tracking-tighter uppercase italic" v-html="homeContent?.objectivesTitle || 'Institutional <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>Objectives.</span>'"></h2>
            </div>
            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-16">
               <div v-for="(obj, i) in (objectives as any[])" :key="i" class="space-y-4 group">
                 <span class="text-[#2E7D32] font-black text-4xl md:text-5xl opacity-20 group-hover:opacity-100 transition-all duration-500">{{ (i+1).toString().padStart(2, '0') }}</span>
-                <p class="text-gray-500 font-bold leading-relaxed text-sm md:text-base tracking-tight">{{ obj.description }}</p>
+                <p class="text-gray-500 font-bold leading-relaxed text-sm md:text-base tracking-tight" v-html="obj.description"></p>
               </div>
               <div v-if="!objectives?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
                 <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Strategic objectives pending...</p>
@@ -114,12 +107,12 @@ useHead({
         <!-- Responsibilities -->
         <div class="space-y-8 md:space-y-12 animate-fade-in-up">
            <div class="border-b border-gray-100 pb-6 md:pb-12 text-center md:text-right">
-             <span class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block text-center md:text-right">Code of Conduct</span>
-             <h2 class="text-3xl md:text-6xl font-black tracking-tighter uppercase italic">Core <br class="md:hidden" /> <span class="not-italic text-gray-400">Responsibilities.</span></h2>
+             <span class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block text-center md:text-right" v-html="homeContent?.responsibilitiesSubTitle || 'Code of Conduct'"></span>
+             <h2 class="text-3xl md:text-6xl font-black tracking-tighter uppercase italic" v-html="homeContent?.responsibilitiesTitle || 'Core <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>Responsibilities.</span>'"></h2>
            </div>
            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
               <div v-for="(res, i) in (responsibilities as any[])" :key="i" class="p-8 md:p-12 bg-gray-50 rounded-2xl hover:bg-[#2E7D32] hover:text-white transition-all duration-500 group shadow-sm">
-                <p class="font-bold text-xs md:text-sm leading-relaxed tracking-widest">{{ res.description }}</p>
+                <p class="font-bold text-xs md:text-sm leading-relaxed tracking-widest" v-html="res.description"></p>
               </div>
               <div v-if="!responsibilities?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
                 <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Commitments under review...</p>
@@ -132,7 +125,7 @@ useHead({
     <section class="container mx-auto px-6">
       <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 md:mb-16 border-b border-gray-100 pb-6 md:pb-8 gap-4">
         <div>
-          <h2 class="text-3xl md:text-4xl font-black tracking-tighter uppercase italic">Recent <span class="not-italic text-gray-400">Programs.</span></h2>
+          <h2 class="text-3xl md:text-4xl font-black tracking-tighter uppercase italic" v-html="homeContent?.programsTitle || 'Recent <span class=\'not-italic text-gray-400\'>Programs.</span>'"></h2>
         </div>
         <NuxtLink to="/programs" class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] hover:text-[#2E7D32] transition-colors self-start md:self-auto">View All Programs —></NuxtLink>
       </div>
@@ -170,10 +163,8 @@ useHead({
       <div class="bg-black rounded-[1.5rem] md:rounded-[2rem] p-10 md:p-24 text-center text-white relative overflow-hidden group">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#2E7D32_0%,transparent_100%)] opacity-0 group-hover:opacity-40 transition-opacity duration-1000"></div>
         <div class="relative z-10 max-w-3xl mx-auto">
-          <h2 class="text-3xl md:text-7xl font-black mb-6 md:mb-10 tracking-tighter uppercase italic leading-[0.9]">Participate in <br class="hidden md:block" /> <span class="not-italic text-[#2E7D32]">the Future.</span></h2>
-          <p class="text-gray-400 mb-10 md:mb-16 text-base md:text-xl leading-relaxed font-medium uppercase tracking-widest text-[10px]">
-            Join a network of leading experts dedicated to solving the most pressing strategic challenges facing the African continent today.
-          </p>
+          <h2 class="text-3xl md:text-7xl font-black mb-6 md:mb-10 tracking-tighter uppercase italic leading-[0.9]" v-html="homeContent?.ctaTitle || 'Participate in <br class=\'hidden md:block\' /> <span class=\'not-italic text-[#2E7D32]\'>the Future.</span>'"></h2>
+          <p class="text-gray-400 mb-10 md:mb-16 text-base md:text-xl leading-relaxed font-medium uppercase tracking-widest text-[10px]" v-html="homeContent?.ctaDescription || 'Join a network of leading experts dedicated to solving the most pressing strategic challenges facing the African continent today.'"></p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
             <button class="btn-secondary !py-3 md:!py-4 !bg-[#2E7D32] !text-white !border-transparent hover:!bg-white hover:!text-black w-full sm:w-auto">
               GET INVOLVED

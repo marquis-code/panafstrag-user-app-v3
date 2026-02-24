@@ -189,10 +189,10 @@
     </main>
 
     <!-- ═══ FOOTER ═══ -->
-    <footer class="relative bg-black text-white pt-24 pb-12 overflow-hidden mt-20">
+    <footer class="relative bg-[#0F1A13] text-white pt-24 pb-12 overflow-hidden mt-20">
       <!-- Glow Effects -->
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-[#2E7D32] to-transparent opacity-50"></div>
-      <div class="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#2E7D32] rounded-full blur-[150px] opacity-10 pointer-events-none"></div>
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-[#2E7D32] to-transparent opacity-30"></div>
+      <div class="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#2E7D32] rounded-full blur-[150px] opacity-5 pointer-events-none"></div>
 
       <div class="container mx-auto px-6 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 mb-20">
