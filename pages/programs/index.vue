@@ -96,7 +96,7 @@ const formatDate = (date: string) => {
 }
 
 useHead({
-  title: 'Programs | PANAFSTRAG',
+  title: 'Programmes | PANAFSTRAG',
 })
 </script>
 
@@ -108,8 +108,8 @@ useHead({
       
       <div class="container mx-auto px-6 relative z-10">
         <div class="max-w-3xl mx-auto text-center animate-fade-in">
-          <h1 class="text-4xl lg:text-7xl font-bold mb-8 tracking-tight text-white" v-html="homeContent?.programsPageTitle || 'Strategic <span class=\'text-white/40\'>Programs.</span>'"></h1>
-          <p class="text-white/60 text-lg font-medium leading-relaxed" v-html="homeContent?.programsPageDescription || 'Explore our latest initiatives, strategic research projects, and policy recommendation programs across the continent.'"></p>
+          <h1 class="text-4xl lg:text-7xl font-bold mb-8 tracking-tight text-white" v-html="homeContent?.programsPageTitle || 'Strategic <span class=\'text-white/40\'>Programmes</span>'"></h1>
+          <p class="text-white/60 text-lg font-medium leading-relaxed" v-html="homeContent?.programsPageDescription || 'Explore our latest initiatives, strategic research projects, and policy recommendation programmes across the continent.'"></p>
         </div>
       </div>
     </section>
@@ -216,8 +216,8 @@ useHead({
       <!-- Empty State -->
       <div v-else class="py-32">
         <EmptyState
-          title="NO PROGRAMS FOUND"
-          message="We couldn't find any strategic programs for the selected criteria. Please try adjusting your filters."
+          title="NO PROGRAMMES FOUND"
+          message="We couldn't find any strategic Programmes for the selected criteria. Please try adjusting your filters."
         />
       </div>
     </div>

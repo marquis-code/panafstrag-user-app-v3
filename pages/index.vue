@@ -204,9 +204,9 @@ useHead({
       <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 md:mb-16 border-b border-gray-100 pb-6 md:pb-8 gap-4">
         <div>
           <span v-if="homeContent?.programsSubTitle" class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block" v-html="homeContent.programsSubTitle"></span>
-          <h2 class="text-3xl md:text-4xl font-black tracking-tighter uppercase italic" v-html="homeContent?.programsTitle || 'Recent <span class=\'not-italic text-gray-400\'>Programs.</span>'"></h2>
+          <h2 class="text-3xl md:text-4xl font-black tracking-tighter uppercase italic" v-html="homeContent?.programsTitle || 'Recent <span class=\'not-italic text-gray-400\'>Programmes</span>'"></h2>
         </div>
-        <NuxtLink to="/programs" class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] hover:text-[#2E7D32] transition-colors self-start md:self-auto">View All Programs —></NuxtLink>
+        <NuxtLink to="/programs" class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] hover:text-[#2E7D32] transition-colors self-start md:self-auto">View All Programmes —></NuxtLink>
       </div>
 
       <div v-if="pending" class="grid md:grid-cols-3 gap-8 md:gap-12">
@@ -232,7 +232,7 @@ useHead({
 
         <!-- Empty State -->
         <div v-if="!programs?.length" class="col-span-full py-24 md:py-32 text-center bg-gray-50 rounded-3xl border-2 border-dashed border-gray-100">
-          <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-xs">No recent programs found.</p>
+          <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-xs">No recent programmes found.</p>
         </div>
       </div>
     </section>
