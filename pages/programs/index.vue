@@ -141,7 +141,7 @@ useHead({
         </div>
       </div>
 
-      <!-- Programs Grid -->
+      <!-- Programmes Grid -->
       <div v-if="pending" class="py-20 flex justify-center">
         <LoadingState />
       </div>
@@ -163,9 +163,10 @@ useHead({
               <div class="aspect-[16/10] overflow-hidden relative">
                 <img v-if="program.bannerImages?.length" :src="program.bannerImages[0]" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                 <img v-else-if="program.imageUrl" :src="program.imageUrl" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                <div v-else class="w-full h-full bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32]/20">
+                 <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
+                <!-- <div v-else class="w-full h-full bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32]/20">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                </div>
+                </div> @/assets/images/program-placeholder.png -->
 
                 <!-- Status Badge -->
                 <div class="absolute top-5 left-5">

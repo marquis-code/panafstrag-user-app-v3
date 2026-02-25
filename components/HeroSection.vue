@@ -2,7 +2,7 @@
   <section class="relative min-h-[90vh] flex items-center overflow-hidden bg-black">
     <!-- Carousel Track -->
     <div class="absolute inset-0 z-0 h-full w-full">
-      <TransitionGroup name="fade">
+      <TransitionGroup :name="initialized ? 'fade' : ''">
         <div 
           v-for="(slide, index) in carousels" 
           :key="index"
@@ -37,7 +37,7 @@
 
               <div class="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 animate-fade-in-up delay-300">
                 <NuxtLink to="/programs" class="group relative px-10 py-5 bg-[#2E7D32] text-white font-black text-[10px] tracking-[0.3em] uppercase rounded-xl overflow-hidden transition-all hover:scale-105 active:scale-95">
-                  <span class="relative z-10">EXPLORE PROGRAMS</span>
+                  <span class="relative z-10">EXPLORE PROGRAMMES</span>
                   <div class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                 </NuxtLink>
                 <NuxtLink to="/archives" class="px-10 py-5 border border-white/20 text-white font-black text-[10px] tracking-[0.3em] uppercase rounded-xl hover:bg-white hover:text-black transition-all">
@@ -66,14 +66,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 
 const props = defineProps<{
   carousels: any[]
 }>()
 
 const currentIndex = ref(0)
+const initialized = ref(false)
 let timer: any = null
+
+const preloadImages = () => {
+  for (const slide of props.carousels) {
+    if (slide.imgUrl) {
+      const img = new Image()
+      img.src = slide.imgUrl
+    }
+  }
+}
 
 const startTimer = () => {
   if (props.carousels.length <= 1) return
@@ -82,7 +92,12 @@ const startTimer = () => {
   }, 6000)
 }
 
-onMounted(() => {
+onMounted(async () => {
+  preloadImages()
+  // Allow the first slide to render without fade animation
+  await nextTick()
+  await nextTick()
+  initialized.value = true
   startTimer()
 })
 

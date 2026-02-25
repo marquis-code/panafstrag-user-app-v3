@@ -135,14 +135,14 @@ useHead({
           <div class="flex flex-col gap-6">
             <div>
               <p class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-2">Email</p>
-              <a href="mailto:info@panafstrag.org" class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">
-                info@panafstrag.org
+              <a :href="`mailto:${homeContent?.contactEmail || 'info@panafstrag.org'}`" class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">
+                {{ homeContent?.contactEmail || 'info@panafstrag.org' }}
               </a>
             </div>
             <div>
               <p class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-2">Phone</p>
-              <a href="tel:+23300000000" class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">
-                +233 00 000 0000
+              <a :href="`tel:${homeContent?.contactPhone?.replace(/\s/g, '') || '+23300000000'}`" class="text-xs md:text-sm font-bold hover:text-gray-400 transition-colors">
+                {{ homeContent?.contactPhone || '+233 00 000 0000' }}
               </a>
             </div>
           </div>
@@ -150,11 +150,7 @@ useHead({
 
         <div>
           <p class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 mb-6 md:mb-8">Location</p>
-          <address class="not-italic text-xs md:text-sm font-bold leading-relaxed text-gray-700">
-            PANAFSTRAG Secretariat<br />
-            Accra, Ghana<br />
-            West Africa
-          </address>
+          <address class="not-italic text-xs md:text-sm font-bold leading-relaxed text-gray-700 whitespace-pre-line" v-html="homeContent?.contactAddress || 'PANAFSTRAG Secretariat<br />Accra, Ghana<br />West Africa'"></address>
         </div>
 
         <div>
@@ -162,16 +158,25 @@ useHead({
           <div class="flex flex-col gap-3 text-xs md:text-sm">
             <div class="flex justify-between border-b border-gray-100 pb-3">
               <span class="font-black uppercase tracking-wider text-[10px] md:text-[11px]">Mon – Fri</span>
-              <span class="font-bold text-gray-500">8:00 AM – 5:00 PM</span>
+              <span class="font-bold text-gray-500">{{ homeContent?.contactOfficeHoursMonFri || '8:00 AM – 5:00 PM' }}</span>
             </div>
             <div class="flex justify-between border-b border-gray-100 pb-3">
               <span class="font-black uppercase tracking-wider text-[10px] md:text-[11px]">Saturday</span>
-              <span class="font-bold text-gray-500">9:00 AM – 1:00 PM</span>
+              <span class="font-bold text-gray-500">{{ homeContent?.contactOfficeHoursSat || '9:00 AM – 1:00 PM' }}</span>
             </div>
-            <div class="flex justify-between">
+            <div class="flex justify-between border-b border-gray-100 pb-3">
               <span class="font-black uppercase tracking-wider text-[10px] md:text-[11px]">Sunday</span>
-              <span class="font-bold text-gray-500">Closed</span>
+              <span class="font-bold text-gray-500">{{ homeContent?.contactOfficeHoursSun || 'Closed' }}</span>
             </div>
+          </div>
+        </div>
+
+        <div v-if="homeContent?.contactSocialLinks?.length">
+          <p class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 mb-6 md:mb-8">Connect</p>
+          <div class="flex flex-wrap gap-4">
+            <a v-for="link in homeContent.contactSocialLinks" :key="link.platform" :href="link.url" target="_blank" class="px-4 py-2 border border-gray-200 text-[10px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all rounded-lg">
+              {{ link.platform }}
+            </a>
           </div>
         </div>
       </div>

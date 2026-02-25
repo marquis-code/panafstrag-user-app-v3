@@ -33,7 +33,7 @@ const formatDate = (date: string) => {
 }
 
 useHead({
-  title: computed(() => `${program.value?.title || 'Program'} | PANAFSTRAG`),
+  title: computed(() => `${program.value?.title || 'Programme'} | PANAFSTRAG`),
 })
 </script>
 
@@ -63,7 +63,7 @@ useHead({
           <div class="h-6 bg-white/5 w-1/2 rounded-lg"></div>
         </div>
 
-        <!-- Program Hero Info -->
+        <!-- Programme Hero Info -->
         <div v-else-if="program" class="space-y-8 animate-fade-in">
           <div class="flex flex-wrap items-center gap-2">
             <span class="px-4 py-1 bg-white/10 backdrop-blur-md rounded-full text-[11px] font-bold tracking-[0.1em] uppercase text-white/80 border border-white/10">
@@ -169,7 +169,7 @@ useHead({
                 <div class="w-20 h-20 mx-auto rounded-3xl bg-gray-50 flex items-center justify-center mb-6 text-gray-200">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h7" /></svg>
                 </div>
-                <p class="text-gray-400 font-medium italic">Program information is currently being finalized.</p>
+                <p class="text-gray-400 font-medium italic">Programme information is currently being finalized.</p>
               </div>
             </div>
           </div>
@@ -276,7 +276,7 @@ useHead({
     <!-- Gallery Divider (if more than 1 image) -->
     <section v-if="program?.bannerImages?.length > 1" class="py-24 animate-fade-in-up">
       <div class="container mx-auto px-6 max-w-6xl">
-        <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-12 opacity-60 text-center">Program Atmosphere</h3>
+        <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-12 opacity-60 text-center">Programme Atmosphere</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div v-for="(img, idx) in program.bannerImages" :key="idx" class="aspect-square rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg">
             <img :src="img" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />

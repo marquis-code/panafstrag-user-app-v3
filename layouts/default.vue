@@ -239,18 +239,22 @@
             <div class="flex flex-col gap-6">
               <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Connect</h4>
               <nav class="flex flex-col gap-4">
-                <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
-                  <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
-                  Twitter (X)
-                </a>
-                <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
-                  <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
-                  LinkedIn
-                </a>
-                <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
-                  <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
-                  ResearchGate
-                </a>
+                <template v-if="homeContent?.contactSocialLinks?.length">
+                  <a v-for="link in homeContent.contactSocialLinks" :key="link.platform" :href="link.url" target="_blank" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
+                    {{ link.platform }}
+                  </a>
+                </template>
+                <template v-else>
+                  <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
+                    Twitter (X)
+                  </a>
+                  <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
+                    LinkedIn
+                  </a>
+                </template>
               </nav>
             </div>
 
@@ -319,7 +323,7 @@ const primaryItemsRes = computed(() => {
     return homeContent.value.primaryNavItems
   }
   return [
-    { label: 'Programs', path: '/programs' },
+    { label: 'Programmes', path: '/programs' },
     { label: 'Archives', path: '/archives' },
   ]
 })

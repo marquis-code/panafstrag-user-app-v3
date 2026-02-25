@@ -56,24 +56,24 @@ useHead({
       ]" 
     />
 
-    <!-- Active Program Spotlight -->
+    <!-- Active Programme Spotlight -->
     <section v-if="bannerProgram" class="container mx-auto px-6 animate-fade-in-up">
-      <div class="relative overflow-hidden rounded-[2rem] bg-[#0A0A0A] border border-white/5 shadow-2xl group">
+      <div class="relative overflow-hidden rounded-[1.5rem] bg-[#0A0A0A] border border-white/5 shadow-2xl group">
         <!-- Background Glow -->
-        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[#2E7D32]/10 blur-[120px] -mr-64 -mt-64 rounded-full pointer-events-none"></div>
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-[#2E7D32]/10 blur-[100px] -mr-48 -mt-48 rounded-full pointer-events-none"></div>
         
         <div class="grid lg:grid-cols-2 items-center">
           <!-- Visual Context (Left) -->
-          <div class="relative aspect-square lg:aspect-auto lg:h-[600px] overflow-hidden order-2 lg:order-1">
+          <div class="relative aspect-video lg:aspect-auto lg:h-[450px] overflow-hidden order-2 lg:order-1">
             <img 
               v-if="bannerProgram.bannerImages?.length" 
               :src="bannerProgram.bannerImages[0]" 
-              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110"
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
             />
             <img 
               v-else-if="bannerProgram.imageUrl" 
               :src="bannerProgram.imageUrl" 
-              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110"
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
             />
             <div v-else class="w-full h-full bg-gradient-to-br from-gray-900 via-[#2E7D32]/20 to-black"></div>
             
@@ -83,45 +83,45 @@ useHead({
           </div>
 
           <!-- Information (Right) -->
-          <div class="p-8 md:p-16 lg:p-20 flex flex-col justify-center order-1 lg:order-2 space-y-8 md:space-y-12 relative z-10">
+          <div class="p-6 md:p-10 lg:p-12 flex flex-col justify-center order-1 lg:order-2 space-y-6 md:space-y-8 relative z-10">
             <div>
-              <div class="flex flex-wrap items-center gap-4 mb-8">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-[#2E7D32] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg shadow-[#2E7D32]/20">
+              <div class="flex flex-wrap items-center gap-3 mb-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg shadow-[#2E7D32]/20">
                   <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                   Active Selection
                 </div>
-                <span v-if="bannerProgram.type" class="px-3 py-1.5 border border-white/10 text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] rounded-full">
+                <span v-if="bannerProgram.type" class="px-3 py-1 border border-white/10 text-gray-400 text-[9px] font-black uppercase tracking-[0.2em] rounded-full">
                   {{ bannerProgram.type }}
                 </span>
               </div>
 
-              <h2 class="text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tighter uppercase italic leading-[1.1] mb-8 group-hover:text-[#2E7D32] transition-colors duration-500">
+              <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tighter italic leading-[1.1] mb-6 group-hover:text-[#2E7D32] transition-colors duration-500">
                 {{ bannerProgram.title }}
               </h2>
 
-              <p v-if="bannerProgram.theme" class="text-gray-400 text-lg md:text-xl font-medium leading-relaxed max-w-xl">
+              <p v-if="bannerProgram.theme" class="text-gray-400 text-base md:text-lg font-medium leading-relaxed max-w-xl">
                 {{ bannerProgram.theme }}
               </p>
             </div>
 
-            <div class="grid grid-cols-2 gap-8 py-8 border-y border-white/5">
-              <div v-if="bannerProgram.date" class="space-y-2">
-                <span class="text-[9px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Event Date</span>
-                <p class="text-white font-bold">{{ new Date(bannerProgram.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</p>
+            <div class="grid grid-cols-2 gap-6 py-6 border-y border-white/5">
+              <div v-if="bannerProgram.date" class="space-y-1">
+                <span class="text-[8px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Event Date</span>
+                <p class="text-white text-sm font-bold">{{ new Date(bannerProgram.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</p>
               </div>
-              <div v-if="bannerProgram.location" class="space-y-2">
-                <span class="text-[9px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Location</span>
-                <p class="text-white font-bold line-clamp-1">{{ bannerProgram.location }}</p>
+              <div v-if="bannerProgram.location" class="space-y-1">
+                <span class="text-[8px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Location</span>
+                <p class="text-white text-sm font-bold line-clamp-1">{{ bannerProgram.location }}</p>
               </div>
             </div>
 
-            <div class="flex items-center gap-8">
-              <NuxtLink :to="`/programs/${bannerProgram._id}`" class="group/btn relative px-10 py-5 bg-white text-black font-black text-[10px] tracking-[0.3em] uppercase rounded-xl overflow-hidden transition-all hover:scale-105 active:scale-95">
+            <div class="flex items-center gap-6">
+              <NuxtLink :to="`/programs/${bannerProgram._id}`" class="group/btn relative px-8 py-4 bg-white text-black font-black text-[9px] tracking-[0.3em] uppercase rounded-lg overflow-hidden transition-all hover:scale-105 active:scale-95">
                 <span class="relative z-10">ENGAGE DETAILS</span>
                 <div class="absolute inset-0 bg-[#2E7D32] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
               </NuxtLink>
               
-              <NuxtLink v-if="bannerProgram.registerLink" :to="bannerProgram.registerLink" target="_blank" class="text-white text-[10px] font-black uppercase tracking-[0.2em] border-b border-[#2E7D32] pb-1 hover:text-[#2E7D32] transition-all">
+              <NuxtLink v-if="bannerProgram.registerLink" :to="bannerProgram.registerLink" target="_blank" class="text-white text-[9px] font-black uppercase tracking-[0.2em] border-b border-[#2E7D32] pb-1 hover:text-[#2E7D32] transition-all">
                 JOIN VIRTUAL ROOM
               </NuxtLink>
             </div>
@@ -190,7 +190,7 @@ useHead({
            </div>
            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
               <div v-for="(res, i) in (responsibilities as any[])" :key="i" class="p-8 md:p-12 bg-gray-50 rounded-2xl hover:bg-[#2E7D32] hover:text-white transition-all duration-500 group shadow-sm">
-                <p class="font-bold text-xs md:text-sm leading-relaxed tracking-widest" v-html="res.description"></p>
+                <p class="font-bold text-sm md:text-base leading-loose" v-html="res.description"></p>
               </div>
               <div v-if="!responsibilities?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
                 <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Commitments under review...</p>
@@ -199,7 +199,7 @@ useHead({
         </div>
     </section>
 
-    <!-- Recent Programs Section -->
+    <!-- Recent Programmes Section -->
     <section class="container mx-auto px-6">
       <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 md:mb-16 border-b border-gray-100 pb-6 md:pb-8 gap-4">
         <div>
