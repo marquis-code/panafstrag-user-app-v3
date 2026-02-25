@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
+import { useCustomToast } from "@/composables/core/useCustomToast"
 
 const { homeContent } = useHomeContent()
+  const { showToast } = useCustomToast()
 
 const form = reactive({
   name: '',
@@ -25,7 +27,12 @@ const handleSubmit = async () => {
     Object.assign(form, { name: '', email: '', subject: '', message: '' })
     setTimeout(() => submitted.value = false, 5000)
   } catch (error) {
-    alert('Failed to send message. Please try again later.')
+           showToast({
+          title: "Error",
+          message: "Failed to send message. Please try again later.",
+          toastType: "error",
+          duration: 3000,
+        })
   } finally {
     loading.value = false
   }

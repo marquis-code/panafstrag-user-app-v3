@@ -3,11 +3,15 @@ import { useFetchPrograms } from '@/composables/modules/programs/useFetchProgram
 import { useFetchObjectives } from '@/composables/modules/objective/useObjective'
 import { useFetchResponsibilities } from '@/composables/modules/responsibility/useResponsibility'
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
+import { useActiveBanner } from '@/composables/modules/active-banner/useActiveBanner'
 
 const { programs: allPrograms, loading: pending } = useFetchPrograms()
 const { objectives, fetchObjectives } = useFetchObjectives()
 const { responsibilities, fetchResponsibilities } = useFetchResponsibilities()
 const { homeContent } = useHomeContent()
+const { activeBanner } = useActiveBanner()
+
+const bannerProgram = computed(() => activeBanner.value?.programId || null)
 
 onMounted(() => {
   fetchObjectives()
@@ -51,6 +55,41 @@ useHead({
         }
       ]" 
     />
+
+    <!-- Active Program Banner -->
+    <section v-if="bannerProgram" class="container mx-auto px-6 animate-fade-in-up">
+      <NuxtLink :to="`/programs/${bannerProgram._id}`" class="group block relative overflow-hidden rounded-2xl bg-black">
+        <div class="aspect-[21/9] md:aspect-[3/1] relative">
+          <img 
+            v-if="bannerProgram.bannerImages?.length" 
+            :src="bannerProgram.bannerImages[0]" 
+            :alt="bannerProgram.title"
+            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-90"
+          />
+          <img 
+            v-else-if="bannerProgram.imageUrl" 
+            :src="bannerProgram.imageUrl" 
+            :alt="bannerProgram.title"
+            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-90"
+          />
+          <div v-else class="w-full h-full bg-gradient-to-br from-gray-900 via-[#2E7D32]/20 to-black"></div>
+          
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+          
+          <div class="absolute bottom-0 left-0 right-0 p-8 md:p-16">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-widest">FEATURED PROGRAM</span>
+              <span v-if="bannerProgram.type" class="px-3 py-1 border border-white/30 text-white text-[9px] font-black uppercase tracking-widest">{{ bannerProgram.type }}</span>
+            </div>
+            <h2 class="text-2xl md:text-5xl font-black text-white tracking-tighter uppercase italic leading-tight mb-3 line-clamp-2">{{ bannerProgram.title }}</h2>
+            <p v-if="bannerProgram.theme" class="text-white/60 text-sm md:text-base font-medium uppercase tracking-wider mb-6 line-clamp-1">{{ bannerProgram.theme }}</p>
+            <span class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-white border-b-2 border-[#2E7D32] pb-1 group-hover:gap-5 transition-all">
+              VIEW DETAILS —>
+            </span>
+          </div>
+        </div>
+      </NuxtLink>
+    </section>
 
     <!-- About Us Section -->
     <section v-if="homeContent" class="container mx-auto px-6">

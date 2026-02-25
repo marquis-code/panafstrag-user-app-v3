@@ -6,7 +6,6 @@ const { programs: allPrograms, loading: pending } = useFetchPrograms()
 const { homeContent } = useHomeContent()
 
 const route = useRoute()
-const filter = ref(route.query.type as string || 'all')
 const selectedYear = ref(route.query.year as string || 'all')
 const selectedMonth = ref(route.query.month as string || 'all')
 
@@ -27,18 +26,17 @@ const monthOptions = [
 
 const filteredPrograms = computed(() => {
   let progs = (allPrograms.value as any[]) || []
-  if (filter.value !== 'all') {
-    progs = progs.filter(p => p.type === filter.value)
-  }
+  // Only show upcoming programs
+  progs = progs.filter(p => p.type === 'upcoming')
   if (selectedYear.value !== 'all') {
     progs = progs.filter(p => {
-      const pYear = new Date(p.date).getFullYear()
+      const pYear = p.year || new Date(p.date).getFullYear()
       return pYear === parseInt(selectedYear.value)
     })
   }
   if (selectedMonth.value !== 'all') {
     progs = progs.filter(p => {
-      const pMonth = new Date(p.date).getMonth() + 1
+      const pMonth = p.month || (new Date(p.date).getMonth() + 1)
       return pMonth === parseInt(selectedMonth.value)
     })
   }
@@ -50,7 +48,7 @@ const groupedProgramsByYear = computed(() => {
   const groups: Record<number, any[]> = {}
   
   for (const prog of progs) {
-    const year = new Date(prog.date).getFullYear()
+    const year = prog.year || new Date(prog.date).getFullYear()
     if (!groups[year]) groups[year] = []
     groups[year].push(prog)
   }
@@ -119,7 +117,7 @@ useHead({
       <div v-for="group in groupedProgramsByYear" :key="group.year" class="space-y-12">
         <div class="border-b border-gray-100 pb-4">
           <h2 class="text-3xl font-black uppercase tracking-tighter italic">
-            Archive Year: <span class="not-italic text-gray-400">{{ group.year }}</span>
+            Program Year: <span class="not-italic text-gray-400">{{ group.year }}</span>
           </h2>
         </div>
 
@@ -128,8 +126,13 @@ useHead({
             class="group relative animate-fade-in-up"
             :class="`delay-${(i % 3 + 1) * 100}`">
             <div class="aspect-video bg-gray-100 rounded-xl overflow-hidden relative mb-8 shadow-sm">
-              <img v-if="program.imageUrl" :src="program.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-              <img v-else src="@/assets/images/program-placeholder.png" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-50 group-hover:opacity-100" />
+              <img v-if="program.bannerImages?.length" :src="program.bannerImages[0]" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+              <img v-else-if="program.imageUrl" :src="program.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+              <div v-else class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
 
               <div class="absolute top-4 right-4 flex gap-2">
                 <span class="px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-widest">
