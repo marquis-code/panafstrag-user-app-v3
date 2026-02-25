@@ -56,39 +56,78 @@ useHead({
       ]" 
     />
 
-    <!-- Active Program Banner -->
+    <!-- Active Program Spotlight -->
     <section v-if="bannerProgram" class="container mx-auto px-6 animate-fade-in-up">
-      <NuxtLink :to="`/programs/${bannerProgram._id}`" class="group block relative overflow-hidden rounded-2xl bg-black">
-        <div class="aspect-[21/9] md:aspect-[3/1] relative">
-          <img 
-            v-if="bannerProgram.bannerImages?.length" 
-            :src="bannerProgram.bannerImages[0]" 
-            :alt="bannerProgram.title"
-            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-90"
-          />
-          <img 
-            v-else-if="bannerProgram.imageUrl" 
-            :src="bannerProgram.imageUrl" 
-            :alt="bannerProgram.title"
-            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-90"
-          />
-          <div v-else class="w-full h-full bg-gradient-to-br from-gray-900 via-[#2E7D32]/20 to-black"></div>
-          
-          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-          
-          <div class="absolute bottom-0 left-0 right-0 p-8 md:p-16">
-            <div class="flex items-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-widest">FEATURED PROGRAM</span>
-              <span v-if="bannerProgram.type" class="px-3 py-1 border border-white/30 text-white text-[9px] font-black uppercase tracking-widest">{{ bannerProgram.type }}</span>
+      <div class="relative overflow-hidden rounded-[2rem] bg-[#0A0A0A] border border-white/5 shadow-2xl group">
+        <!-- Background Glow -->
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[#2E7D32]/10 blur-[120px] -mr-64 -mt-64 rounded-full pointer-events-none"></div>
+        
+        <div class="grid lg:grid-cols-2 items-center">
+          <!-- Visual Context (Left) -->
+          <div class="relative aspect-square lg:aspect-auto lg:h-[600px] overflow-hidden order-2 lg:order-1">
+            <img 
+              v-if="bannerProgram.bannerImages?.length" 
+              :src="bannerProgram.bannerImages[0]" 
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110"
+            />
+            <img 
+              v-else-if="bannerProgram.imageUrl" 
+              :src="bannerProgram.imageUrl" 
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110"
+            />
+            <div v-else class="w-full h-full bg-gradient-to-br from-gray-900 via-[#2E7D32]/20 to-black"></div>
+            
+            <!-- Gradient Overlays -->
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-transparent to-transparent hidden lg:block"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent lg:hidden"></div>
+          </div>
+
+          <!-- Information (Right) -->
+          <div class="p-8 md:p-16 lg:p-20 flex flex-col justify-center order-1 lg:order-2 space-y-8 md:space-y-12 relative z-10">
+            <div>
+              <div class="flex flex-wrap items-center gap-4 mb-8">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-[#2E7D32] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg shadow-[#2E7D32]/20">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                  Active Selection
+                </div>
+                <span v-if="bannerProgram.type" class="px-3 py-1.5 border border-white/10 text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] rounded-full">
+                  {{ bannerProgram.type }}
+                </span>
+              </div>
+
+              <h2 class="text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tighter uppercase italic leading-[1.1] mb-8 group-hover:text-[#2E7D32] transition-colors duration-500">
+                {{ bannerProgram.title }}
+              </h2>
+
+              <p v-if="bannerProgram.theme" class="text-gray-400 text-lg md:text-xl font-medium leading-relaxed max-w-xl">
+                {{ bannerProgram.theme }}
+              </p>
             </div>
-            <h2 class="text-2xl md:text-5xl font-black text-white tracking-tighter uppercase italic leading-tight mb-3 line-clamp-2">{{ bannerProgram.title }}</h2>
-            <p v-if="bannerProgram.theme" class="text-white/60 text-sm md:text-base font-medium uppercase tracking-wider mb-6 line-clamp-1">{{ bannerProgram.theme }}</p>
-            <span class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-white border-b-2 border-[#2E7D32] pb-1 group-hover:gap-5 transition-all">
-              VIEW DETAILS —>
-            </span>
+
+            <div class="grid grid-cols-2 gap-8 py-8 border-y border-white/5">
+              <div v-if="bannerProgram.date" class="space-y-2">
+                <span class="text-[9px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Event Date</span>
+                <p class="text-white font-bold">{{ new Date(bannerProgram.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</p>
+              </div>
+              <div v-if="bannerProgram.location" class="space-y-2">
+                <span class="text-[9px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Location</span>
+                <p class="text-white font-bold line-clamp-1">{{ bannerProgram.location }}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-8">
+              <NuxtLink :to="`/programs/${bannerProgram._id}`" class="group/btn relative px-10 py-5 bg-white text-black font-black text-[10px] tracking-[0.3em] uppercase rounded-xl overflow-hidden transition-all hover:scale-105 active:scale-95">
+                <span class="relative z-10">ENGAGE DETAILS</span>
+                <div class="absolute inset-0 bg-[#2E7D32] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
+              </NuxtLink>
+              
+              <NuxtLink v-if="bannerProgram.registerLink" :to="bannerProgram.registerLink" target="_blank" class="text-white text-[10px] font-black uppercase tracking-[0.2em] border-b border-[#2E7D32] pb-1 hover:text-[#2E7D32] transition-all">
+                JOIN VIRTUAL ROOM
+              </NuxtLink>
+            </div>
           </div>
         </div>
-      </NuxtLink>
+      </div>
     </section>
 
     <!-- About Us Section -->
