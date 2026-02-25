@@ -15,7 +15,7 @@
           <div class="flex items-center gap-2">
             <span class="w-1.5 h-1.5 rounded-full bg-black animate-pulse"></span>
             <span class="text-[9px] font-black uppercase tracking-[0.4em] text-black/40">
-              Est. 1992 — Pan-African Strategic & Policy Research Group
+              {{ homeContent?.websiteHeaderText || 'Est. 1992 — Panafricana Stratetegic & Policy Research Group' }}
             </span>
           </div>
           <span class="text-[9px] font-black uppercase tracking-[0.3em] text-black/30 hidden md:block">
@@ -55,7 +55,7 @@
                 <span class="text-[8px] font-black uppercase tracking-[0.4em] text-white/30 italic">Organization</span>
               </div>
               <div class="flex flex-col gap-4">
-                <NuxtLink v-for="item in instituteItems" :key="item.path" :to="item.path" class="text-[10px] font-black uppercase tracking-[0.2em] hover:text-gray-400 transition-all duration-300 py-2 border-b border-white/5 last:border-0 hover:pl-2">
+                <NuxtLink v-for="item in instituteItemsRes" :key="item.path" :to="item.path" class="text-[10px] font-black uppercase tracking-[0.2em] hover:text-gray-400 transition-all duration-300 py-2 border-b border-white/5 last:border-0 hover:pl-2">
                   {{ item.label }}
                 </NuxtLink>
               </div>
@@ -63,7 +63,7 @@
           </div>
 
           <NuxtLink
-            v-for="item in primaryItems"
+            v-for="item in primaryItemsRes"
             :key="item.path"
             :to="item.path"
             class="nav-link group relative px-5 py-2 text-[11px] font-black uppercase tracking-[0.25em] transition-colors duration-200 hover:text-black/50"
@@ -149,8 +149,9 @@
               <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 italic">01. Principal</h3>
               <nav class="flex flex-col gap-4">
                 <NuxtLink to="/" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors">Home</NuxtLink>
-                <NuxtLink to="/programs" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors">Programs</NuxtLink>
-                <NuxtLink to="/archives" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors">Archives</NuxtLink>
+                <NuxtLink v-for="item in primaryItemsRes" :key="item.path" :to="item.path" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors">
+                  {{ item.label }}
+                </NuxtLink>
                 <NuxtLink to="/contact" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors flex items-center gap-3 italic">
                   Contact <span class="text-lg">→</span>
                 </NuxtLink>
@@ -161,7 +162,7 @@
             <div class="space-y-8">
               <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 italic">02. The Institute</h3>
               <nav class="flex flex-col gap-4">
-                <NuxtLink v-for="item in instituteItems" :key="item.path" :to="item.path" @click="isMobileOpen = false" class="text-2xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors opacity-60 hover:opacity-100">
+                <NuxtLink v-for="item in instituteItemsRes" :key="item.path" :to="item.path" @click="isMobileOpen = false" class="text-2xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors opacity-60 hover:opacity-100">
                   {{ item.label }}
                 </NuxtLink>
               </nav>
@@ -214,7 +215,7 @@
             <div class="flex flex-col gap-6">
               <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Organization</h4>
               <nav class="flex flex-col gap-4">
-                <NuxtLink v-for="item in instituteItems" :key="item.path" :to="item.path"
+                <NuxtLink v-for="item in instituteItemsRes" :key="item.path" :to="item.path"
                   class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 relative group inline-flex max-w-max">
                   <span class="relative z-10">{{ item.label }}</span>
                   <span class="absolute left-0 -bottom-1 w-full h-px bg-[#2E7D32] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
@@ -226,7 +227,7 @@
             <div class="flex flex-col gap-6">
               <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Activities</h4>
               <nav class="flex flex-col gap-4">
-                <NuxtLink v-for="item in primaryItems" :key="item.path" :to="item.path"
+                <NuxtLink v-for="item in primaryItemsRes" :key="item.path" :to="item.path"
                   class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 relative group inline-flex max-w-max">
                   <span class="relative z-10">{{ item.label }}</span>
                   <span class="absolute left-0 -bottom-1 w-full h-px bg-[#2E7D32] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
@@ -290,7 +291,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
+
+const { homeContent } = useHomeContent()
 
 const isMobileOpen = ref(false)
 const scrolled = ref(false)
@@ -298,25 +301,28 @@ const isSearchOpen = ref(false)
 
 const instituteHover = ref(false)
 
-const instituteItems = [
-  { label: 'The Board', path: '/board' },
-  { label: 'Organogram', path: '/organogram' },
-  { label: 'Focus Areas', path: '/focus-areas' },
-  { label: 'Cells', path: '/cells' },
-  { label: 'Language Groups', path: '/language-groups' },
-]
+const instituteItemsRes = computed(() => {
+  if (homeContent.value?.instituteNavItems?.length) {
+    return homeContent.value.instituteNavItems
+  }
+  return [
+    { label: 'The Board', path: '/board' },
+    { label: 'Organogram', path: '/organogram' },
+    { label: 'Focus Areas', path: '/focus-areas' },
+    { label: 'Cells', path: '/cells' },
+    { label: 'Language Groups', path: '/language-groups' },
+  ]
+})
 
-const primaryItems = [
-  { label: 'Programs', path: '/programs' },
-  { label: 'Archives', path: '/archives' },
-]
-
-const navItems = [
-  { label: 'Home', path: '/' },
-  ...instituteItems,
-  ...primaryItems,
-  { label: 'Contact', path: '/contact' },
-]
+const primaryItemsRes = computed(() => {
+  if (homeContent.value?.primaryNavItems?.length) {
+    return homeContent.value.primaryNavItems
+  }
+  return [
+    { label: 'Programs', path: '/programs' },
+    { label: 'Archives', path: '/archives' },
+  ]
+})
 
 const currentDate = computed(() => {
   return new Date().toLocaleDateString('en-GB', {

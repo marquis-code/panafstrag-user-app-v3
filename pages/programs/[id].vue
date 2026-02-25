@@ -22,10 +22,14 @@ const hasVirtualLinks = computed(() => {
 
 const getYouTubeEmbedUrl = (url: string) => {
   if (!url) return ''
-  // Handle various YouTube URL formats
   const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
   if (match) return `https://www.youtube.com/embed/${match[1]}`
   return url
+}
+
+const formatDate = (date: string) => {
+  try { return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }
+  catch { return date }
 }
 
 useHead({
@@ -34,265 +38,311 @@ useHead({
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#FDFDFD]">
-    <!-- Hero -->
-    <section class="relative bg-black text-white pt-32 pb-52 overflow-hidden group">
+  <div class="min-h-screen bg-[#F9FBFA]">
+    <!-- Hero Area -->
+    <section class="relative bg-[#1A3A1C] pt-32 pb-60 overflow-hidden">
+      <!-- Background Image with Overlay -->
       <div class="absolute inset-0 z-0">
-        <img v-if="heroImage" :src="heroImage" class="w-full h-full object-cover opacity-30 grayscale group-hover:scale-110 transition-transform duration-[3s]" />
-        <div v-else class="w-full h-full bg-gradient-to-br from-gray-900 via-[#2E7D32]/10 to-black"></div>
-        <div class="absolute inset-0 bg-gradient-to-b from-black via-black/40 to-black"></div>
+        <img v-if="heroImage" :src="heroImage" class="w-full h-full object-cover opacity-15 grayscale mix-blend-luminosity" />
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#1A3A1C]/80 to-[#1A3A1C]"></div>
       </div>
 
-      <div class="container mx-auto px-6 relative z-10">
-        <NuxtLink to="/programs" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 hover:text-white transition-colors mb-16">
-          ← Back to Programs
+      <!-- Subtle Decorative Elements -->
+      <div class="absolute top-20 right-[-10%] w-[500px] h-[500px] bg-[#2E7D32]/20 rounded-full blur-[120px] pointer-events-none"></div>
+      <div class="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#2E7D32]/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+      <div class="container mx-auto px-6 relative z-10 max-w-6xl">
+        <NuxtLink to="/programs" class="inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors mb-12 group">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+          Back to Programs
         </NuxtLink>
 
-        <div v-if="loading" class="max-w-4xl space-y-10 animate-pulse">
-          <div class="h-4 bg-white/10 w-32"></div>
-          <div class="h-24 bg-white/10 w-full"></div>
-          <div class="flex gap-4">
-            <div class="h-10 bg-white/10 w-40"></div>
-            <div class="h-10 bg-white/10 w-40"></div>
-          </div>
+        <!-- Loading State -->
+        <div v-if="loading" class="space-y-6 animate-pulse">
+          <div class="h-14 bg-white/5 w-3/4 rounded-2xl"></div>
+          <div class="h-6 bg-white/5 w-1/2 rounded-lg"></div>
         </div>
 
-        <div v-else-if="program" class="max-w-4xl space-y-12 animate-fade-in-up">
-          <div class="flex flex-wrap items-center gap-3">
-            <span class="px-4 py-1.5 border border-white/20 bg-white/5 backdrop-blur-md text-[9px] font-black uppercase tracking-[0.3em]">{{ program.type }} Module</span>
-            <span v-if="program.status" class="px-4 py-1.5 bg-white text-black text-[9px] font-black uppercase tracking-[0.3em]">{{ program.status }}</span>
-            <span v-if="program.location" class="px-4 py-1.5 border border-white/20 bg-white/5 backdrop-blur-md text-[9px] font-black uppercase tracking-[0.3em]">📍 {{ program.location }}</span>
+        <!-- Program Hero Info -->
+        <div v-else-if="program" class="space-y-8 animate-fade-in">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-4 py-1 bg-white/10 backdrop-blur-md rounded-full text-[11px] font-bold tracking-[0.1em] uppercase text-white/80 border border-white/10">
+              {{ program.type }}
+            </span>
+            <span v-if="program.status" class="px-4 py-1 bg-[#2E7D32]/80 backdrop-blur-md rounded-full text-[11px] font-bold tracking-[0.1em] uppercase text-white border border-white/5 shadow-lg">
+              {{ program.status }}
+            </span>
           </div>
 
-          <h1 class="text-4xl lg:text-7xl font-black tracking-tighter uppercase italic leading-[1.05]">
+          <h1 class="text-3xl md:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight max-w-5xl text-white">
             {{ program.title }}
           </h1>
 
-          <div v-if="program.theme" class="text-xl lg:text-3xl font-bold italic text-gray-400 max-w-2xl leading-relaxed">
+          <p v-if="program.theme" class="text-xl md:text-2xl text-white/60 font-medium max-w-3xl leading-relaxed italic">
             "{{ program.theme }}"
-          </div>
-
-          <div class="flex flex-wrap items-center gap-8 pt-8 border-t border-white/10">
-            <div v-if="program.startDate" class="flex flex-col gap-1">
-              <span class="text-[9px] font-black uppercase tracking-[0.3em] text-gray-500 italic">Start</span>
-              <span class="text-sm font-black uppercase tracking-widest text-white/80">{{ program.startDate }}</span>
-            </div>
-            <div v-if="program.endDate" class="flex flex-col gap-1">
-              <span class="text-[9px] font-black uppercase tracking-[0.3em] text-gray-500 italic">End</span>
-              <span class="text-sm font-black uppercase tracking-widest text-white/80">{{ program.endDate }}</span>
-            </div>
-            <div v-if="!program.startDate && program.date" class="flex flex-col gap-1">
-              <span class="text-[9px] font-black uppercase tracking-[0.3em] text-gray-500 italic">Date</span>
-              <span class="text-sm font-black uppercase tracking-widest text-white/80">{{ new Date(program.date).toLocaleDateString('en-US', { dateStyle: 'long' }) }}</span>
-            </div>
-          </div>
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- Virtual Event Bar -->
-    <div v-if="program && hasVirtualLinks" class="bg-[#2E7D32] text-white">
-      <div class="container mx-auto px-6 py-4 flex flex-wrap items-center justify-center gap-4 md:gap-6">
-        <span class="text-[9px] font-black uppercase tracking-[0.3em]">JOIN VIRTUALLY:</span>
-        <a v-if="program.zoomMeetingUrl" :href="program.zoomMeetingUrl" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 hover:bg-white/30 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-          ZOOM MEETING
-        </a>
-        <a v-if="program.googleMeetUrl" :href="program.googleMeetUrl" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 hover:bg-white/30 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-          GOOGLE MEET
-        </a>
-        <a v-if="program.uploadedVideoUrl" :href="program.uploadedVideoUrl" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 hover:bg-white/30 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          WATCH VIDEO
-        </a>
-      </div>
-    </div>
-
-    <!-- Main Content -->
-    <section class="relative -mt-24 z-20 pb-40">
-      <div class="container mx-auto px-6">
-        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-16 lg:gap-20">
-
-          <!-- Content Left -->
-          <div class="flex-1 space-y-0">
-            <!-- Description & Rich Content Card -->
-            <div class="bg-white p-8 md:p-16 shadow-2xl border border-black/5 animate-fade-in-up delay-100">
-              <div v-if="loading" class="space-y-6">
-                <div v-for="i in 10" :key="i" class="h-4 bg-gray-50 w-full"></div>
+    <!-- Integrated Content Area -->
+    <div class="container mx-auto px-6 max-w-6xl relative z-20 -mt-40">
+      <div class="flex flex-col lg:flex-row gap-8">
+        
+        <!-- Main Content (Cards) -->
+        <div class="flex-1 space-y-8">
+          
+          <!-- Quick Statistics/Info Row -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in-up delay-[100ms]">
+            <div class="bg-white/95 backdrop-blur-xl p-6 rounded-[2rem] border border-white shadow-xl shadow-black/[0.03] flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
               </div>
-              <div v-else-if="program">
-                <!-- Brief Description -->
-                <div v-if="program.description">
-                  <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-300 mb-8 italic">Summary</h4>
-                  <p class="text-gray-600 font-medium leading-[1.8] text-lg whitespace-pre-wrap mb-12" v-html="program.description"></p>
-                </div>
-
-                <!-- Rich Content -->
-                <div v-if="program.content">
-                  <h4 v-if="program.description" class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-300 mb-8 italic pt-8 border-t border-gray-100">Program Details</h4>
-                  <div class="program-content" v-html="program.content"></div>
-                </div>
-
-                <!-- Fallback if no content or description -->
-                <div v-if="!program.content && !program.description" class="py-12 text-center">
-                  <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Program details coming soon...</p>
-                </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Schedule</p>
+                <p class="text-sm font-bold text-gray-900">{{ program?.startDate || formatDate(program?.date) }}</p>
+              </div>
+            </div>
+            
+            <div class="bg-white/95 backdrop-blur-xl p-6 rounded-[2rem] border border-white shadow-xl shadow-black/[0.03] flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Location</p>
+                <p class="text-sm font-bold text-gray-900 truncate max-w-[150px]">{{ program?.location || 'Virtual' }}</p>
               </div>
             </div>
 
-            <!-- Video Embed -->
-            <div v-if="program?.uploadedVideoUrl && program.uploadedVideoUrl !== 'null'" class="bg-white p-8 md:p-16 shadow-2xl border border-black/5 border-t-0 animate-fade-in-up delay-200">
-              <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-300 mb-8 italic">Program Video</h4>
-              <div class="aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl">
-                <iframe :src="getYouTubeEmbedUrl(program.uploadedVideoUrl)" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div class="bg-white/95 backdrop-blur-xl p-6 rounded-[2rem] border border-white shadow-xl shadow-black/[0.03] flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
               </div>
-            </div>
-
-            <!-- Agenda -->
-            <div v-if="program?.agenda?.length" class="bg-white p-8 md:p-16 shadow-2xl border border-black/5 border-t-0 animate-fade-in-up delay-300">
-              <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-300 mb-10 italic">Program Agenda</h4>
-              <div class="space-y-0">
-                <div v-for="(item, idx) in program.agenda" :key="idx" class="flex items-start gap-6 group">
-                  <!-- Timeline Dot -->
-                  <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center text-[10px] font-black flex-shrink-0 group-hover:bg-[#2E7D32] transition-colors">
-                      {{ idx + 1 }}
-                    </div>
-                    <div v-if="idx < program.agenda.length - 1" class="w-0.5 h-full min-h-[3rem] bg-gray-200"></div>
-                  </div>
-                  <div class="pb-8 flex-1">
-                    <p class="text-[10px] font-black text-[#2E7D32] uppercase tracking-widest mb-1">{{ item.time }}</p>
-                    <p class="text-lg font-black uppercase tracking-tight leading-tight">{{ item.title }}</p>
-                    <p v-if="item.description" class="text-gray-500 text-sm mt-2 leading-relaxed">{{ item.description }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Speakers -->
-            <div v-if="program?.speakers?.length" class="bg-white p-8 md:p-16 shadow-2xl border border-black/5 border-t-0 animate-fade-in-up delay-400">
-              <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-300 mb-10 italic">Speakers & Panelists</h4>
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                <div v-for="(speaker, idx) in program.speakers" :key="idx" class="group text-center space-y-4">
-                  <div class="w-28 h-28 mx-auto rounded-full bg-gray-100 overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow border-4 border-white">
-                    <img v-if="speaker.imageUrl" :src="speaker.imageUrl" :alt="speaker.name" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-                    <div v-else class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300 text-gray-500 text-3xl font-black">
-                      {{ speaker.name?.[0]?.toUpperCase() || '?' }}
-                    </div>
-                  </div>
-                  <div>
-                    <p class="font-black text-sm uppercase tracking-tight leading-tight">{{ speaker.name }}</p>
-                    <p class="text-[9px] font-black text-[#2E7D32] uppercase tracking-widest mt-1">{{ speaker.role }}</p>
-                    <p v-if="speaker.bio" class="text-gray-500 text-xs mt-3 leading-relaxed line-clamp-4">{{ speaker.bio }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Banner Images Gallery -->
-            <div v-if="program?.bannerImages?.length > 1" class="bg-white p-8 md:p-16 shadow-2xl border border-black/5 border-t-0 animate-fade-in-up">
-              <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-300 mb-8 italic">Program Gallery</h4>
-              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div v-for="(img, idx) in program.bannerImages" :key="idx" class="aspect-video rounded-xl overflow-hidden bg-gray-100 group">
-                  <img :src="img" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-                </div>
+              <div>
+                <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Participation</p>
+                <p class="text-sm font-bold text-gray-900">{{ program?.speakers?.length || 0 }} Speakers</p>
               </div>
             </div>
           </div>
 
-          <!-- Sidebar -->
-          <aside class="w-full lg:w-1/3 space-y-8 lg:pt-32 animate-fade-in-up delay-200">
-            <!-- Registration CTA -->
-            <div v-if="program?.registerLink" class="bg-black text-white p-8 md:p-10 rounded-[2rem] shadow-2xl group transition-all duration-500 hover:bg-black/90">
-              <h4 class="text-[9px] font-black uppercase tracking-[0.4em] text-gray-500 mb-6 italic">Registration</h4>
-              <p class="text-base font-bold mb-8 leading-relaxed italic">Join this strategic mission and contribute to African policy development.</p>
-              <a :href="program.registerLink" target="_blank" class="block w-full text-center py-4 bg-[#2E7D32] text-white text-[10px] font-black uppercase tracking-[0.3em] hover:bg-[#1B5E20] transition-colors rounded-xl shadow-lg">
-                REGISTER NOW
+          <!-- Virtual Join Bar (Now Integrated better) -->
+          <div v-if="program && hasVirtualLinks" class="bg-[#2E7D32] rounded-[2rem] p-4 flex flex-wrap items-center justify-between gap-4 px-8 shadow-xl shadow-[#2E7D32]/10 animate-fade-in-up delay-[150ms]">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center animate-pulse">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                </span>
+              </div>
+              <span class="text-white text-[11px] font-bold tracking-[0.2em] uppercase">The session is live</span>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-3">
+              <a v-if="program.zoomMeetingUrl" :href="program.zoomMeetingUrl" target="_blank" class="px-6 py-2.5 bg-white text-[#2E7D32] rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-gray-100 transition-all flex items-center gap-2">
+                Join via Zoom
+              </a>
+              <a v-if="program.googleMeetUrl" :href="program.googleMeetUrl" target="_blank" class="px-6 py-2.5 bg-white/15 text-white border border-white/20 rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-white/25 transition-all flex items-center gap-2">
+                Join via Meet
               </a>
             </div>
+          </div>
 
-            <!-- Quick Info -->
-            <div v-if="program" class="p-8 bg-white border border-gray-100 rounded-[2rem] shadow-sm space-y-6">
-              <h4 class="text-[9px] font-black uppercase tracking-[0.4em] text-gray-300 italic">Quick Info</h4>
-              <div v-if="program.type" class="flex justify-between items-center py-3 border-b border-gray-50">
-                <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Type</span>
-                <span class="text-[10px] font-black uppercase tracking-widest">{{ program.type }}</span>
+          <!-- Main Narrative Content -->
+          <div class="bg-white rounded-[2.5rem] p-10 md:p-16 shadow-2xl shadow-black/[0.02] border border-gray-100 animate-fade-in-up delay-[200ms]">
+            <div v-if="loading" class="space-y-6">
+              <div class="h-4 bg-gray-50 w-full rounded-full"></div>
+              <div class="h-4 bg-gray-50 w-full rounded-full"></div>
+              <div class="h-4 bg-gray-50 w-3/4 rounded-full"></div>
+            </div>
+            <div v-else-if="program" class="space-y-12">
+              <div v-if="program.description">
+                <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-8 opacity-60">Mission Overview</h3>
+                <div class="text-gray-600 leading-[2] text-[16px] font-medium whitespace-pre-wrap lg:pr-10" v-html="program.description"></div>
               </div>
-              <div v-if="program.status" class="flex justify-between items-center py-3 border-b border-gray-50">
-                <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Status</span>
-                <span class="px-3 py-1 bg-black text-white text-[9px] font-black uppercase tracking-widest">{{ program.status }}</span>
+
+              <div v-if="program.content" class="pt-12 border-t border-gray-50">
+                <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-10 opacity-60">Systemic Framework</h3>
+                <div class="program-content" v-html="program.content"></div>
               </div>
-              <div v-if="program.location" class="flex justify-between items-center py-3 border-b border-gray-50">
-                <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Location</span>
-                <span class="text-[10px] font-black uppercase tracking-widest">{{ program.location }}</span>
-              </div>
-              <div v-if="program.speakers?.length" class="flex justify-between items-center py-3 border-b border-gray-50">
-                <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Speakers</span>
-                <span class="text-[10px] font-black uppercase tracking-widest">{{ program.speakers.length }}</span>
-              </div>
-              <div v-if="program.agenda?.length" class="flex justify-between items-center py-3">
-                <span class="text-[9px] font-black uppercase tracking-widest text-gray-400">Agenda Items</span>
-                <span class="text-[10px] font-black uppercase tracking-widest">{{ program.agenda.length }}</span>
+
+              <div v-if="!program.content && !program.description" class="py-20 text-center">
+                <div class="w-20 h-20 mx-auto rounded-3xl bg-gray-50 flex items-center justify-center mb-6 text-gray-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                </div>
+                <p class="text-gray-400 font-medium italic">Program information is currently being finalized.</p>
               </div>
             </div>
+          </div>
 
-            <!-- Download Resources -->
-            <div v-if="program?.uploadedDocumentFiles?.length" class="p-8 border-2 border-dashed border-gray-200 rounded-[2rem]">
-              <h4 class="text-[9px] font-black uppercase tracking-[0.4em] text-gray-300 mb-8 italic">Documents</h4>
-              <div class="space-y-3">
-                <a v-for="(doc, idx) in (program.uploadedDocumentFiles as string[])" :key="idx" :href="doc" target="_blank" class="flex items-center gap-4 group p-3 hover:bg-gray-50 rounded-xl transition-all">
-                  <div class="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center font-black text-xs group-hover:bg-black group-hover:text-white transition-all">{{ Number(idx) + 1 }}</div>
-                  <div class="flex flex-col flex-1 min-w-0">
-                    <span class="text-[10px] font-black uppercase tracking-widest text-black/60 group-hover:text-black transition-colors truncate">{{ doc?.split('/').pop()?.toUpperCase() || 'DOCUMENT' }}</span>
-                    <span class="text-[8px] font-bold text-gray-300">Click to download</span>
+          <!-- Speakers Grid -->
+          <div v-if="program?.speakers?.length" class="space-y-8 animate-fade-in-up delay-[250ms]">
+            <div class="flex items-center gap-4">
+              <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase opacity-60">Distinguished Panel</h3>
+              <div class="h-px flex-1 bg-gray-100"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div v-for="(speaker, idx) in program.speakers" :key="idx" class="bg-white p-8 rounded-[2rem] border border-gray-50 shadow-sm group hover:shadow-xl hover:shadow-[#2E7D32]/5 hover:-translate-y-1 transition-all duration-500">
+                <div class="w-24 h-24 mx-auto rounded-[2rem] overflow-hidden mb-6 rotate-3 group-hover:rotate-0 transition-transform duration-500 shadow-lg">
+                  <img v-if="speaker.imageUrl" :src="speaker.imageUrl" :alt="speaker.name" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                  <div v-else class="w-full h-full bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32] text-3xl font-bold">
+                    {{ speaker.name?.[0] }}
                   </div>
-                  <span class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-sm">↓</span>
-                </a>
+                </div>
+                <div class="text-center">
+                  <h4 class="text-sm font-bold text-gray-900 mb-1">{{ speaker.name }}</h4>
+                  <p class="text-[10px] font-bold text-[#2E7D32] tracking-widest uppercase mb-4">{{ speaker.role }}</p>
+                  <p v-if="speaker.bio" class="text-xs text-gray-400 leading-relaxed line-clamp-3 italic">"{{ speaker.bio }}"</p>
+                </div>
               </div>
             </div>
+          </div>
 
-            <!-- Social Share -->
-            <div class="p-8 bg-gray-50 rounded-[2rem]">
-              <h4 class="text-[9px] font-black uppercase tracking-[0.4em] text-gray-300 mb-6 italic">Share</h4>
-              <div class="flex gap-4">
-                <button class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all text-xs font-black">𝕏</button>
-                <button class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all text-xs font-black">In</button>
-                <button class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all text-xs">🔗</button>
+          <!-- Video Showcase -->
+          <div v-if="program?.uploadedVideoUrl && program.uploadedVideoUrl !== 'null'" class="bg-[#111111] rounded-[3rem] p-4 animate-fade-in-up delay-[300ms]">
+            <div class="aspect-video w-full rounded-[2.5rem] overflow-hidden shadow-2xl relative group">
+              <iframe :src="getYouTubeEmbedUrl(program.uploadedVideoUrl)" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <!-- Timeline Agenda -->
+          <div v-if="program?.agenda?.length" class="bg-white rounded-[2.5rem] p-10 md:p-16 shadow-lg shadow-black/[0.01] border border-gray-50 animate-fade-in-up delay-[350ms]">
+            <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-16 opacity-60">Strategic Schedule</h3>
+            
+            <div class="space-y-0">
+              <div v-for="(item, idx) in program.agenda" :key="idx" class="flex items-start gap-10 group">
+                <div class="flex flex-col items-center">
+                  <div class="w-12 h-12 rounded-2xl bg-[#E8F5E9] text-[#2E7D32] flex items-center justify-center text-xs font-black flex-shrink-0 group-hover:bg-[#2E7D32] group-hover:text-white transition-all duration-500">
+                    {{ idx + 1 }}
+                  </div>
+                  <div v-if="idx < program.agenda.length - 1" class="w-0.5 h-16 bg-gray-50 group-hover:bg-[#2E7D32]/10 transition-colors"></div>
+                </div>
+                <div class="pb-12">
+                  <span class="text-[10px] font-black text-[#2E7D32] tracking-[0.2em] uppercase mb-2 block opacity-40 group-hover:opacity-100 transition-opacity">{{ item.time || 'TBD' }}</span>
+                  <p class="text-lg font-bold text-gray-900 mb-3">{{ item.title }}</p>
+                  <p v-if="item.description" class="text-sm text-gray-400 leading-relaxed max-w-xl">{{ item.description }}</p>
+                </div>
               </div>
             </div>
-          </aside>
+          </div>
+        </div>
+
+        <!-- Sidebar (Floating Info Content) -->
+        <aside class="w-full lg:w-[350px] space-y-6">
+          
+          <!-- Registration Card -->
+          <div v-if="program?.registerLink" class="bg-[#2E7D32] rounded-[2.5rem] p-8 text-white relative overflow-hidden group shadow-2xl shadow-[#2E7D32]/20 sticky top-10">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-2xl group-hover:w-40 transition-all duration-700"></div>
+            
+            <h4 class="text-[10px] font-bold tracking-[0.4em] uppercase text-white/50 mb-6 italic">Secure Pass</h4>
+            <p class="text-lg font-bold mb-10 leading-snug">Registration portal is currently active for this initiative.</p>
+            
+            <a :href="program.registerLink" target="_blank" class="flex items-center justify-between w-full p-4 bg-white rounded-2xl group/btn hover:bg-gray-50 transition-colors">
+              <span class="text-[#2E7D32] text-xs font-bold tracking-widest uppercase ml-2">Register Entry</span>
+              <div class="w-8 h-8 rounded-xl bg-[#2E7D32] flex items-center justify-center text-white group-hover/btn:translate-x-1 transition-transform">
+                →
+              </div>
+            </a>
+          </div>
+
+          <!-- Document Repository -->
+          <div v-if="program?.uploadedDocumentFiles?.length" class="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-xl shadow-black/[0.02]">
+            <h4 class="text-[10px] font-bold tracking-[0.4em] uppercase text-[#2E7D32] mb-8 italic opacity-40">Documentation</h4>
+            <div class="space-y-3">
+              <a v-for="(doc, idx) in (program.uploadedDocumentFiles as string[])" :key="idx" :href="doc" target="_blank" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#E8F5E9]/50 transition-all group">
+                <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center group-hover:bg-[#2E7D32] transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-[11px] font-bold text-gray-700 truncate capitalize">{{ doc?.split('/').pop()?.split('-').pop() || 'Module Documentation' }}</p>
+                  <p class="text-[9px] font-bold text-gray-300 uppercase tracking-widest mt-1">Download Resources</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Share / Connect -->
+          <div class="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm flex items-center justify-between">
+            <span class="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-300">Share Brief</span>
+            <div class="flex gap-2">
+              <button class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center hover:bg-[#2E7D32] hover:text-white transition-all text-xs font-black text-gray-400">𝕏</button>
+              <button class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center hover:bg-[#2E7D32] hover:text-white transition-all text-xs font-black text-gray-400">IN</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+    
+    <!-- Gallery Divider (if more than 1 image) -->
+    <section v-if="program?.bannerImages?.length > 1" class="py-24 animate-fade-in-up">
+      <div class="container mx-auto px-6 max-w-6xl">
+        <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-12 opacity-60 text-center">Program Atmosphere</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div v-for="(img, idx) in program.bannerImages" :key="idx" class="aspect-square rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg">
+            <img :src="img" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- Footer Space -->
+    <div class="h-40"></div>
   </div>
 </template>
 
 <style>
-/* Rich content typography */
-.program-content h1 { font-size: 2rem; font-weight: 900; margin: 1.5rem 0 0.75rem; letter-spacing: -0.025em; color: #1a1a1a; }
-.program-content h2 { font-size: 1.5rem; font-weight: 800; margin: 1.25rem 0 0.5rem; letter-spacing: -0.015em; color: #1a1a1a; }
-.program-content h3 { font-size: 1.25rem; font-weight: 700; margin: 1rem 0 0.5rem; color: #1a1a1a; }
-.program-content p { margin: 0.5rem 0; line-height: 1.8; color: #4b5563; font-size: 1rem; }
-.program-content ul { list-style-type: disc; padding-left: 1.5rem; margin: 0.75rem 0; }
-.program-content ol { list-style-type: decimal; padding-left: 1.5rem; margin: 0.75rem 0; }
-.program-content li { margin: 0.25rem 0; line-height: 1.7; color: #4b5563; }
+/* Refined Narrative Typography */
+.program-content { color: #555c68; font-size: 1rem; line-height: 2; font-weight: 400; }
+.program-content h1 { font-size: 2.5rem; font-weight: 800; margin: 3rem 0 1rem; color: #111827; letter-spacing: -0.02em; }
+.program-content h2 { font-size: 2rem; font-weight: 700; margin: 2.5rem 0 0.75rem; color: #111827; }
+.program-content h3 { font-size: 1.5rem; font-weight: 600; margin: 2rem 0 0.5rem; color: #111827; }
+.program-content p { margin: 1rem 0; }
+.program-content ul { list-style-type: none; padding-left: 0; margin: 1.5rem 0; }
+.program-content ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.program-content ul li::before { 
+  content: ''; 
+  position: absolute; 
+  left: 0; 
+  top: 0.7em; 
+  width: 6px; 
+  height: 6px; 
+  background-color: #2E7D32; 
+  border-radius: 50%;
+}
+.program-content ol { list-style-type: decimal; padding-left: 1.5rem; margin: 1.5rem 0; }
+.program-content li { margin: 0.5rem 0; }
 .program-content blockquote {
   border-left: 4px solid #2E7D32;
-  padding: 1rem 1.5rem;
-  margin: 1.5rem 0;
-  background: #f9fafb;
+  padding: 1.5rem 2rem;
+  margin: 2.5rem 0;
+  background: #fdfdfd;
+  color: #1B5E20;
+  border-radius: 0 1.5rem 1.5rem 0;
   font-style: italic;
-  color: #6b7280;
-  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 1.1rem;
+  box-shadow: inset 10px 0 20px -10px rgba(0,0,0,0.05);
 }
-.program-content a { color: #2E7D32; text-decoration: underline; }
-.program-content a:hover { color: #1B5E20; }
-.program-content strong { font-weight: 800; color: #1a1a1a; }
-.program-content em { font-style: italic; }
-.program-content img { max-width: 100%; border-radius: 0.75rem; margin: 1.5rem 0; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-.program-content hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
-.program-content code { background: #f3f4f6; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-size: 0.875em; }
-.program-content pre { background: #1f2937; color: #e5e7eb; padding: 1.5rem; border-radius: 0.75rem; overflow-x: auto; margin: 1.5rem 0; }
-.program-content pre code { background: none; padding: 0; color: inherit; }
+.program-content a { color: #2E7D32; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+.program-content strong { font-weight: 700; color: #111827; }
+.program-content img { max-width: 100%; border-radius: 2rem; margin: 2.5rem 0; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.1); }
+.program-content hr { border: none; border-top: 1px solid #F3F4F6; margin: 3rem 0; }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in { animation: fade-in 1s ease-out forwards; }
+.animate-fade-in-up { opacity: 0; animation: fade-in-up 0.8s ease-out forwards; }
+.delay-\[100ms\] { animation-delay: 100ms; }
+.delay-\[150ms\] { animation-delay: 150ms; }
+.delay-\[200ms\] { animation-delay: 200ms; }
+.delay-\[250ms\] { animation-delay: 250ms; }
+.delay-\[300ms\] { animation-delay: 300ms; }
+.delay-\[350ms\] { animation-delay: 350ms; }
 </style>
