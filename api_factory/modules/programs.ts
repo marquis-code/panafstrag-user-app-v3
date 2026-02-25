@@ -4,6 +4,12 @@ export const programs_api = {
   getPrograms: () => {
     return GATEWAY_ENDPOINT.get('/program');
   },
+  getUpcomingPrograms: () => {
+    return GATEWAY_ENDPOINT.get('/program/upcoming');
+  },
+  getPastPrograms: () => {
+    return GATEWAY_ENDPOINT.get('/program/past');
+  },
   getProgram: (id: string) => {
     return GATEWAY_ENDPOINT.get(`/program/${id}`);
   },
