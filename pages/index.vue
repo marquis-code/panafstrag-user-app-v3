@@ -47,6 +47,7 @@ useHead({
 <template>
   <div class="space-y-16 md:space-y-32 pb-32 bg-white">
     <HeroSection 
+      :establishedText="homeContent?.heroEstablishedText"
       :carousels="homeContent?.carousels || [
         {
           title: 'Strategic Research.',

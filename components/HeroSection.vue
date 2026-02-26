@@ -22,9 +22,11 @@
 
           <div class="container mx-auto px-6 relative z-10 h-full flex items-center">
             <div class="max-w-4xl mx-auto text-center">
-              <div class="inline-flex items-center gap-2 px-4 py-2 mb-10 border border-white/10 bg-white/5 backdrop-blur-md rounded-full animate-fade-in-up">
+              <div v-if="establishedText || $slots.established" class="inline-flex items-center gap-2 px-4 py-2 mb-10 border border-white/10 bg-white/5 backdrop-blur-md rounded-full animate-fade-in-up">
                 <span class="w-1.5 h-1.5 rounded-full bg-[#2E7D32] animate-pulse"></span>
-                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300">ESTABLISHED 1992</span>
+                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300">
+                  <slot name="established">{{ establishedText || 'ESTABLISHED 1992' }}</slot>
+                </span>
               </div>
 
               <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black mb-6 md:mb-10 leading-[0.85] tracking-tighter text-white animate-fade-in-up delay-100 italic uppercase">
@@ -69,7 +71,8 @@
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 
 const props = defineProps<{
-  carousels: any[]
+  carousels: any[],
+  establishedText?: string
 }>()
 
 const currentIndex = ref(0)
