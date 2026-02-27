@@ -100,12 +100,12 @@ useHead({
             <img 
               v-if="bannerProgram.bannerImages?.length" 
               :src="bannerProgram.bannerImages[0]" 
-              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+              class="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
             />
             <img 
               v-else-if="bannerProgram.imageUrl" 
               :src="bannerProgram.imageUrl" 
-              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+              class="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
             />
             <div v-else class="w-full h-full bg-gradient-to-br from-gray-900 via-[#2E7D32]/20 to-black"></div>
             

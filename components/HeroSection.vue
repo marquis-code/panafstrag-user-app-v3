@@ -11,7 +11,7 @@
       fetchpriority="high"
       loading="eager"
       decoding="sync"
-      class="absolute inset-0 w-full h-full object-cover opacity-60 scale-105 z-0 hero-instant-img"
+      class="absolute inset-0 w-full h-full object-contain opacity-60 scale-105 z-0 hero-instant-img"
     />
     <!-- Gradient overlays that sit on top of the instant image -->
     <div class="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/40 to-black/90 z-[1]"></div>
@@ -33,7 +33,7 @@
               :fetchpriority="index === 0 ? 'high' : 'low'"
               :loading="index === 0 ? 'eager' : 'lazy'"
               :decoding="index === 0 ? 'sync' : 'async'"
-              class="absolute inset-0 w-full h-full object-cover opacity-60 scale-105 transition-transform duration-[10000ms]"
+              class="absolute inset-0 w-full h-full object-contain opacity-60 scale-105 transition-transform duration-[10000ms]"
               :class="{ 'scale-110': currentIndex === index }"
             />
             <div class="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/40 to-black/90"></div>
@@ -165,8 +165,9 @@ const heroSectionStyle = computed(() => {
   const url = firstSlideImg.value
   return {
     backgroundImage: `url(${url})`,
-    backgroundSize: 'cover',
+    backgroundSize: 'contain',
     backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
     backgroundColor: '#1a1a1a',
   }
 })
