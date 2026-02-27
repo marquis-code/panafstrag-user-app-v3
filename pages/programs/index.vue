@@ -27,15 +27,18 @@ const monthOptions = [
 const filteredPrograms = computed(() => {
   let progs = (allPrograms.value as any[]) || []
   const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 
   // Map dynamic status based on current date
   progs = progs.map(p => {
-    const pDate = p.startDate ? new Date(p.startDate) : (p.date ? new Date(p.date) : null)
-    let calculatedStatus = p.type // fallback to DB type
+    // Prefer p.date as the source of truth for the event date
+    const pDateStr = p.date || p.startDate
+    const pDate = pDateStr ? new Date(pDateStr) : null
+    let calculatedStatus = 'upcoming'
     
     if (pDate) {
-      // If the date is earlier than today, it's past
-      calculatedStatus = pDate < now ? 'past' : 'upcoming'
+      const compareDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate())
+      calculatedStatus = compareDate < today ? 'past' : 'upcoming'
     }
     
     return { ...p, calculatedStatus }
@@ -44,14 +47,14 @@ const filteredPrograms = computed(() => {
   // Filter logic
   if (selectedYear.value !== 'all') {
     progs = progs.filter(p => {
-      const pYear = p.year || (p.date ? new Date(p.date).getFullYear() : (p.startDate ? new Date(p.startDate).getFullYear() : null))
+      const pYear = p.date ? new Date(p.date).getFullYear() : (p.startDate ? new Date(p.startDate).getFullYear() : (p.year || null))
       return pYear === parseInt(selectedYear.value)
     })
   }
   
   if (selectedMonth.value !== 'all') {
     progs = progs.filter(p => {
-      const pMonth = p.month || (p.date ? (new Date(p.date).getMonth() + 1) : (p.startDate ? (new Date(p.startDate).getMonth() + 1) : null))
+      const pMonth = p.date ? (new Date(p.date).getMonth() + 1) : (p.startDate ? (new Date(p.startDate).getMonth() + 1) : (p.month || null))
       return pMonth === parseInt(selectedMonth.value)
     })
   }
@@ -64,7 +67,7 @@ const groupedProgramsByYear = computed(() => {
   const groups: Record<number, any[]> = {}
   
   for (const prog of progs) {
-    const year = prog.year || (prog.date ? new Date(prog.date).getFullYear() : (prog.startDate ? new Date(prog.startDate).getFullYear() : 0))
+    const year = prog.date ? new Date(prog.date).getFullYear() : (prog.startDate ? new Date(prog.startDate).getFullYear() : (prog.year || 0))
     if (!groups[year]) groups[year] = []
     groups[year].push(prog)
   }
@@ -180,7 +183,7 @@ useHead({
               <div class="p-8 space-y-5">
                 <div class="flex items-center gap-2">
                   <div class="w-1.5 h-1.5 rounded-full bg-[#2E7D32]"></div>
-                  <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ program.startDate || formatDate(program.date) }}</p>
+                  <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ formatDate(program.date) || program.startDate }}</p>
                 </div>
                 
                 <h3 class="text-xl font-bold text-gray-900 leading-snug group-hover:text-[#2E7D32] transition-colors line-clamp-2">

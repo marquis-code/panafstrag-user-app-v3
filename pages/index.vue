@@ -13,13 +13,44 @@ const { activeBanner } = useActiveBanner()
 
 const bannerProgram = computed(() => activeBanner.value?.programId || null)
 
+const bannerProgramStatus = computed(() => {
+  if (!bannerProgram.value) return ''
+  const p = bannerProgram.value as any
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const pDateStr = p.date || p.startDate
+  const pDate = pDateStr ? new Date(pDateStr) : null
+  if (pDate) {
+    const compareDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate())
+    return compareDate < today ? 'past' : 'upcoming'
+  }
+  return p.type || 'upcoming'
+})
+
 onMounted(() => {
   fetchObjectives()
   fetchResponsibilities()
 })
 
 // Cast to any[] to avoid 'never' errors if the ref is not properly typed in the composable
-const programs = computed(() => (allPrograms.value as any[])?.slice(0, 3) || [])
+const programs = computed(() => {
+  const progs = (allPrograms.value as any[]) || []
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+
+  return progs.map(p => {
+    const pDateStr = p.date || p.startDate
+    const pDate = pDateStr ? new Date(pDateStr) : null
+    let calculatedStatus = p.type || 'upcoming'
+    
+    if (pDate) {
+      const compareDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate())
+      calculatedStatus = compareDate < today ? 'past' : 'upcoming'
+    }
+    
+    return { ...p, calculatedStatus }
+  }).slice(0, 3)
+})
 
 const features = [
   {
@@ -91,8 +122,8 @@ useHead({
                   <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                   Active Selection
                 </div>
-                <span v-if="bannerProgram.type" class="px-3 py-1 border border-white/10 text-gray-400 text-[9px] font-black uppercase tracking-[0.2em] rounded-full">
-                  {{ bannerProgram.type }}
+                <span v-if="bannerProgramStatus" class="px-3 py-1 border border-white/10 text-gray-400 text-[9px] font-black uppercase tracking-[0.2em] rounded-full">
+                  {{ bannerProgramStatus }}
                 </span>
               </div>
 
@@ -202,38 +233,70 @@ useHead({
 
     <!-- Recent Programmes Section -->
     <section class="container mx-auto px-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 md:mb-16 border-b border-gray-100 pb-6 md:pb-8 gap-4">
-        <div>
-          <span v-if="homeContent?.programsSubTitle" class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block" v-html="homeContent.programsSubTitle"></span>
-          <h2 class="text-3xl md:text-4xl font-black tracking-tighter uppercase italic" v-html="homeContent?.programsTitle || 'Recent <span class=\'not-italic text-gray-400\'>Programmes</span>'"></h2>
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 border-b border-gray-100 pb-10 gap-6">
+        <div class="space-y-4">
+          <span v-if="homeContent?.programsSubTitle" class="text-[10px] font-black uppercase tracking-[0.4em] text-[#2E7D32] block" v-html="homeContent.programsSubTitle"></span>
+          <h2 class="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-[0.9]" v-html="homeContent?.programsTitle || 'Recent <br /> <span class=\'not-italic text-gray-400\'>Programmes.</span>'"></h2>
         </div>
-        <NuxtLink to="/programs" class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] hover:text-[#2E7D32] transition-colors self-start md:self-auto">View All Programmes —></NuxtLink>
+        <NuxtLink to="/programs" class="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] hover:text-[#2E7D32] transition-colors pb-1 border-b-2 border-transparent hover:border-[#2E7D32]">
+          VIEW ALL PROGRAMMES
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </NuxtLink>
       </div>
 
-      <div v-if="pending" class="grid md:grid-cols-3 gap-8 md:gap-12">
-        <div v-for="i in 3" :key="i" class="h-[400px] md:h-[500px] bg-gray-50 rounded-2xl animate-pulse"></div>
+      <div v-if="pending" class="grid md:grid-cols-3 gap-10">
+        <div v-for="i in 3" :key="i" class="h-[500px] bg-gray-50 rounded-[2rem] animate-pulse"></div>
       </div>
 
-      <div v-else class="grid md:grid-cols-3 gap-8 md:gap-12">
+      <div v-else class="grid md:grid-cols-3 gap-10 lg:gap-14">
         <div v-for="(program, i) in (programs as any[])" :key="program._id"
           class="group relative animate-fade-in-up"
           :class="`delay-${(i + 1) * 100}`">
-          <div class="aspect-[4/5] bg-gray-100 rounded-2xl overflow-hidden mb-6 md:mb-8 shadow-sm">
-            <img v-if="program.imageUrl" :src="program.imageUrl" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-            <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
+          
+          <div class="relative aspect-[4/5] bg-gray-50 rounded-[2rem] overflow-hidden mb-8 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-700">
+            <!-- Image Logic: bannerImages[0] then imageUrl then placeholder -->
+            <img v-if="program.bannerImages?.length" :src="program.bannerImages[0]" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
+            <img v-else-if="program.imageUrl" :src="program.imageUrl" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
+            <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-100 transition-all duration-700" />
+            
+            <!-- Status Badge Overlay -->
+            <div class="absolute top-6 left-6 z-10">
+              <span class="px-4 py-1.5 backdrop-blur-md bg-white/90 text-black text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg border border-white/20">
+                <span class="inline-block w-1.5 h-1.5 rounded-full mr-2" :class="program.calculatedStatus === 'upcoming' ? 'bg-[#2E7D32] animate-pulse' : 'bg-gray-400'"></span>
+                {{ program.calculatedStatus }}
+              </span>
+            </div>
+
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
           </div>
-          <div class="space-y-3 md:space-y-4">
-            <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-[#2E7D32]">{{ program.type }}</span>
-            <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ program.title }}</h4>
-            <div class="pt-2 md:pt-4 flex items-center gap-4">
-              <NuxtLink :to="`/programs`" class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] border-b-2 border-black pb-1 hover:border-[#2E7D32] transition-all">Read Details</NuxtLink>
+
+          <div class="space-y-5 px-2">
+            <div class="flex items-center gap-3">
+              <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded">{{ program.type }}</span>
+              <span class="text-[9px] font-black uppercase tracking-[0.1em] text-gray-400">{{ program.startDate || program.date ? new Date(program.date || program.startDate).getFullYear() : '' }}</span>
+            </div>
+            
+            <h4 class="text-2xl lg:text-3xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-[1.1] italic">
+              {{ program.title }}
+            </h4>
+            
+            <div class="pt-4">
+              <NuxtLink :to="`/programs/${program._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] border-b-2 border-black pb-1 hover:border-[#2E7D32] hover:text-[#2E7D32] transition-all">
+                READ DETAILS
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </NuxtLink>
             </div>
           </div>
         </div>
 
         <!-- Empty State -->
-        <div v-if="!programs?.length" class="col-span-full py-24 md:py-32 text-center bg-gray-50 rounded-3xl border-2 border-dashed border-gray-100">
-          <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-xs">No recent programmes found.</p>
+        <div v-if="!programs?.length" class="col-span-full py-24 md:py-32 text-center bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-100">
+          <p class="text-gray-400 font-black uppercase tracking-[0.3em] text-[10px]">No recent Intelligence reports found.</p>
         </div>
       </div>
     </section>

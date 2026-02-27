@@ -67,13 +67,13 @@ const filteredArchives = computed(() => {
   }
   if (selectedYear.value !== 'all') {
     items = items.filter(p => {
-      const pYear = p.year || new Date(p.date).getFullYear()
+      const pYear = p.date ? new Date(p.date).getFullYear() : (p.startDate && !isNaN(new Date(p.startDate).getTime()) ? new Date(p.startDate).getFullYear() : (p.year || null))
       return pYear === parseInt(selectedYear.value)
     })
   }
   if (selectedMonth.value !== 'all') {
     items = items.filter(p => {
-      const pMonth = p.month || (new Date(p.date).getMonth() + 1)
+      const pMonth = p.date ? (new Date(p.date).getMonth() + 1) : (p.startDate && !isNaN(new Date(p.startDate).getTime()) ? (new Date(p.startDate).getMonth() + 1) : (p.month || null))
       return pMonth === parseInt(selectedMonth.value)
     })
   }
@@ -85,7 +85,7 @@ const groupedArchivesByYear = computed(() => {
   const groups: Record<number, any[]> = {}
   
   for (const item of items) {
-    const year = item.year || new Date(item.date).getFullYear()
+    const year = item.date ? new Date(item.date).getFullYear() : (item.startDate && !isNaN(new Date(item.startDate).getTime()) ? new Date(item.startDate).getFullYear() : (item.year || 0))
     if (!groups[year]) groups[year] = []
     groups[year].push(item)
   }
@@ -182,7 +182,7 @@ useHead({
                 
                 <div class="space-y-3 md:space-y-4">
                   <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
-                    {{ item.startDate ? new Date(item.startDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+                    {{ item.date ? new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : item.startDate }}
                   </span>
                   <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ item.title }}</h4>
                   <div class="pt-2 md:pt-4">
