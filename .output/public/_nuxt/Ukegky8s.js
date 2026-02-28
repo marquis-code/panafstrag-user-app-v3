@@ -1,0 +1,1 @@
+import{G as r}from"./DcGoPhyd.js";const b={getMembers:()=>r.get("/board"),getMember:e=>r.get(`/board/${e}`),createMember:e=>r.post("/board",e),updateMember:(e,t)=>r.patch(`/board/${e}`,t),deleteMember:e=>r.delete(`/board/${e}`)};export{b};
