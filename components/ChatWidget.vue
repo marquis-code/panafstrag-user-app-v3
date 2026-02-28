@@ -5,20 +5,20 @@
   >
     <!-- Chat Window -->
     <Transition
-      enter-active-class="transition duration-300 ease-out"
-      enter-from-class="opacity-0 translate-y-8 scale-95"
+      enter-active-class="transition duration-500 cubic-bezier(0.34, 1.56, 0.64, 1)"
+      enter-from-class="opacity-0 translate-y-12 scale-90"
       enter-to-class="opacity-100 translate-y-0 scale-100"
-      leave-active-class="transition duration-200 ease-in"
+      leave-active-class="transition duration-300 ease-in"
       leave-from-class="opacity-100 translate-y-0 scale-100"
-      leave-to-class="opacity-0 translate-y-8 scale-95"
+      leave-to-class="opacity-0 translate-y-12 scale-90"
     >
       <div
         v-if="isOpen"
         :class="[
-          'bg-white flex flex-col overflow-hidden shadow-2xl border border-black/5',
+          'bg-white flex flex-col overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-black/5 transition-all duration-500',
           isFullScreen
             ? 'fixed inset-0 w-full h-full rounded-none z-[200]'
-            : 'fixed inset-0 w-full h-full z-[200] rounded-none sm:relative sm:inset-auto sm:w-[24rem] sm:h-[34rem] sm:rounded-3xl sm:mb-4 sm:z-auto'
+            : 'fixed bottom-4 right-4 left-4 top-4 sm:relative sm:inset-auto sm:w-[24rem] sm:h-[36rem] rounded-3xl sm:mb-6 sm:z-auto'
         ]"
       >
         <!-- ========== VIEW 1: Welcome / Call or Chat ========== -->
@@ -159,6 +159,33 @@
       </div>
     </Transition>
 
+    <!-- Automated Message Tooltip -->
+    <Transition
+      enter-active-class="transition duration-500 cubic-bezier(0.34, 1.56, 0.64, 1)"
+      enter-from-class="opacity-0 translate-y-4 scale-75"
+      enter-to-class="opacity-100 translate-y-0 scale-100"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="opacity-100 translate-y-0 scale-100"
+      leave-to-class="opacity-0 translate-y-4 scale-75"
+    >
+      <div 
+        v-if="showTooltip && !isOpen && !isFullScreen" 
+        class="mb-4 mr-2 bg-white px-6 py-4 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.15)] border border-gray-100 max-w-[280px] relative animate-float pointer-events-auto cursor-pointer group"
+        @click="openFromTooltip"
+      >
+        <div class="absolute -bottom-2 right-6 w-4 h-4 bg-white rotate-45 border-r border-b border-gray-100"></div>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+          <span class="text-[10px] font-black uppercase tracking-widest text-[#075e54]">Panafstrag Support</span>
+        </div>
+        <p class="text-xs text-gray-700 font-medium leading-relaxed italic line-clamp-2">"{{ tooltipMessage }}"</p>
+        <div class="mt-2 flex items-center gap-1 text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-[#075e54] transition-colors">
+          Click to reply
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </div>
+      </div>
+    </Transition>
+
     <!-- Trigger Button (Draggable) — hidden when fullscreen -->
     <button
       v-if="!isFullScreen"
@@ -197,6 +224,14 @@ const typingTimeout = ref<any>(null)
 const botTyping = ref(false)
 const botMessages = ref<any[]>([])
 const hasAutoGreeted = ref(false)
+const showTooltip = ref(false)
+const tooltipMessage = ref('')
+const tooltipTimeout = ref<any>(null)
+
+const openFromTooltip = () => {
+  showTooltip.value = false
+  isOpen.value = true
+}
 
 // ======= Dynamic Bot Config & Tracking =======
 const botConfigs = ref<any[]>([])
@@ -248,6 +283,16 @@ const formatTime = (date: string) => new Date(date).toLocaleTimeString([], { hou
 
 // ======= Bot Logic =======
 const addBotMessage = (content: string, quickReplies: string[] = [], delay = 1200) => {
+  // If closed, show as tooltip
+  if (!isOpen.value && !isFullScreen.value) {
+    tooltipMessage.value = content
+    showTooltip.value = true
+    if (tooltipTimeout.value) clearTimeout(tooltipTimeout.value)
+    tooltipTimeout.value = setTimeout(() => {
+      // Keep it visible unless another one comes or user closes
+    }, 10000)
+  }
+
   botTyping.value = true
   scrollToBottom()
   setTimeout(() => {
@@ -330,8 +375,7 @@ onMounted(() => {
         if (!isOpen.value && !hasAutoGreeted.value) {
           hasAutoGreeted.value = true
           sessionStorage.setItem('chat_auto_greeted', 'true')
-          isOpen.value = true
-          currentView.value = 'chat'
+          // Instead of opening full chat, add bot message which triggers tooltip
           addBotMessage(welcomeCfg.message, welcomeCfg.quickReplies, 800)
         }
       }, welcomeCfg.delayMs || 5000)
@@ -354,8 +398,6 @@ watch(() => route.path, (newPath, oldPath) => {
           sessionStorage.setItem(triggerKey, 'true')
           setTimeout(() => {
             if (!isOpen.value) {
-              isOpen.value = true
-              currentView.value = 'chat'
               addBotMessage(matchedGreet.message, matchedGreet.quickReplies, 1000)
             }
           }, matchedGreet.delayMs || 2000)
@@ -478,4 +520,14 @@ watch(displayMessages, () => { scrollToBottom() }, { deep: true })
 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
 </style>

@@ -81,7 +81,7 @@ useHead({
       :establishedText="homeContent?.heroEstablishedText"
       :carousels="homeContent?.carousels || [
         {
-          title: 'Strategic Research.',
+          title: 'Strategic Research',
           description: 'Providing deep strategic insights and policy recommendations to foster sustainable development and security across the African continent.',
           imgUrl: ''
         }

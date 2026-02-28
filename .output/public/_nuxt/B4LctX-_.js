@@ -1,1 +1,0 @@
-import{G as r}from"./C66bnJVq.js";const b={getMembers:()=>r.get("/board"),getMember:e=>r.get(`/board/${e}`),createMember:e=>r.post("/board",e),updateMember:(e,t)=>r.patch(`/board/${e}`,t),deleteMember:e=>r.delete(`/board/${e}`)};export{b};
