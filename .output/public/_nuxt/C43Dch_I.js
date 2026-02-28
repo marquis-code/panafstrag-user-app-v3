@@ -1,1 +1,0 @@
-import{G as t}from"./DcGoPhyd.js";const a={getPrograms:()=>t.get("/program"),getUpcomingPrograms:()=>t.get("/program/upcoming"),getPastPrograms:()=>t.get("/program/past"),getProgram:r=>t.get(`/program/${r}`),createProgram:r=>t.post("/program",r),updateProgram:(r,e)=>t.patch(`/program/${r}`,e),deleteProgram:r=>t.delete(`/program/${r}`)};export{a as p};
