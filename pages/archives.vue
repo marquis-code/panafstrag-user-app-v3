@@ -169,8 +169,8 @@ useHead({
             class="group relative animate-fade-in-up"
             :class="`delay-${(i % 3 + 1) * 100}`">
 
-            <!-- Programme type card (past programmes) -->
-            <template v-if="item._source === 'program'">
+            <!-- Programme type card (past programmes or archived programmes) -->
+            <template v-if="item._source === 'program' || item.type === 'programme'">
               <NuxtLink :to="`/programs/${item._id}`" class="block h-full">
                 <div class="aspect-[4/5] bg-gray-100 rounded-2xl overflow-hidden mb-6 md:mb-8 shadow-sm relative">
                   <img v-if="item.bannerImages?.length" :src="item.bannerImages[0]" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
@@ -182,7 +182,7 @@ useHead({
                 
                 <div class="space-y-3 md:space-y-4">
                   <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
-                    {{ item.date ? new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : item.startDate }}
+                    {{ item.date ? new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : (item.startDate || '') }}
                   </span>
                   <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ item.title }}</h4>
                   <div class="pt-2 md:pt-4">
