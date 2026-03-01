@@ -15,7 +15,7 @@
           <div class="flex items-center gap-2">
             <span class="w-1.5 h-1.5 rounded-full bg-black animate-pulse"></span>
             <span class="text-[9px] font-black uppercase tracking-[0.4em] text-black/40">
-              {{ homeContent?.websiteHeaderText || 'Est. 1992 — Panafricana Stratetegic & Policy Research Group' }}
+              {{ homeContent?.websiteHeaderText || 'Est. 1992 — Panafricana Strategic & Policy Research Group' }}
             </span>
           </div>
           <span class="text-[9px] font-black uppercase tracking-[0.3em] text-black/30 hidden md:block">

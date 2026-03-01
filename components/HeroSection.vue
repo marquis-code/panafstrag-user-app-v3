@@ -190,7 +190,7 @@ const startTimer = () => {
   if (props.carousels.length <= 1) return
   timer = setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % props.carousels.length
-  }, 6000)
+  }, 10000)
 }
 
 // ────────── Lifecycle ──────────
