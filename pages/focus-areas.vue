@@ -26,7 +26,7 @@ useHead({
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.focusAreasPageTitle || 'Strategic <span class=\'not-italic text-gray-400\'>Focus Areas.</span>'"></h1>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.focusAreasPageTitle || 'Strategic <span class=\'not-italic text-gray-400\'>Focus Areas</span>'"></h1>
       <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.focusAreasPageDescription || 'PANAFSTRAG focuses on multi-disciplinary research and strategic evaluations to address the complex challenges of stability and development in Africa.'"></p>
     </div>
 

@@ -6,7 +6,7 @@ import { programs_api } from '@/api_factory/modules/programs'
 const { archives: allArchives, loading: pending } = useFetchArchives()
 const { homeContent } = useHomeContent()
 
-// Fetch past programs to merge into archives
+// Fetch past programmes to merge into archives
 const pastPrograms = ref<any[]>([])
 const pastLoading = ref(false)
 
@@ -51,7 +51,7 @@ const years = computed(() => {
   return y
 })
 
-// Merge archives and past programs
+// Merge archives and past programmes
 const mergedItems = computed(() => {
   const archives = (allArchives.value as any[]) || []
   const programs = pastPrograms.value || []
@@ -67,13 +67,13 @@ const filteredArchives = computed(() => {
   }
   if (selectedYear.value !== 'all') {
     items = items.filter(p => {
-      const pYear = p.year || new Date(p.date).getFullYear()
+      const pYear = p.date ? new Date(p.date).getFullYear() : (p.startDate && !isNaN(new Date(p.startDate).getTime()) ? new Date(p.startDate).getFullYear() : (p.year || null))
       return pYear === parseInt(selectedYear.value)
     })
   }
   if (selectedMonth.value !== 'all') {
     items = items.filter(p => {
-      const pMonth = p.month || (new Date(p.date).getMonth() + 1)
+      const pMonth = p.date ? (new Date(p.date).getMonth() + 1) : (p.startDate && !isNaN(new Date(p.startDate).getTime()) ? (new Date(p.startDate).getMonth() + 1) : (p.month || null))
       return pMonth === parseInt(selectedMonth.value)
     })
   }
@@ -85,7 +85,7 @@ const groupedArchivesByYear = computed(() => {
   const groups: Record<number, any[]> = {}
   
   for (const item of items) {
-    const year = item.year || new Date(item.date).getFullYear()
+    const year = item.date ? new Date(item.date).getFullYear() : (item.startDate && !isNaN(new Date(item.startDate).getTime()) ? new Date(item.startDate).getFullYear() : (item.year || 0))
     if (!groups[year]) groups[year] = []
     groups[year].push(item)
   }
@@ -109,8 +109,8 @@ useHead({
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.archivesPageTitle || 'Institutional <span class=\'not-italic text-gray-400\'>Archives.</span>'"></h1>
-      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.archivesPageDescription || 'A comprehensive repository of past programs, strategic evaluations, policy briefs, and historical documents from PANAFSTRAG operations.'"></p>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.archivesPageTitle || 'Institutional <span class=\'not-italic text-gray-400\'>Archives</span>'"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.archivesPageDescription || 'A comprehensive repository of past programmes, strategic evaluations, policy briefs, and historical documents from PANAFSTRAG operations.'"></p>
     </div>
 
     <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-8 md:mb-16 animate-fade-in-up delay-100 relative z-20">
@@ -122,7 +122,7 @@ useHead({
           class="px-4 md:px-8 py-2 md:py-2.5 rounded-lg text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap"
           :class="filter === f ? 'bg-black text-white' : 'text-gray-400 hover:text-black'"
         >
-          {{ f === 'program' ? 'PAST PROGRAMS' : f }}
+          {{ f === 'program' ? 'PAST PROGRAMMES' : f }}
         </button>
       </div>
 
@@ -164,52 +164,72 @@ useHead({
           </h2>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14">
           <div v-for="(item, i) in group.items" :key="item._id"
-            class="group glass-card animate-fade-in-up !p-6 md:!p-8"
-            :class="`delay-${(i % 4 + 1) * 100}`">
+            class="group relative animate-fade-in-up"
+            :class="`delay-${(i % 3 + 1) * 100}`">
 
-            <!-- Program type card (past programs) -->
-            <template v-if="item._source === 'program'">
-              <div class="aspect-video bg-gray-100 rounded-lg overflow-hidden mb-6 relative">
-                <img v-if="item.bannerImages?.length" :src="item.bannerImages[0]" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-                <img v-else-if="item.imageUrl" :src="item.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-                <div v-else class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+            <!-- Programme type card (past programmes or archived programmes) -->
+            <template v-if="item._source === 'program' || item.type === 'programme'">
+              <NuxtLink :to="`/programs/${item._id}`" class="block h-full">
+                <div class="aspect-[4/5] bg-gray-100 rounded-2xl overflow-hidden mb-6 md:mb-8 shadow-sm relative">
+                  <img v-if="item.bannerImages?.length" :src="item.bannerImages[0]" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+                  <img v-else-if="item.imageUrl" :src="item.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+                  <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
+                  
+                  <span class="absolute top-4 right-4 px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">PROGRAMME</span>
                 </div>
-                <span class="absolute top-2 right-2 px-2 py-0.5 bg-[#2E7D32] text-white text-[8px] font-black uppercase tracking-widest">PROGRAM</span>
-              </div>
-              <h4 class="text-lg md:text-xl font-black mb-3 tracking-tighter uppercase line-clamp-2 group-hover:text-[#2E7D32] transition-colors leading-tight">{{ item.title }}</h4>
-              <p class="text-gray-400 text-[9px] font-black uppercase tracking-widest mb-4">
-                {{ item.startDate || new Date(item.date).toLocaleDateString('en-US', { dateStyle: 'long' }) }}
-              </p>
-              <p v-if="item.description" class="text-gray-500 text-xs font-medium leading-relaxed line-clamp-3 mb-6" v-html="item.description"></p>
-              <NuxtLink :to="`/programs/${item._id}`" class="w-full py-3 bg-gray-50 group-hover:bg-black group-hover:text-white rounded-lg text-center text-[9px] font-black uppercase tracking-widest transition-all block">
-                VIEW DETAILS
+                
+                <div class="space-y-3 md:space-y-4">
+                  <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                    {{ item.date ? new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : (item.startDate || '') }}
+                  </span>
+                  <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ item.title }}</h4>
+                  <div class="pt-2 md:pt-4">
+                    <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] border-b-2 border-black pb-1 group-hover:border-[#2E7D32] group-hover:text-[#2E7D32] transition-all inline-flex items-center gap-2">
+                      VIEW DETAILS 
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                    </span>
+                  </div>
+                </div>
               </NuxtLink>
             </template>
 
             <!-- Archive type card (speeches, reports, etc.) -->
             <template v-else>
-              <div class="w-12 h-12 md:w-14 md:h-14 rounded-lg bg-black flex items-center justify-center mb-6 md:mb-8 text-white transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3">
-                <svg v-if="item.type === 'speech'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
-                <svg v-else-if="item.type === 'report' || item.type === 'publication'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h4 class="text-lg md:text-xl font-black mb-3 md:mb-4 tracking-tighter uppercase line-clamp-2 group-hover:text-gray-500 transition-colors leading-tight">{{ item.title }}</h4>
-              <p class="text-gray-400 text-[9px] md:text-[10px] font-black uppercase tracking-widest mb-6 md:mb-10">
-                {{ item.type }} • {{ item.month ? months[item.month - 1] : '' }} {{ item.year || new Date(item.date).getFullYear() }}
-              </p>
-              <a :href="item.fileUrl" target="_blank" class="w-full py-3 md:py-4 bg-gray-50 group-hover:bg-black group-hover:text-white rounded-lg text-center text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all block">
-                DOWNLOAD
+              <a :href="item.fileUrl" target="_blank" class="block h-full">
+                <div class="h-full bg-gray-50 border border-gray-100 rounded-[1.5rem] p-8 md:p-10 flex flex-col hover:border-[#2E7D32]/30 hover:shadow-xl hover:-translate-y-2 transition-all duration-500 group/archive relative overflow-hidden">
+                  <!-- Decorative background element -->
+                  <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#2E7D32]/5 rounded-full blur-3xl group-hover/archive:bg-[#2E7D32]/10 transition-colors duration-500"></div>
+
+                  <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white border border-gray-100 group-hover/archive:border-[#2E7D32]/30 flex items-center justify-center mb-8 md:mb-10 text-black group-hover/archive:text-[#2E7D32] transition-all duration-500 shadow-sm group-hover/archive:rotate-3">
+                    <svg v-if="item.type === 'speech'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-7 md:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                    <svg v-else-if="item.type === 'report' || item.type === 'publication'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-7 md:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-7 md:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  
+                  <div class="flex-grow relative z-10">
+                    <p class="text-[#2E7D32] text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mb-3 md:mb-4">
+                      {{ item.type }} • {{ item.month ? months[item.month - 1] : '' }} {{ item.year || new Date(item.date).getFullYear() }}
+                    </p>
+                    <h4 class="text-xl md:text-2xl font-black mb-4 tracking-tighter uppercase line-clamp-3 group-hover/archive:text-[#2E7D32] transition-colors leading-tight italic">{{ item.title }}</h4>
+                  </div>
+                  
+                  <div class="mt-8 pt-6 border-t border-gray-100 group-hover/archive:border-[#2E7D32]/20 relative z-10">
+                    <span class="inline-flex items-center gap-2 text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] border-b-2 border-transparent pb-1 group-hover/archive:border-[#2E7D32] text-gray-500 group-hover/archive:text-[#2E7D32] transition-all">
+                      DOWNLOAD RESOURCE
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 group-hover/archive:-translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
               </a>
             </template>
           </div>

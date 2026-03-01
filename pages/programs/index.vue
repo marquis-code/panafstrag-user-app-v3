@@ -26,20 +26,39 @@ const monthOptions = [
 
 const filteredPrograms = computed(() => {
   let progs = (allPrograms.value as any[]) || []
-  // Only show upcoming programs
-  progs = progs.filter(p => p.type === 'upcoming')
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+
+  // Map dynamic status based on current date
+  progs = progs.map(p => {
+    // Prefer p.date as the source of truth for the event date
+    const pDateStr = p.date || p.startDate
+    const pDate = pDateStr ? new Date(pDateStr) : null
+    let calculatedStatus = 'upcoming'
+    
+    if (pDate) {
+      const compareDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate())
+      calculatedStatus = compareDate < today ? 'past' : 'upcoming'
+    }
+    
+    return { ...p, calculatedStatus }
+  })
+
+  // Filter logic
   if (selectedYear.value !== 'all') {
     progs = progs.filter(p => {
-      const pYear = p.year || new Date(p.date).getFullYear()
+      const pYear = p.date ? new Date(p.date).getFullYear() : (p.startDate ? new Date(p.startDate).getFullYear() : (p.year || null))
       return pYear === parseInt(selectedYear.value)
     })
   }
+  
   if (selectedMonth.value !== 'all') {
     progs = progs.filter(p => {
-      const pMonth = p.month || (new Date(p.date).getMonth() + 1)
+      const pMonth = p.date ? (new Date(p.date).getMonth() + 1) : (p.startDate ? (new Date(p.startDate).getMonth() + 1) : (p.month || null))
       return pMonth === parseInt(selectedMonth.value)
     })
   }
+
   return progs
 })
 
@@ -48,7 +67,7 @@ const groupedProgramsByYear = computed(() => {
   const groups: Record<number, any[]> = {}
   
   for (const prog of progs) {
-    const year = prog.year || new Date(prog.date).getFullYear()
+    const year = prog.date ? new Date(prog.date).getFullYear() : (prog.startDate ? new Date(prog.startDate).getFullYear() : (prog.year || 0))
     if (!groups[year]) groups[year] = []
     groups[year].push(prog)
   }
@@ -62,118 +81,164 @@ const groupedProgramsByYear = computed(() => {
     }))
 })
 
+const getStatusColor = (status: string) => {
+  switch (status?.toLowerCase()) {
+    case 'upcoming': return 'bg-[#E8F5E9] text-[#2E7D32]'
+    case 'past': return 'bg-gray-100 text-gray-500'
+    default: return 'bg-blue-50 text-blue-600'
+  }
+}
+
+const formatDate = (date: string) => {
+  if (!date) return ''
+  try {
+    return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  } catch {
+    return date
+  }
+}
+
 useHead({
-  title: 'Programs | PANAFSTRAG',
+  title: 'Programmes | PANAFSTRAG',
 })
 </script>
 
 <template>
-  <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
-    <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.programsPageTitle || 'Our <span class=\'not-italic text-gray-400\'>Programs.</span>'"></h1>
-      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.programsPageDescription || 'Explore our latest initiatives, strategic research projects, and policy recommendation programs across the continent.'"></p>
-    </div>
+  <div class="min-h-screen bg-[#F9FBFA] pb-32">
+    <!-- Header Section -->
+    <section class="bg-[#1A3A1C] pt-28 pb-40 overflow-hidden relative">
+      <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-[#2E7D32]/20 rounded-full blur-[100px] pointer-events-none"></div>
+      
+      <div class="container mx-auto px-6 relative z-10">
+        <div class="max-w-3xl mx-auto text-center animate-fade-in">
+          <h1 class="text-4xl lg:text-7xl font-bold mb-8 tracking-tight text-white" v-html="homeContent?.programsPageTitle || 'Strategic <span class=\'text-white/40\'>Programmes</span>'"></h1>
+          <p class="text-white/60 text-lg font-medium leading-relaxed" v-html="homeContent?.programsPageDescription || 'Explore our latest initiatives, strategic research projects, and policy recommendation programmes across the continent.'"></p>
+        </div>
+      </div>
+    </section>
 
-      <!-- Aggressive Filter Toolbar -->
-      <div class="flex flex-col md:flex-row items-center gap-6 animate-fade-in-up delay-100 relative z-20">
-        <!-- New Year-centric Filter -->
-        <div class="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100">
-           <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mr-2">Archive Year:</span>
-           <div class="w-48">
-              <CustomDropdown
-                v-model="selectedYear"
-                :options="[{ label: 'ALL YEARS', value: 'all' }, ...years]"
-                placeholder="SELECT YEAR"
-              />
-           </div>
+    <!-- Content & Filters -->
+    <div class="container mx-auto px-6 -mt-20 relative z-20">
+      <!-- Filter Toolbar -->
+      <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-20 animate-fade-in-up">
+        <div class="flex items-center gap-3 px-6 py-3 bg-white/90 backdrop-blur-xl rounded-[1.5rem] border border-white shadow-xl shadow-black/[0.03]">
+          <span class="text-[10px] font-black text-[#2E7D32] uppercase tracking-[0.2em]">Filter Year:</span>
+          <div class="w-40">
+            <CustomDropdown
+              v-model="selectedYear"
+              :options="[{ label: 'ALL YEARS', value: 'all' }, ...years]"
+              variant="flat"
+            />
+          </div>
         </div>
 
-        <!-- Temporal Search -->
-        <div class="flex items-center gap-3 w-full md:w-auto">
-          <Transition
-            enter-active-class="transition duration-300 ease-out"
-            enter-from-class="opacity-0 -translate-x-4"
-            enter-to-class="opacity-100 translate-x-0"
-          >
-            <div v-if="selectedYear !== 'all'" class="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100">
-              <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mr-2">Month:</span>
-              <div class="w-48">
-                <CustomDropdown
-                  v-model="selectedMonth"
-                  :options="[{ label: 'ALL MONTHS', value: 'all' }, ...monthOptions]"
-                  placeholder="SELECT MONTH"
-                />
-              </div>
-            </div>
-          </Transition>
+        <div v-if="selectedYear !== 'all'" class="flex items-center gap-3 px-6 py-3 bg-white/90 backdrop-blur-xl rounded-[1.5rem] border border-white shadow-xl shadow-black/[0.03]">
+          <span class="text-[10px] font-black text-[#2E7D32] uppercase tracking-[0.2em]">Month:</span>
+          <div class="w-40">
+            <CustomDropdown
+              v-model="selectedMonth"
+              :options="[{ label: 'ALL MONTHS', value: 'all' }, ...monthOptions]"
+              variant="flat"
+            />
+          </div>
         </div>
       </div>
 
-    <div v-if="pending">
-      <LoadingState />
-    </div>
+      <!-- Programmes Grid -->
+      <div v-if="pending" class="py-20 flex justify-center">
+        <LoadingState />
+      </div>
 
-    <div v-else-if="groupedProgramsByYear?.length" class="space-y-24">
-      <div v-for="group in groupedProgramsByYear" :key="group.year" class="space-y-12">
-        <div class="border-b border-gray-100 pb-4">
-          <h2 class="text-3xl font-black uppercase tracking-tighter italic">
-            Program Year: <span class="not-italic text-gray-400">{{ group.year }}</span>
-          </h2>
-        </div>
+      <div v-else-if="groupedProgramsByYear?.length" class="space-y-32">
+        <div v-for="group in groupedProgramsByYear" :key="group.year" class="space-y-12">
+          <!-- Year Divider -->
+          <div class="flex items-center gap-6">
+            <h2 class="text-4xl md:text-5xl font-bold tracking-tighter text-gray-900">{{ group.year }}</h2>
+            <div class="h-0.5 flex-1 bg-gray-100"></div>
+          </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-          <div v-for="(program, i) in group.programs" :key="program._id"
-            class="group relative animate-fade-in-up"
-            :class="`delay-${(i % 3 + 1) * 100}`">
-            <div class="aspect-video bg-gray-100 rounded-xl overflow-hidden relative mb-8 shadow-sm">
-              <img v-if="program.bannerImages?.length" :src="program.bannerImages[0]" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-              <img v-else-if="program.imageUrl" :src="program.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-              <div v-else class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            <div v-for="(program, i) in group.programs" :key="program._id"
+              class="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-[#2E7D32]/5 hover:-translate-y-2 transition-all duration-500 animate-fade-in-up"
+              :style="{ animationDelay: `${(i % 3) * 100}ms` }">
+              
+              <!-- Image Container -->
+              <div class="aspect-[16/10] overflow-hidden relative">
+                <img v-if="program.bannerImages?.length" :src="program.bannerImages[0]" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                <img v-else-if="program.imageUrl" :src="program.imageUrl" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                 <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
+                <!-- <div v-else class="w-full h-full bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32]/20">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                </div> @/assets/images/program-placeholder.png -->
+
+                <!-- Status Badge -->
+                <div class="absolute top-5 left-5">
+                  <span class="px-4 py-1.5 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase shadow-lg" :class="getStatusColor(program.calculatedStatus)">
+                    {{ program.calculatedStatus }}
+                  </span>
+                </div>
               </div>
 
-              <div class="absolute top-4 right-4 flex gap-2">
-                <span class="px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-widest">
-                  {{ program.type }}
-                </span>
-              </div>
-            </div>
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ program.startDate || new Date(program.date).toLocaleDateString('en-US', { dateStyle: 'long' }) }}</p>
-              </div>
-              <h4 class="text-2xl font-black tracking-tighter uppercase group-hover:text-[#2E7D32] transition-colors leading-tight line-clamp-2 italic">{{ program.title }}</h4>
-              <p v-if="program.theme" class="text-[10px] font-bold text-gray-400 uppercase italic line-clamp-2 leading-relaxed pb-2 border-b border-gray-100">{{ program.theme }}</p>
-              <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3" v-html="program.description"></p>
+              <!-- Content Area -->
+              <div class="p-8 space-y-5">
+                <div class="flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 rounded-full bg-[#2E7D32]"></div>
+                  <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ formatDate(program.date) || program.startDate }}</p>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-900 leading-snug group-hover:text-[#2E7D32] transition-colors line-clamp-2">
+                  {{ program.title }}
+                </h3>
+                
+                <p v-if="program.theme" class="text-xs font-semibold text-gray-400 leading-relaxed italic line-clamp-2 border-l-2 border-gray-100 pl-4 py-1">
+                  "{{ program.theme }}"
+                </p>
 
-              <div class="pt-6 flex flex-wrap gap-4 items-center">
-                <NuxtLink :to="`/programs/${program._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-black pb-1 hover:gap-5 hover:border-[#2E7D32] transition-all">
-                  VIEW FULL DETAILS —>
-                </NuxtLink>
-                <a v-if="program.registerLink" :href="program.registerLink" target="_blank" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-gray-400 pb-1 hover:gap-5 hover:border-gray-200 transition-all opacity-60 hover:opacity-100">
-                  REGISTER NOW
-                </a>
-                <a v-if="program.uploadedVideoUrl && program.uploadedVideoUrl !== 'null'" :href="program.uploadedVideoUrl" target="_blank" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-red-600 pb-1 hover:gap-5 hover:border-red-300 transition-all text-red-600">
-                  WATCH VIDEO
-                </a>
-                <div v-if="program.uploadedDocumentFiles?.length" class="w-full block pt-4">
-                   <a v-for="(doc, idx) in (program.uploadedDocumentFiles as string[])" :key="idx" :href="doc" target="_blank" class="block text-[9px] font-black text-gray-400 hover:text-black transition-colors uppercase tracking-[0.2em] mb-1 italic">Download Resource {{ Number(idx) + 1 }}</a>
+                <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 font-medium" v-html="program.description"></p>
+
+                <div class="pt-6 border-t border-gray-50 flex items-center justify-between">
+                  <NuxtLink :to="`/programs/${program._id}`" class="text-[11px] font-bold text-[#2E7D32] tracking-widest uppercase flex items-center gap-2 group/btn">
+                    Details 
+                    <span class="inline-block transform group-hover/btn:translate-x-1 transition-transform">→</span>
+                  </NuxtLink>
+                  
+                  <div class="flex gap-2">
+                    <a v-if="program.registerLink" :href="program.registerLink" target="_blank" class="w-9 h-9 rounded-xl bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white transition-all shadow-sm" title="Register">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
+                    </a>
+                    <a v-if="program.uploadedVideoUrl && program.uploadedVideoUrl !== 'null'" :href="program.uploadedVideoUrl" target="_blank" class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white transition-all shadow-sm" title="Watch Video">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /></svg>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Empty State -->
-    <div v-else>
-      <EmptyState
-        title="NO PROGRAMS"
-        message="Our strategic event calendar is currently under review. Please check back later for updates."
-      />
+      <!-- Empty State -->
+      <div v-else class="py-32">
+        <EmptyState
+          title="NO PROGRAMMES FOUND"
+          message="We couldn't find any strategic Programmes for the selected criteria. Please try adjusting your filters."
+        />
+      </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in { animation: fade-in 1s ease-out forwards; }
+.animate-fade-in-up { opacity: 0; animation: fade-in-up 0.8s ease-out forwards; }
+</style>

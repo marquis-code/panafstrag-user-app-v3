@@ -13,13 +13,44 @@ const { activeBanner } = useActiveBanner()
 
 const bannerProgram = computed(() => activeBanner.value?.programId || null)
 
+const bannerProgramStatus = computed(() => {
+  if (!bannerProgram.value) return ''
+  const p = bannerProgram.value as any
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const pDateStr = p.date || p.startDate
+  const pDate = pDateStr ? new Date(pDateStr) : null
+  if (pDate) {
+    const compareDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate())
+    return compareDate < today ? 'past' : 'upcoming'
+  }
+  return p.type || 'upcoming'
+})
+
 onMounted(() => {
   fetchObjectives()
   fetchResponsibilities()
 })
 
 // Cast to any[] to avoid 'never' errors if the ref is not properly typed in the composable
-const programs = computed(() => (allPrograms.value as any[])?.slice(0, 3) || [])
+const programs = computed(() => {
+  const progs = (allPrograms.value as any[]) || []
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+
+  return progs.map(p => {
+    const pDateStr = p.date || p.startDate
+    const pDate = pDateStr ? new Date(pDateStr) : null
+    let calculatedStatus = p.type || 'upcoming'
+    
+    if (pDate) {
+      const compareDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate())
+      calculatedStatus = compareDate < today ? 'past' : 'upcoming'
+    }
+    
+    return { ...p, calculatedStatus }
+  }).slice(0, 3)
+})
 
 const features = [
   {
@@ -40,55 +71,95 @@ const features = [
 ]
 
 useHead({
-  title: 'PANAFSTRAG | Pan-African Strategic and Policy Research Group',
+  title: 'PANAFSTRAG | Panafricana Stratetegic & Policy Research Group',
 })
 </script>
 
 <template>
   <div class="space-y-16 md:space-y-32 pb-32 bg-white">
     <HeroSection 
+      :establishedText="homeContent?.heroEstablishedText"
       :carousels="homeContent?.carousels || [
         {
-          title: 'Strategic Research.',
+          title: 'Strategic Research',
           description: 'Providing deep strategic insights and policy recommendations to foster sustainable development and security across the African continent.',
           imgUrl: ''
         }
       ]" 
     />
 
-    <!-- Active Program Banner -->
+    <!-- Active Programme Spotlight -->
     <section v-if="bannerProgram" class="container mx-auto px-6 animate-fade-in-up">
-      <NuxtLink :to="`/programs/${bannerProgram._id}`" class="group block relative overflow-hidden rounded-2xl bg-black">
-        <div class="aspect-[21/9] md:aspect-[3/1] relative">
-          <img 
-            v-if="bannerProgram.bannerImages?.length" 
-            :src="bannerProgram.bannerImages[0]" 
-            :alt="bannerProgram.title"
-            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-90"
-          />
-          <img 
-            v-else-if="bannerProgram.imageUrl" 
-            :src="bannerProgram.imageUrl" 
-            :alt="bannerProgram.title"
-            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-90"
-          />
-          <div v-else class="w-full h-full bg-gradient-to-br from-gray-900 via-[#2E7D32]/20 to-black"></div>
-          
-          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-          
-          <div class="absolute bottom-0 left-0 right-0 p-8 md:p-16">
-            <div class="flex items-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-widest">FEATURED PROGRAM</span>
-              <span v-if="bannerProgram.type" class="px-3 py-1 border border-white/30 text-white text-[9px] font-black uppercase tracking-widest">{{ bannerProgram.type }}</span>
+      <div class="relative overflow-hidden rounded-[1.5rem] bg-[#0A0A0A] border border-white/5 shadow-2xl group">
+        <!-- Background Glow -->
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-[#2E7D32]/10 blur-[100px] -mr-48 -mt-48 rounded-full pointer-events-none"></div>
+        
+        <div class="grid lg:grid-cols-2 items-center">
+          <!-- Visual Context (Left) -->
+          <div class="relative aspect-video lg:aspect-auto lg:h-[450px] overflow-hidden order-2 lg:order-1">
+            <img 
+              v-if="bannerProgram.bannerImages?.length" 
+              :src="bannerProgram.bannerImages[0]" 
+              class="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+            />
+            <img 
+              v-else-if="bannerProgram.imageUrl" 
+              :src="bannerProgram.imageUrl" 
+              class="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+            />
+            <div v-else class="w-full h-full bg-gradient-to-br from-gray-900 via-[#2E7D32]/20 to-black"></div>
+            
+            <!-- Gradient Overlays -->
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-transparent to-transparent hidden lg:block"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent lg:hidden"></div>
+          </div>
+
+          <!-- Information (Right) -->
+          <div class="p-6 md:p-10 lg:p-12 flex flex-col justify-center order-1 lg:order-2 space-y-6 md:space-y-8 relative z-10">
+            <div>
+              <div class="flex flex-wrap items-center gap-3 mb-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg shadow-[#2E7D32]/20">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                  Active Selection
+                </div>
+                <span v-if="bannerProgramStatus" class="px-3 py-1 border border-white/10 text-gray-400 text-[9px] font-black uppercase tracking-[0.2em] rounded-full">
+                  {{ bannerProgramStatus }}
+                </span>
+              </div>
+
+              <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tighter italic leading-[1.1] mb-6 group-hover:text-[#2E7D32] transition-colors duration-500">
+                {{ bannerProgram.title }}
+              </h2>
+
+              <p v-if="bannerProgram.theme" class="text-gray-400 text-base md:text-lg font-medium leading-relaxed max-w-xl">
+                {{ bannerProgram.theme }}
+              </p>
             </div>
-            <h2 class="text-2xl md:text-5xl font-black text-white tracking-tighter uppercase italic leading-tight mb-3 line-clamp-2">{{ bannerProgram.title }}</h2>
-            <p v-if="bannerProgram.theme" class="text-white/60 text-sm md:text-base font-medium uppercase tracking-wider mb-6 line-clamp-1">{{ bannerProgram.theme }}</p>
-            <span class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-white border-b-2 border-[#2E7D32] pb-1 group-hover:gap-5 transition-all">
-              VIEW DETAILS —>
-            </span>
+
+            <div class="grid grid-cols-2 gap-6 py-6 border-y border-white/5">
+              <div v-if="bannerProgram.date" class="space-y-1">
+                <span class="text-[8px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Event Date</span>
+                <p class="text-white text-sm font-bold">{{ new Date(bannerProgram.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</p>
+              </div>
+              <div v-if="bannerProgram.location" class="space-y-1">
+                <span class="text-[8px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Location</span>
+                <p class="text-white text-sm font-bold line-clamp-1">{{ bannerProgram.location }}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+              <NuxtLink :to="`/programs/${bannerProgram._id}`" class="group/btn relative px-8 py-4 bg-white text-black font-black text-[9px] tracking-[0.3em] uppercase rounded-lg overflow-hidden transition-all hover:scale-105 active:scale-95">
+                <span class="relative z-10">ENGAGE DETAILS</span>
+                <div class="absolute inset-0 bg-[#2E7D32] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
+              </NuxtLink>
+              
+              <NuxtLink v-if="bannerProgram.registerLink" :to="bannerProgram.registerLink" target="_blank" class="text-white text-[9px] font-black uppercase tracking-[0.2em] border-b border-[#2E7D32] pb-1 hover:text-[#2E7D32] transition-all">
+                JOIN VIRTUAL ROOM
+              </NuxtLink>
+            </div>
           </div>
         </div>
-      </NuxtLink>
+      </div>
     </section>
 
     <!-- About Us Section -->
@@ -100,7 +171,7 @@ useHead({
         </div>
         
         <div class="max-w-3xl mx-auto">
-          <p class="text-gray-500 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-line" v-html="homeContent.aboutUsDescription || 'Pan-Africana Strategic and Policy Research Group was founded in 1992 to provide an in-depth study and analysis of the challenges of political stability, safety and development in Africa and propose policy options and strategies for these issues while synergising the potentials of its diaspora for executing these policies.'"></p>
+          <p class="text-gray-500 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-line" v-html="homeContent.aboutUsDescription || 'Panafricana Stratetegic & Policy Research Group was founded in 1992 to provide an in-depth study and analysis of the challenges of political stability, safety and development in Africa and propose policy options and strategies for these issues while synergising the potentials of its diaspora for executing these policies.'"></p>
         </div>
       </div>
     </section>
@@ -151,7 +222,7 @@ useHead({
            </div>
            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
               <div v-for="(res, i) in (responsibilities as any[])" :key="i" class="p-8 md:p-12 bg-gray-50 rounded-2xl hover:bg-[#2E7D32] hover:text-white transition-all duration-500 group shadow-sm">
-                <p class="font-bold text-xs md:text-sm leading-relaxed tracking-widest" v-html="res.description"></p>
+                <p class="font-bold text-sm md:text-base leading-loose" v-html="res.description"></p>
               </div>
               <div v-if="!responsibilities?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
                 <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Commitments under review...</p>
@@ -160,40 +231,72 @@ useHead({
         </div>
     </section>
 
-    <!-- Recent Programs Section -->
+    <!-- Recent Programmes Section -->
     <section class="container mx-auto px-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 md:mb-16 border-b border-gray-100 pb-6 md:pb-8 gap-4">
-        <div>
-          <span v-if="homeContent?.programsSubTitle" class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block" v-html="homeContent.programsSubTitle"></span>
-          <h2 class="text-3xl md:text-4xl font-black tracking-tighter uppercase italic" v-html="homeContent?.programsTitle || 'Recent <span class=\'not-italic text-gray-400\'>Programs.</span>'"></h2>
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 border-b border-gray-100 pb-10 gap-6">
+        <div class="space-y-4">
+          <span v-if="homeContent?.programsSubTitle" class="text-[10px] font-black uppercase tracking-[0.4em] text-[#2E7D32] block" v-html="homeContent.programsSubTitle"></span>
+          <h2 class="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-[0.9]" v-html="homeContent?.programsTitle || 'Recent <br /> <span class=\'not-italic text-gray-400\'>Programmes.</span>'"></h2>
         </div>
-        <NuxtLink to="/programs" class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] hover:text-[#2E7D32] transition-colors self-start md:self-auto">View All Programs —></NuxtLink>
+        <NuxtLink to="/programs" class="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] hover:text-[#2E7D32] transition-colors pb-1 border-b-2 border-transparent hover:border-[#2E7D32]">
+          VIEW ALL PROGRAMMES
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </NuxtLink>
       </div>
 
-      <div v-if="pending" class="grid md:grid-cols-3 gap-8 md:gap-12">
-        <div v-for="i in 3" :key="i" class="h-[400px] md:h-[500px] bg-gray-50 rounded-2xl animate-pulse"></div>
+      <div v-if="pending" class="grid md:grid-cols-3 gap-10">
+        <div v-for="i in 3" :key="i" class="h-[500px] bg-gray-50 rounded-[2rem] animate-pulse"></div>
       </div>
 
-      <div v-else class="grid md:grid-cols-3 gap-8 md:gap-12">
+      <div v-else class="grid md:grid-cols-3 gap-10 lg:gap-14">
         <div v-for="(program, i) in (programs as any[])" :key="program._id"
           class="group relative animate-fade-in-up"
           :class="`delay-${(i + 1) * 100}`">
-          <div class="aspect-[4/5] bg-gray-100 rounded-2xl overflow-hidden mb-6 md:mb-8 shadow-sm">
-            <img v-if="program.imageUrl" :src="program.imageUrl" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-            <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
+          
+          <div class="relative aspect-[4/5] bg-gray-50 rounded-[2rem] overflow-hidden mb-8 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-700">
+            <!-- Image Logic: bannerImages[0] then imageUrl then placeholder -->
+            <img v-if="program.bannerImages?.length" :src="program.bannerImages[0]" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
+            <img v-else-if="program.imageUrl" :src="program.imageUrl" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
+            <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-100 transition-all duration-700" />
+            
+            <!-- Status Badge Overlay -->
+            <div class="absolute top-6 left-6 z-10">
+              <span class="px-4 py-1.5 backdrop-blur-md bg-white/90 text-black text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg border border-white/20">
+                <span class="inline-block w-1.5 h-1.5 rounded-full mr-2" :class="program.calculatedStatus === 'upcoming' ? 'bg-[#2E7D32] animate-pulse' : 'bg-gray-400'"></span>
+                {{ program.calculatedStatus }}
+              </span>
+            </div>
+
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
           </div>
-          <div class="space-y-3 md:space-y-4">
-            <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-[#2E7D32]">{{ program.type }}</span>
-            <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ program.title }}</h4>
-            <div class="pt-2 md:pt-4 flex items-center gap-4">
-              <NuxtLink :to="`/programs`" class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] border-b-2 border-black pb-1 hover:border-[#2E7D32] transition-all">Read Details</NuxtLink>
+
+          <div class="space-y-5 px-2">
+            <div class="flex items-center gap-3">
+              <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded">{{ program.type }}</span>
+              <span class="text-[9px] font-black uppercase tracking-[0.1em] text-gray-400">{{ program.startDate || program.date ? new Date(program.date || program.startDate).getFullYear() : '' }}</span>
+            </div>
+            
+            <h4 class="text-2xl lg:text-3xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-[1.1] italic">
+              {{ program.title }}
+            </h4>
+            
+            <div class="pt-4">
+              <NuxtLink :to="`/programs/${program._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] border-b-2 border-black pb-1 hover:border-[#2E7D32] hover:text-[#2E7D32] transition-all">
+                READ DETAILS
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </NuxtLink>
             </div>
           </div>
         </div>
 
         <!-- Empty State -->
-        <div v-if="!programs?.length" class="col-span-full py-24 md:py-32 text-center bg-gray-50 rounded-3xl border-2 border-dashed border-gray-100">
-          <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-xs">No recent programs found.</p>
+        <div v-if="!programs?.length" class="col-span-full py-24 md:py-32 text-center bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-100">
+          <p class="text-gray-400 font-black uppercase tracking-[0.3em] text-[10px]">No recent Intelligence reports found.</p>
         </div>
       </div>
     </section>
