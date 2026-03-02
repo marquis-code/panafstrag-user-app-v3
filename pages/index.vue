@@ -71,7 +71,7 @@ const features = [
 ]
 
 useHead({
-  title: 'PANAFSTRAG | Panafricana Stratetegic & Policy Research Group',
+  title: 'PANAFSTRAG | Panafricana Strategic & Policy Research Group',
 })
 </script>
 
@@ -171,7 +171,7 @@ useHead({
         </div>
         
         <div class="max-w-3xl mx-auto">
-          <p class="text-gray-500 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-line" v-html="homeContent.aboutUsDescription || 'Panafricana Stratetegic & Policy Research Group was founded in 1992 to provide an in-depth study and analysis of the challenges of political stability, safety and development in Africa and propose policy options and strategies for these issues while synergising the potentials of its diaspora for executing these policies.'"></p>
+          <p class="text-gray-500 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-line" v-html="homeContent.aboutUsDescription || 'Panafricana Strategic & Policy Research Group was founded in 1992 to provide an in-depth study and analysis of the challenges of political stability, safety and development in Africa and propose policy options and strategies for these issues while synergising the potentials of its diaspora for executing these policies.'"></p>
         </div>
       </div>
     </section>
