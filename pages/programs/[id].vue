@@ -52,13 +52,9 @@ const getDocExt = (url: string) => {
 const pdfDocuments = computed(() => {
   if (!program.value?.uploadedDocumentFiles?.length) return []
   return (program.value.uploadedDocumentFiles as string[]).filter(
-    (doc: string) => getDocExt(doc) === 'PDF'
+    (doc: string) => getDocExt(doc) === 'PDF' // Keep mapping only PDFs
   )
 })
-
-const getGoogleViewerUrl = (url: string) => {
-  return `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`
-}
 
 const selectedPdfIndex = ref(0)
 </script>
@@ -173,6 +169,68 @@ const selectedPdfIndex = ref(0)
             </div>
           </div>
 
+          <!-- PDF Document Preview (MOVED UP FOR DESKTOP PROMINENCE) -->
+          <div v-if="pdfDocuments.length" id="document-preview" class="space-y-6 animate-fade-in-up delay-[200ms]">
+            <div class="flex items-center gap-4">
+              <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase opacity-60">Document Preview</h3>
+              <div class="h-px flex-1 bg-gray-100"></div>
+            </div>
+
+            <!-- PDF Tabs (if multiple PDFs) -->
+            <div v-if="pdfDocuments.length > 1" class="flex flex-wrap gap-2">
+              <button
+                v-for="(doc, idx) in pdfDocuments"
+                :key="idx"
+                @click="selectedPdfIndex = idx"
+                class="px-5 py-2.5 rounded-2xl text-[11px] font-bold tracking-wider uppercase transition-all duration-300"
+                :class="selectedPdfIndex === idx
+                  ? 'bg-[#2E7D32] text-white shadow-lg shadow-[#2E7D32]/20'
+                  : 'bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-600'"
+              >
+                {{ getDocTitle(doc) }}
+              </button>
+            </div>
+
+            <!-- PDF Viewer Container -->
+            <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-2xl shadow-black/[0.03] overflow-hidden">
+              <!-- PDF Header Bar -->
+              <div class="flex items-center justify-between px-8 py-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold text-gray-700 capitalize">{{ getDocTitle(pdfDocuments[selectedPdfIndex]) }}</p>
+                    <p class="text-[9px] text-gray-400 font-medium tracking-wide uppercase">PDF Preview</p>
+                  </div>
+                </div>
+                <a
+                  :href="pdfDocuments[selectedPdfIndex]"
+                  target="_blank"
+                  class="flex items-center gap-2 px-4 py-2 bg-[#2E7D32] text-white rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-[#256d29] transition-colors shadow-md shadow-[#2E7D32]/20"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Download
+                </a>
+              </div>
+
+              <!-- Iframe Viewer -->
+              <div class="w-full" style="height: 600px;">
+                <iframe
+                  :key="pdfDocuments[selectedPdfIndex]"
+                  :src="pdfDocuments[selectedPdfIndex]"
+                  class="w-full h-full border-0"
+                  frameborder="0"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
+
           <!-- Main Narrative Content -->
           <div class="bg-white rounded-[2.5rem] p-10 md:p-16 shadow-2xl shadow-black/[0.02] border border-gray-100 animate-fade-in-up delay-[200ms]">
             <div v-if="loading" class="space-y-6">
@@ -228,68 +286,6 @@ const selectedPdfIndex = ref(0)
           <div v-if="program?.uploadedVideoUrl && program.uploadedVideoUrl !== 'null'" class="bg-[#111111] rounded-[3rem] p-4 animate-fade-in-up delay-[300ms]">
             <div class="aspect-video w-full rounded-[2.5rem] overflow-hidden shadow-2xl relative group">
               <iframe :src="getYouTubeEmbedUrl(program.uploadedVideoUrl)" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-          </div>
-
-          <!-- PDF Document Preview -->
-          <div v-if="pdfDocuments.length" class="space-y-6 animate-fade-in-up delay-[300ms]">
-            <div class="flex items-center gap-4">
-              <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase opacity-60">Document Preview</h3>
-              <div class="h-px flex-1 bg-gray-100"></div>
-            </div>
-
-            <!-- PDF Tabs (if multiple PDFs) -->
-            <div v-if="pdfDocuments.length > 1" class="flex flex-wrap gap-2">
-              <button
-                v-for="(doc, idx) in pdfDocuments"
-                :key="idx"
-                @click="selectedPdfIndex = idx"
-                class="px-5 py-2.5 rounded-2xl text-[11px] font-bold tracking-wider uppercase transition-all duration-300"
-                :class="selectedPdfIndex === idx
-                  ? 'bg-[#2E7D32] text-white shadow-lg shadow-[#2E7D32]/20'
-                  : 'bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-600'"
-              >
-                {{ getDocTitle(doc) }}
-              </button>
-            </div>
-
-            <!-- PDF Viewer Container -->
-            <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-2xl shadow-black/[0.03] overflow-hidden">
-              <!-- PDF Header Bar -->
-              <div class="flex items-center justify-between px-8 py-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
-                <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p class="text-xs font-bold text-gray-700 capitalize">{{ getDocTitle(pdfDocuments[selectedPdfIndex]) }}</p>
-                    <p class="text-[9px] text-gray-400 font-medium tracking-wide uppercase">PDF Preview</p>
-                  </div>
-                </div>
-                <a
-                  :href="pdfDocuments[selectedPdfIndex]"
-                  target="_blank"
-                  class="flex items-center gap-2 px-4 py-2 bg-[#2E7D32] text-white rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-[#256d29] transition-colors shadow-md shadow-[#2E7D32]/20"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  Download
-                </a>
-              </div>
-
-              <!-- Iframe Viewer -->
-              <div class="w-full" style="height: 600px;">
-                <iframe
-                  :key="pdfDocuments[selectedPdfIndex]"
-                  :src="getGoogleViewerUrl(pdfDocuments[selectedPdfIndex])"
-                  class="w-full h-full border-0"
-                  frameborder="0"
-                  loading="lazy"
-                ></iframe>
-              </div>
             </div>
           </div>
 
