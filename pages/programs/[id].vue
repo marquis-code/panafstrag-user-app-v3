@@ -35,6 +35,19 @@ const formatDate = (date: string) => {
 useHead({
   title: computed(() => `${program.value?.title || 'Programme'} | PANAFSTRAG`),
 })
+
+const getDocTitle = (url: string) => {
+  if (!url) return 'Module Documentation'
+  const parts = url.split('/')
+  const name = parts[parts.length - 1]
+  // Extract real name if it covers standard cloudinary hash prefix
+  const cleanName = name.includes('_') ? name.split('_').slice(1).join('_') : name
+  return cleanName.split('.')[0].replace(/-/g, ' ').replace(/_/g, ' ')
+}
+
+const getDocExt = (url: string) => {
+  return url.split('.').pop()?.toUpperCase() || 'DOC'
+}
 </script>
 
 <template>
@@ -247,15 +260,23 @@ useHead({
 
           <!-- Document Repository -->
           <div v-if="program?.uploadedDocumentFiles?.length" class="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-xl shadow-black/[0.02]">
-            <h4 class="text-[10px] font-bold tracking-[0.4em] uppercase text-[#2E7D32] mb-8 italic opacity-40">Documentation</h4>
-            <div class="space-y-3">
-              <a v-for="(doc, idx) in (program.uploadedDocumentFiles as string[])" :key="idx" :href="doc" target="_blank" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#E8F5E9]/50 transition-all group">
-                <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center group-hover:bg-[#2E7D32] transition-all">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+            <h4 class="text-[10px] font-bold tracking-[0.4em] uppercase text-[#2E7D32] mb-8 italic opacity-40">Resource Archive</h4>
+            <div class="space-y-4">
+              <a v-for="(doc, idx) in (program.uploadedDocumentFiles as string[])" :key="idx" :href="doc" target="_blank" class="flex items-center gap-5 p-5 rounded-[1.5rem] bg-gray-50/50 hover:bg-white border border-transparent hover:border-[#2E7D32]/10 hover:shadow-xl hover:shadow-[#2E7D32]/5 transition-all duration-500 group">
+                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover:bg-[#2E7D32] transition-all duration-500">
+                  <svg v-if="getDocExt(doc) === 'PDF'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11h6m-6 4h6" /></svg>
+                  <svg v-else-if="['XLS', 'XLSX'].includes(getDocExt(doc))" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="text-[11px] font-bold text-gray-700 truncate capitalize">{{ doc?.split('/').pop()?.split('-').pop() || 'Module Documentation' }}</p>
-                  <p class="text-[9px] font-bold text-gray-300 uppercase tracking-widest mt-1">Download Resources</p>
+                  <p class="text-[12px] font-bold text-gray-900 truncate group-hover:text-[#2E7D32] transition-colors capitalize">{{ getDocTitle(doc) }}</p>
+                  <div class="flex items-center gap-2 mt-1">
+                    <span class="text-[8px] font-black text-[#2E7D32] uppercase tracking-[0.2em] bg-[#E8F5E9] px-2 py-0.5 rounded">{{ getDocExt(doc) }}</span>
+                    <span class="text-[9px] font-bold text-gray-300 uppercase tracking-widest leading-none">Download Brief</span>
+                  </div>
+                </div>
+                <div class="w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center text-gray-300 group-hover:border-[#2E7D32] group-hover:text-[#2E7D32] transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                 </div>
               </a>
             </div>
