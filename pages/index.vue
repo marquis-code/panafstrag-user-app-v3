@@ -39,9 +39,10 @@ const programs = computed(() => {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 
   return progs.map(p => {
-    const pDateStr = p.date || p.startDate
+    if (!p) return {}
+    const pDateStr = p?.date || p?.startDate
     const pDate = pDateStr ? new Date(pDateStr) : null
-    let calculatedStatus = p.type || 'upcoming'
+    let calculatedStatus = p?.type || 'upcoming'
     
     if (pDate) {
       const compareDate = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate())
@@ -98,12 +99,12 @@ useHead({
           <!-- Visual Context (Left) -->
           <div class="relative aspect-video lg:aspect-auto lg:h-[450px] overflow-hidden order-2 lg:order-1">
             <img 
-              v-if="bannerProgram.bannerImages?.length" 
+              v-if="bannerProgram?.bannerImages?.length" 
               :src="bannerProgram.bannerImages[0]" 
               class="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
             />
             <img 
-              v-else-if="bannerProgram.imageUrl" 
+              v-else-if="bannerProgram?.imageUrl" 
               :src="bannerProgram.imageUrl" 
               class="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
             />
@@ -128,32 +129,32 @@ useHead({
               </div>
 
               <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tighter italic leading-[1.1] mb-6 group-hover:text-[#2E7D32] transition-colors duration-500">
-                {{ bannerProgram.title }}
+                {{ bannerProgram?.title }}
               </h2>
 
-              <p v-if="bannerProgram.theme" class="text-gray-400 text-base md:text-lg font-medium leading-relaxed max-w-xl">
-                {{ bannerProgram.theme }}
+              <p v-if="bannerProgram?.theme" class="text-gray-400 text-base md:text-lg font-medium leading-relaxed max-w-xl">
+                {{ bannerProgram?.theme }}
               </p>
             </div>
 
             <div class="grid grid-cols-2 gap-6 py-6 border-y border-white/5">
-              <div v-if="bannerProgram.date" class="space-y-1">
+              <div v-if="bannerProgram?.date" class="space-y-1">
                 <span class="text-[8px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Event Date</span>
                 <p class="text-white text-sm font-bold">{{ new Date(bannerProgram.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</p>
               </div>
-              <div v-if="bannerProgram.location" class="space-y-1">
+              <div v-if="bannerProgram?.location" class="space-y-1">
                 <span class="text-[8px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Location</span>
-                <p class="text-white text-sm font-bold line-clamp-1">{{ bannerProgram.location }}</p>
+                <p class="text-white text-sm font-bold line-clamp-1">{{ bannerProgram?.location }}</p>
               </div>
             </div>
 
             <div class="flex items-center gap-6">
-              <NuxtLink :to="`/programs/${bannerProgram._id}`" class="group/btn relative px-8 py-4 bg-white text-black font-black text-[9px] tracking-[0.3em] uppercase rounded-lg overflow-hidden transition-all hover:scale-105 active:scale-95">
+              <NuxtLink :to="`/programs/${bannerProgram?._id}`" class="group/btn relative px-8 py-4 bg-white text-black font-black text-[9px] tracking-[0.3em] uppercase rounded-lg overflow-hidden transition-all hover:scale-105 active:scale-95">
                 <span class="relative z-10">ENGAGE DETAILS</span>
                 <div class="absolute inset-0 bg-[#2E7D32] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
               </NuxtLink>
               
-              <NuxtLink v-if="bannerProgram.registerLink" :to="bannerProgram.registerLink" target="_blank" class="text-white text-[9px] font-black uppercase tracking-[0.2em] border-b border-[#2E7D32] pb-1 hover:text-[#2E7D32] transition-all">
+              <NuxtLink v-if="bannerProgram?.registerLink" :to="bannerProgram.registerLink" target="_blank" class="text-white text-[9px] font-black uppercase tracking-[0.2em] border-b border-[#2E7D32] pb-1 hover:text-[#2E7D32] transition-all">
                 JOIN VIRTUAL ROOM
               </NuxtLink>
             </div>
@@ -257,15 +258,15 @@ useHead({
           
           <div class="relative aspect-[4/5] bg-gray-50 rounded-[2rem] overflow-hidden mb-8 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-700">
             <!-- Image Logic: bannerImages[0] then imageUrl then placeholder -->
-            <img v-if="program.bannerImages?.length" :src="program.bannerImages[0]" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
-            <img v-else-if="program.imageUrl" :src="program.imageUrl" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
+            <img v-if="program?.bannerImages?.length" :src="program.bannerImages[0]" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
+            <img v-else-if="program?.imageUrl" :src="program.imageUrl" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
             <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-100 transition-all duration-700" />
             
             <!-- Status Badge Overlay -->
             <div class="absolute top-6 left-6 z-10">
               <span class="px-4 py-1.5 backdrop-blur-md bg-white/90 text-black text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg border border-white/20">
-                <span class="inline-block w-1.5 h-1.5 rounded-full mr-2" :class="program.calculatedStatus === 'upcoming' ? 'bg-[#2E7D32] animate-pulse' : 'bg-gray-400'"></span>
-                {{ program.calculatedStatus }}
+                <span class="inline-block w-1.5 h-1.5 rounded-full mr-2" :class="program?.calculatedStatus === 'upcoming' ? 'bg-[#2E7D32] animate-pulse' : 'bg-gray-400'"></span>
+                {{ program?.calculatedStatus }}
               </span>
             </div>
 
@@ -275,16 +276,16 @@ useHead({
 
           <div class="space-y-5 px-2">
             <div class="flex items-center gap-3">
-              <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded">{{ program.type }}</span>
-              <span class="text-[9px] font-black uppercase tracking-[0.1em] text-gray-400">{{ program.startDate || program.date ? new Date(program.date || program.startDate).getFullYear() : '' }}</span>
+              <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded">{{ program?.type }}</span>
+              <span class="text-[9px] font-black uppercase tracking-[0.1em] text-gray-400">{{ program?.startDate || program?.date ? new Date(program.date || program.startDate).getFullYear() : '' }}</span>
             </div>
             
             <h4 class="text-2xl lg:text-3xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-[1.1] italic">
-              {{ program.title }}
+              {{ program?.title }}
             </h4>
             
             <div class="pt-4">
-              <NuxtLink :to="`/programs/${program._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] border-b-2 border-black pb-1 hover:border-[#2E7D32] hover:text-[#2E7D32] transition-all">
+              <NuxtLink :to="`/programs/${program?._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] border-b-2 border-black pb-1 hover:border-[#2E7D32] hover:text-[#2E7D32] transition-all">
                 READ DETAILS
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

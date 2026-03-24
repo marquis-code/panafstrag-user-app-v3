@@ -31,8 +31,8 @@ const filteredPrograms = computed(() => {
 
   // Map dynamic status based on current date
   progs = progs.map(p => {
-    // Prefer p.date as the source of truth for the event date
-    const pDateStr = p.date || p.startDate
+    if (!p) return {};
+    const pDateStr = p?.date || p?.startDate
     const pDate = pDateStr ? new Date(pDateStr) : null
     let calculatedStatus = 'upcoming'
     
@@ -47,14 +47,16 @@ const filteredPrograms = computed(() => {
   // Filter logic
   if (selectedYear.value !== 'all') {
     progs = progs.filter(p => {
-      const pYear = p.date ? new Date(p.date).getFullYear() : (p.startDate ? new Date(p.startDate).getFullYear() : (p.year || null))
+      if (!p) return false;
+      const pYear = p?.date ? new Date(p.date).getFullYear() : (p?.startDate ? new Date(p.startDate).getFullYear() : (p?.year || null))
       return pYear === parseInt(selectedYear.value)
     })
   }
   
   if (selectedMonth.value !== 'all') {
     progs = progs.filter(p => {
-      const pMonth = p.date ? (new Date(p.date).getMonth() + 1) : (p.startDate ? (new Date(p.startDate).getMonth() + 1) : (p.month || null))
+      if (!p) return false;
+      const pMonth = p?.date ? (new Date(p.date).getMonth() + 1) : (p?.startDate ? (new Date(p.startDate).getMonth() + 1) : (p?.month || null))
       return pMonth === parseInt(selectedMonth.value)
     })
   }
@@ -67,7 +69,8 @@ const groupedProgramsByYear = computed(() => {
   const groups: Record<number, any[]> = {}
   
   for (const prog of progs) {
-    const year = prog.date ? new Date(prog.date).getFullYear() : (prog.startDate ? new Date(prog.startDate).getFullYear() : (prog.year || 0))
+    if (!prog) continue;
+    const year = prog?.date ? new Date(prog.date).getFullYear() : (prog?.startDate ? new Date(prog.startDate).getFullYear() : (prog?.year || 0))
     if (!groups[year]) groups[year] = []
     groups[year].push(prog)
   }
@@ -164,17 +167,14 @@ useHead({
               
               <!-- Image Container -->
               <div class="aspect-[16/10] overflow-hidden relative">
-                <img v-if="program.bannerImages?.length" :src="program.bannerImages[0]" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                <img v-else-if="program.imageUrl" :src="program.imageUrl" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                <img v-if="program?.bannerImages?.length" :src="program.bannerImages[0]" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                <img v-else-if="program?.imageUrl" :src="program.imageUrl" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                  <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
-                <!-- <div v-else class="w-full h-full bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32]/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                </div> @/assets/images/program-placeholder.png -->
 
                 <!-- Status Badge -->
                 <div class="absolute top-5 left-5">
-                  <span class="px-4 py-1.5 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase shadow-lg" :class="getStatusColor(program.calculatedStatus)">
-                    {{ program.calculatedStatus }}
+                  <span class="px-4 py-1.5 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase shadow-lg" :class="getStatusColor(program?.calculatedStatus)">
+                    {{ program?.calculatedStatus }}
                   </span>
                 </div>
               </div>
@@ -183,30 +183,30 @@ useHead({
               <div class="p-8 space-y-5">
                 <div class="flex items-center gap-2">
                   <div class="w-1.5 h-1.5 rounded-full bg-[#2E7D32]"></div>
-                  <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ formatDate(program.date) || program.startDate }}</p>
+                  <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ formatDate(program?.date) || program?.startDate }}</p>
                 </div>
                 
                 <h3 class="text-xl font-bold text-gray-900 leading-snug group-hover:text-[#2E7D32] transition-colors line-clamp-2">
-                  {{ program.title }}
+                  {{ program?.title }}
                 </h3>
                 
-                <p v-if="program.theme" class="text-xs font-semibold text-gray-400 leading-relaxed italic line-clamp-2 border-l-2 border-gray-100 pl-4 py-1">
+                <p v-if="program?.theme" class="text-xs font-semibold text-gray-400 leading-relaxed italic line-clamp-2 border-l-2 border-gray-100 pl-4 py-1">
                   "{{ program.theme }}"
                 </p>
 
-                <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 font-medium" v-html="program.description"></p>
+                <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 font-medium" v-html="program?.description"></p>
 
                 <div class="pt-6 border-t border-gray-50 flex items-center justify-between">
-                  <NuxtLink :to="`/programs/${program._id}`" class="text-[11px] font-bold text-[#2E7D32] tracking-widest uppercase flex items-center gap-2 group/btn">
+                  <NuxtLink :to="`/programs/${program?._id}`" class="text-[11px] font-bold text-[#2E7D32] tracking-widest uppercase flex items-center gap-2 group/btn">
                     Details 
                     <span class="inline-block transform group-hover/btn:translate-x-1 transition-transform">→</span>
                   </NuxtLink>
                   
                   <div class="flex gap-2">
-                    <a v-if="program.registerLink" :href="program.registerLink" target="_blank" class="w-9 h-9 rounded-xl bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white transition-all shadow-sm" title="Register">
+                    <a v-if="program?.registerLink" :href="program.registerLink" target="_blank" class="w-9 h-9 rounded-xl bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white transition-all shadow-sm" title="Register">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
                     </a>
-                    <a v-if="program.uploadedVideoUrl && program.uploadedVideoUrl !== 'null'" :href="program.uploadedVideoUrl" target="_blank" class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white transition-all shadow-sm" title="Watch Video">
+                    <a v-if="program?.uploadedVideoUrl && program?.uploadedVideoUrl !== 'null'" :href="program.uploadedVideoUrl" target="_blank" class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white transition-all shadow-sm" title="Watch Video">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /></svg>
                     </a>
                   </div>

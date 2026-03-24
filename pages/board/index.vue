@@ -22,28 +22,28 @@ useHead({
     </div>
 
     <div v-else-if="members?.length" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-      <NuxtLink v-for="(member, i) in (members as any[])" :key="member._id"
-        :to="`/board/${member._id}`"
+      <NuxtLink v-for="(member, i) in (members as any[])" :key="member?._id"
+        :to="`/board/${member?._id}`"
         class="glass-card group animate-fade-in-up block hover:scale-[1.02] transition-transform duration-500"
         :class="`delay-${(i % 3 + 1) * 100}`">
         <div class="aspect-square rounded-xl bg-gray-50 mb-8 overflow-hidden relative border border-gray-100 shadow-inner">
-          <img v-if="member.avatar" :src="member.avatar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+          <img v-if="member?.avatar" :src="member.avatar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
           <div v-else class="w-full h-full flex items-center justify-center text-4xl font-black text-gray-200 italic">
-            {{ member.name.charAt(0) }}
+            {{ member?.name?.charAt(0) || 'B' }}
           </div>
         </div>
-        <h3 class="text-2xl font-black mb-2 tracking-tighter uppercase group-hover:text-gray-500 transition-colors leading-tight italic">{{ member.name }}</h3>
-        <p class="text-gray-400 font-black mb-1 text-[10px] uppercase tracking-[0.2em]">{{ member.position }}</p>
-        <p v-if="member.university" class="text-gray-400 font-medium mb-6 text-[9px] uppercase tracking-widest">{{ member.university }}</p>
+        <h3 class="text-2xl font-black mb-2 tracking-tighter uppercase group-hover:text-gray-500 transition-colors leading-tight italic">{{ member?.name }}</h3>
+        <p class="text-gray-400 font-black mb-1 text-[10px] uppercase tracking-[0.2em]">{{ member?.position }}</p>
+        <p v-if="member?.university" class="text-gray-400 font-medium mb-6 text-[9px] uppercase tracking-widest">{{ member?.university }}</p>
 
         <p class="text-gray-500 text-sm font-medium leading-relaxed mb-10 line-clamp-3">
-          {{ member.bio }}
+          {{ member?.bio }}
         </p>
 
         <div class="flex items-center justify-between pt-6 border-t border-gray-100 mt-auto">
           <span class="text-[9px] font-black uppercase tracking-[0.3em] text-black">View Profile —></span>
-          <div class="flex gap-2" v-if="member.duties?.length">
-            <div v-for="n in Math.min(member.duties.length, 3)" :key="n" class="w-1.5 h-1.5 rounded-full bg-gray-100 group-hover:bg-black transition-colors"></div>
+          <div class="flex gap-2" v-if="member?.duties?.length">
+            <div v-for="n in Math.min(member?.duties?.length || 0, 3)" :key="n" class="w-1.5 h-1.5 rounded-full bg-gray-100 group-hover:bg-black transition-colors"></div>
           </div>
         </div>
       </NuxtLink>

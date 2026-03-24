@@ -21,18 +21,18 @@ useHead({
     </div>
 
     <div v-else-if="languageGroups?.length" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-      <div v-for="(group, i) in (languageGroups as any[])" :key="group._id"
+      <div v-for="(group, i) in (languageGroups as any[])" :key="group?._id"
         class="flex flex-col group glass-card overflow-hidden animate-fade-in-up"
         :class="`delay-${(i % 3 + 1) * 100}`">
         <div class="p-10 flex-1 space-y-6">
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 bg-black text-white flex items-center justify-center font-black italic rounded">
-               {{ group.name.charAt(0) }}
+               {{ group?.name?.charAt(0) || 'G' }}
             </div>
-            <h3 class="text-2xl font-black tracking-tighter uppercase group-hover:text-gray-500 transition-colors leading-tight italic">{{ group.name }}</h3>
+            <h3 class="text-2xl font-black tracking-tighter uppercase group-hover:text-gray-500 transition-colors leading-tight italic">{{ group?.name }}</h3>
           </div>
-          <p class="text-gray-500 text-sm font-medium leading-relaxed" v-html="group.description"></p>
-          <div v-if="group.url" class="pt-4">
+          <p class="text-gray-500 text-sm font-medium leading-relaxed" v-html="group?.description"></p>
+          <div v-if="group?.url" class="pt-4">
              <a :href="group.url" target="_blank" class="text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-black inline-block pb-1 hover:border-gray-300 transition-all">Visit Platform →</a>
           </div>
         </div>

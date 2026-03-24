@@ -42,9 +42,9 @@ useHead({
         <!-- Profile Image -->
         <div class="w-full lg:w-1/3 animate-fade-in-up">
           <div class="aspect-[3/4] rounded-[2rem] overflow-hidden bg-gray-50 border border-black/5 shadow-2xl relative">
-            <img v-if="boardMember.avatar" :src="boardMember.avatar" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
+            <img v-if="boardMember?.avatar" :src="boardMember.avatar" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
             <div v-else class="w-full h-full flex items-center justify-center text-8xl font-black text-gray-200 italic">
-              {{ boardMember.name.charAt(0) }}
+              {{ boardMember?.name?.charAt(0) || 'B' }}
             </div>
 
             <!-- Floating accent -->
@@ -57,16 +57,16 @@ useHead({
           <div>
             <span class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 mb-6 block">Board of Trustees</span>
             <h1 class="text-5xl lg:text-7xl font-black tracking-tighter uppercase italic leading-none mb-6">
-              {{ boardMember.name }}
+              {{ boardMember?.name }}
             </h1>
             <div class="flex flex-wrap items-center gap-6">
-              <span class="px-6 py-2 bg-black text-white text-[10px] font-black uppercase tracking-widest">{{ boardMember.position }}</span>
-              <span v-if="boardMember.university" class="text-[10px] font-black uppercase tracking-widest text-gray-400 italic underline decoration-gray-200 underline-offset-8">{{ boardMember.university }}</span>
+              <span class="px-6 py-2 bg-black text-white text-[10px] font-black uppercase tracking-widest">{{ boardMember?.position }}</span>
+              <span v-if="boardMember?.university" class="text-[10px] font-black uppercase tracking-widest text-gray-400 italic underline decoration-gray-200 underline-offset-8">{{ boardMember?.university }}</span>
             </div>
           </div>
 
           <!-- Contact Row -->
-          <div v-if="boardMember.email?.length" class="flex flex-col gap-2 pt-8 border-t border-black/5">
+          <div v-if="boardMember?.email?.length" class="flex flex-col gap-2 pt-8 border-t border-black/5">
             <span class="text-[9px] font-black uppercase tracking-[0.3em] text-gray-300">Direct Intelligence</span>
             <div class="flex flex-wrap gap-8">
               <a v-for="email in boardMember.email" :key="email" :href="`mailto:${email}`" class="text-sm font-black hover:text-gray-400 transition-colors uppercase tracking-widest">{{ email }}</a>
@@ -77,12 +77,12 @@ useHead({
           <div class="prose prose-xl max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-widest">
             <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-300 mb-8 italic">Curriculum Vitae / Biography</h4>
             <p class="text-gray-600 font-medium leading-[1.8] text-lg whitespace-pre-wrap">
-              {{ boardMember.bio }}
+              {{ boardMember?.bio }}
             </p>
           </div>
 
           <!-- Duties -->
-          <div v-if="boardMember.duties?.length" class="pt-12 border-t border-black/5">
+          <div v-if="boardMember?.duties?.length" class="pt-12 border-t border-black/5">
             <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-300 mb-10 italic">Core Responsibilities</h4>
             <div class="grid sm:grid-cols-2 gap-4">
               <div v-for="duty in boardMember.duties" :key="duty" class="p-6 bg-gray-50 rounded-2xl flex items-center gap-4 group hover:bg-black hover:text-white transition-all duration-500">

@@ -43,8 +43,8 @@ useHead({
           {{ (i + 1).toString().padStart(2, '0') }}
         </div>
         <div>
-          <h3 class="text-xl md:text-2xl font-black tracking-tighter uppercase group-hover:text-[#2E7D32] transition-colors leading-tight italic mb-3 md:mb-4">{{ area.name }}</h3>
-          <p v-if="area.description" class="text-gray-500 group-hover:text-gray-400 text-xs md:text-sm font-medium leading-relaxed uppercase tracking-tight line-clamp-2" v-html="area.description"></p>
+          <h3 class="text-xl md:text-2xl font-black tracking-tighter uppercase group-hover:text-[#2E7D32] transition-colors leading-tight italic mb-3 md:mb-4">{{ area?.name }}</h3>
+          <p v-if="area?.description" class="text-gray-500 group-hover:text-gray-400 text-xs md:text-sm font-medium leading-relaxed uppercase tracking-tight line-clamp-2" v-html="area?.description"></p>
           <div class="mt-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] transform transition-transform group-hover:translate-x-2">
             Explore Intelligence —>
           </div>
@@ -87,14 +87,14 @@ useHead({
               <div class="space-y-10">
                 <div>
                    <span class="text-[10px] font-black uppercase tracking-[0.4em] text-[#2E7D32] mb-4 block">Focus Area Details</span>
-                   <h2 class="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-none">{{ selectedArea.name }}</h2>
+                   <h2 class="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-none">{{ selectedArea?.name }}</h2>
                 </div>
                 
                 <div class="h-1 w-20 bg-[#2E7D32]"></div>
 
                 <div class="space-y-6">
                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">In-Depth Analysis</h4>
-                   <p class="text-lg text-gray-800 font-medium leading-relaxed uppercase tracking-tight" v-html="selectedArea.description"></p>
+                   <p class="text-lg text-gray-800 font-medium leading-relaxed uppercase tracking-tight" v-html="selectedArea?.description"></p>
                 </div>
 
                 <!-- Strategic Points (Placeholder/Static for now if not in schema) -->

@@ -40,9 +40,10 @@ const getDocTitle = (url: string) => {
   if (!url) return 'Module Documentation'
   const parts = url.split('/')
   const name = parts[parts.length - 1]
+  if (!name) return 'Document';
   // Extract real name if it covers standard cloudinary hash prefix
   const cleanName = name.includes('_') ? name.split('_').slice(1).join('_') : name
-  return cleanName.split('.')[0].replace(/-/g, ' ').replace(/_/g, ' ')
+  return cleanName?.split('.')[0].replace(/-/g, ' ').replace(/_/g, ' ') || 'Document'
 }
 
 const getDocExt = (url: string) => {
@@ -89,19 +90,19 @@ const selectedPdfIndex = ref(0)
         <div v-else-if="program" class="space-y-8 animate-fade-in">
           <div class="flex flex-wrap items-center gap-2">
             <span class="px-4 py-1 bg-white/10 backdrop-blur-md rounded-full text-[11px] font-bold tracking-[0.1em] uppercase text-white/80 border border-white/10">
-              {{ program.type }}
+              {{ program?.type }}
             </span>
-            <span v-if="program.status" class="px-4 py-1 bg-[#2E7D32]/80 backdrop-blur-md rounded-full text-[11px] font-bold tracking-[0.1em] uppercase text-white border border-white/5 shadow-lg">
-              {{ program.status }}
+            <span v-if="program?.status" class="px-4 py-1 bg-[#2E7D32]/80 backdrop-blur-md rounded-full text-[11px] font-bold tracking-[0.1em] uppercase text-white border border-white/5 shadow-lg">
+              {{ program?.status }}
             </span>
           </div>
 
           <h1 class="text-3xl md:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight max-w-5xl text-white">
-            {{ program.title }}
+            {{ program?.title }}
           </h1>
 
-          <p v-if="program.theme" class="text-xl md:text-2xl text-white/60 font-medium max-w-3xl leading-relaxed italic">
-            "{{ program.theme }}"
+          <p v-if="program?.theme" class="text-xl md:text-2xl text-white/60 font-medium max-w-3xl leading-relaxed italic">
+            "{{ program?.theme }}"
           </p>
         </div>
       </div>
@@ -160,10 +161,10 @@ const selectedPdfIndex = ref(0)
             </div>
             
             <div class="flex flex-wrap items-center gap-3">
-              <a v-if="program.zoomMeetingUrl" :href="program.zoomMeetingUrl" target="_blank" class="px-6 py-2.5 bg-white text-[#2E7D32] rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-gray-100 transition-all flex items-center gap-2">
+              <a v-if="program?.zoomMeetingUrl" :href="program?.zoomMeetingUrl" target="_blank" class="px-6 py-2.5 bg-white text-[#2E7D32] rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-gray-100 transition-all flex items-center gap-2">
                 Join via Zoom
               </a>
-              <a v-if="program.googleMeetUrl" :href="program.googleMeetUrl" target="_blank" class="px-6 py-2.5 bg-white/15 text-white border border-white/20 rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-white/25 transition-all flex items-center gap-2">
+              <a v-if="program?.googleMeetUrl" :href="program?.googleMeetUrl" target="_blank" class="px-6 py-2.5 bg-white/15 text-white border border-white/20 rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-white/25 transition-all flex items-center gap-2">
                 Join via Meet
               </a>
             </div>
@@ -202,7 +203,7 @@ const selectedPdfIndex = ref(0)
                     </svg>
                   </div>
                   <div>
-                    <p class="text-xs font-bold text-gray-700 capitalize">{{ getDocTitle(pdfDocuments[selectedPdfIndex]) }}</p>
+                    <p class="text-xs font-bold text-gray-700 capitalize">{{ getDocTitle(pdfDocuments[selectedPdfIndex] || '') }}</p>
                     <p class="text-[9px] text-gray-400 font-medium tracking-wide uppercase">PDF Preview</p>
                   </div>
                 </div>
@@ -239,17 +240,17 @@ const selectedPdfIndex = ref(0)
               <div class="h-4 bg-gray-50 w-3/4 rounded-full"></div>
             </div>
             <div v-else-if="program" class="space-y-12">
-              <div v-if="program.description">
+              <div v-if="program?.description">
                 <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-8 opacity-60">Mission Overview</h3>
-                <div class="text-gray-600 leading-[2] text-[16px] font-medium whitespace-pre-wrap lg:pr-10" v-html="program.description"></div>
+                <div class="text-gray-600 leading-[2] text-[16px] font-medium whitespace-pre-wrap lg:pr-10" v-html="program?.description"></div>
               </div>
 
-              <div v-if="program.content" class="pt-12 border-t border-gray-50">
+              <div v-if="program?.content" class="pt-12 border-t border-gray-50">
                 <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-10 opacity-60">Systemic Framework</h3>
-                <div class="program-content" v-html="program.content"></div>
+                <div class="program-content" v-html="program?.content"></div>
               </div>
 
-              <div v-if="!program.content && !program.description" class="py-20 text-center">
+              <div v-if="!program?.content && !program?.description" class="py-20 text-center">
                 <div class="w-20 h-20 mx-auto rounded-3xl bg-gray-50 flex items-center justify-center mb-6 text-gray-200">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h7" /></svg>
                 </div>
@@ -266,17 +267,17 @@ const selectedPdfIndex = ref(0)
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div v-for="(speaker, idx) in program.speakers" :key="idx" class="bg-white p-8 rounded-[2rem] border border-gray-50 shadow-sm group hover:shadow-xl hover:shadow-[#2E7D32]/5 hover:-translate-y-1 transition-all duration-500">
+              <div v-for="(speaker, idx) in program?.speakers" :key="idx" class="bg-white p-8 rounded-[2rem] border border-gray-50 shadow-sm group hover:shadow-xl hover:shadow-[#2E7D32]/5 hover:-translate-y-1 transition-all duration-500">
                 <div class="w-24 h-24 mx-auto rounded-[2rem] overflow-hidden mb-6 rotate-3 group-hover:rotate-0 transition-transform duration-500 shadow-lg">
-                  <img v-if="speaker.imageUrl" :src="speaker.imageUrl" :alt="speaker.name" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                  <img v-if="speaker?.imageUrl" :src="speaker?.imageUrl" :alt="speaker?.name" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                   <div v-else class="w-full h-full bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32] text-3xl font-bold">
-                    {{ speaker.name?.[0] }}
+                    {{ speaker?.name?.[0] }}
                   </div>
                 </div>
                 <div class="text-center">
-                  <h4 class="text-sm font-bold text-gray-900 mb-1">{{ speaker.name }}</h4>
-                  <p class="text-[10px] font-bold text-[#2E7D32] tracking-widest uppercase mb-4">{{ speaker.role }}</p>
-                  <p v-if="speaker.bio" class="text-xs text-gray-400 leading-relaxed line-clamp-3 italic">"{{ speaker.bio }}"</p>
+                  <h4 class="text-sm font-bold text-gray-900 mb-1">{{ speaker?.name }}</h4>
+                  <p class="text-[10px] font-bold text-[#2E7D32] tracking-widest uppercase mb-4">{{ speaker?.role }}</p>
+                  <p v-if="speaker?.bio" class="text-xs text-gray-400 leading-relaxed line-clamp-3 italic">"{{ speaker?.bio }}"</p>
                 </div>
               </div>
             </div>
@@ -294,17 +295,17 @@ const selectedPdfIndex = ref(0)
             <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-16 opacity-60">Strategic Schedule</h3>
             
             <div class="space-y-0">
-              <div v-for="(item, idx) in program.agenda" :key="idx" class="flex items-start gap-10 group">
+              <div v-for="(item, idx) in program?.agenda" :key="idx" class="flex items-start gap-10 group">
                 <div class="flex flex-col items-center">
                   <div class="w-12 h-12 rounded-2xl bg-[#E8F5E9] text-[#2E7D32] flex items-center justify-center text-xs font-black flex-shrink-0 group-hover:bg-[#2E7D32] group-hover:text-white transition-all duration-500">
-                    {{ idx + 1 }}
+                    {{ Number(idx) + 1 }}
                   </div>
-                  <div v-if="idx < program.agenda.length - 1" class="w-0.5 h-16 bg-gray-50 group-hover:bg-[#2E7D32]/10 transition-colors"></div>
+                  <div v-if="Number(idx) < (program?.agenda?.length || 0) - 1" class="w-0.5 h-16 bg-gray-50 group-hover:bg-[#2E7D32]/10 transition-colors"></div>
                 </div>
                 <div class="pb-12">
-                  <span class="text-[10px] font-black text-[#2E7D32] tracking-[0.2em] uppercase mb-2 block opacity-40 group-hover:opacity-100 transition-opacity">{{ item.time || 'TBD' }}</span>
-                  <p class="text-lg font-bold text-gray-900 mb-3">{{ item.title }}</p>
-                  <p v-if="item.description" class="text-sm text-gray-400 leading-relaxed max-w-xl">{{ item.description }}</p>
+                  <span class="text-[10px] font-black text-[#2E7D32] tracking-[0.2em] uppercase mb-2 block opacity-40 group-hover:opacity-100 transition-opacity">{{ item?.time || 'TBD' }}</span>
+                  <p class="text-lg font-bold text-gray-900 mb-3">{{ item?.title }}</p>
+                  <p v-if="item?.description" class="text-sm text-gray-400 leading-relaxed max-w-xl">{{ item?.description }}</p>
                 </div>
               </div>
             </div>
@@ -321,7 +322,7 @@ const selectedPdfIndex = ref(0)
             <h4 class="text-[10px] font-bold tracking-[0.4em] uppercase text-white/50 mb-6 italic">Secure Pass</h4>
             <p class="text-lg font-bold mb-10 leading-snug">Registration portal is currently active for this initiative.</p>
             
-            <a :href="program.registerLink" target="_blank" class="flex items-center justify-between w-full p-4 bg-white rounded-2xl group/btn hover:bg-gray-50 transition-colors">
+            <a :href="program?.registerLink" target="_blank" class="flex items-center justify-between w-full p-4 bg-white rounded-2xl group/btn hover:bg-gray-50 transition-colors">
               <span class="text-[#2E7D32] text-xs font-bold tracking-widest uppercase ml-2">Register Entry</span>
               <div class="w-8 h-8 rounded-xl bg-[#2E7D32] flex items-center justify-center text-white group-hover/btn:translate-x-1 transition-transform">
                 →
@@ -370,7 +371,7 @@ const selectedPdfIndex = ref(0)
       <div class="container mx-auto px-6 max-w-6xl">
         <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-12 opacity-60 text-center">Programme Atmosphere</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div v-for="(img, idx) in program.bannerImages" :key="idx" class="aspect-square rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg">
+          <div v-for="(img, idx) in program?.bannerImages" :key="idx" class="aspect-square rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg">
             <img :src="img" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
           </div>
         </div>

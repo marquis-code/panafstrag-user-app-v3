@@ -67,13 +67,14 @@ const filteredArchives = computed(() => {
   }
   if (selectedYear.value !== 'all') {
     items = items.filter(p => {
-      const pYear = p.date ? new Date(p.date).getFullYear() : (p.startDate && !isNaN(new Date(p.startDate).getTime()) ? new Date(p.startDate).getFullYear() : (p.year || null))
+      const pYear = p?.date ? new Date(p.date).getFullYear() : (p?.startDate && !isNaN(new Date(p.startDate).getTime()) ? new Date(p.startDate).getFullYear() : (p?.year || null))
       return pYear === parseInt(selectedYear.value)
     })
   }
   if (selectedMonth.value !== 'all') {
     items = items.filter(p => {
-      const pMonth = p.date ? (new Date(p.date).getMonth() + 1) : (p.startDate && !isNaN(new Date(p.startDate).getTime()) ? (new Date(p.startDate).getMonth() + 1) : (p.month || null))
+      if (!p) return false;
+      const pMonth = p?.date ? (new Date(p.date).getMonth() + 1) : (p?.startDate && !isNaN(new Date(p.startDate).getTime()) ? (new Date(p.startDate).getMonth() + 1) : (p?.month || null))
       return pMonth === parseInt(selectedMonth.value)
     })
   }
@@ -85,7 +86,8 @@ const groupedArchivesByYear = computed(() => {
   const groups: Record<number, any[]> = {}
   
   for (const item of items) {
-    const year = item.date ? new Date(item.date).getFullYear() : (item.startDate && !isNaN(new Date(item.startDate).getTime()) ? new Date(item.startDate).getFullYear() : (item.year || 0))
+    if (!item) continue;
+    const year = item?.date ? new Date(item.date).getFullYear() : (item?.startDate && !isNaN(new Date(item.startDate).getTime()) ? new Date(item.startDate).getFullYear() : (item?.year || 0))
     if (!groups[year]) groups[year] = []
     groups[year].push(item)
   }
@@ -170,11 +172,11 @@ useHead({
             :class="`delay-${(i % 3 + 1) * 100}`">
 
             <!-- Programme type card (past programmes or archived programmes) -->
-            <template v-if="item._source === 'program' || item.type === 'programme'">
-              <NuxtLink :to="`/programs/${item._id}`" class="block h-full">
+            <template v-if="item?._source === 'program' || item?.type === 'programme'">
+              <NuxtLink :to="`/programs/${item?._id}`" class="block h-full">
                 <div class="aspect-[4/5] bg-gray-100 rounded-2xl overflow-hidden mb-6 md:mb-8 shadow-sm relative">
-                  <img v-if="item.bannerImages?.length" :src="item.bannerImages[0]" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-                  <img v-else-if="item.imageUrl" :src="item.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+                  <img v-if="item?.bannerImages?.length" :src="item.bannerImages[0]" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+                  <img v-else-if="item?.imageUrl" :src="item.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
                   <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
                   
                   <span class="absolute top-4 right-4 px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">PROGRAMME</span>
@@ -182,9 +184,9 @@ useHead({
                 
                 <div class="space-y-3 md:space-y-4">
                   <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
-                    {{ item.date ? new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : (item.startDate || '') }}
+                    {{ item?.date ? new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : (item?.startDate || '') }}
                   </span>
-                  <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ item.title }}</h4>
+                  <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ item?.title }}</h4>
                   <div class="pt-2 md:pt-4">
                     <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] border-b-2 border-black pb-1 group-hover:border-[#2E7D32] group-hover:text-[#2E7D32] transition-all inline-flex items-center gap-2">
                       VIEW DETAILS 
@@ -197,16 +199,16 @@ useHead({
 
             <!-- Archive type card (speeches, reports, etc.) -->
             <template v-else>
-              <a :href="item.fileUrl" target="_blank" class="block h-full">
+              <a :href="item?.fileUrl" target="_blank" class="block h-full">
                 <div class="h-full bg-gray-50 border border-gray-100 rounded-[1.5rem] p-8 md:p-10 flex flex-col hover:border-[#2E7D32]/30 hover:shadow-xl hover:-translate-y-2 transition-all duration-500 group/archive relative overflow-hidden">
                   <!-- Decorative background element -->
                   <div class="absolute -right-10 -top-10 w-40 h-40 bg-[#2E7D32]/5 rounded-full blur-3xl group-hover/archive:bg-[#2E7D32]/10 transition-colors duration-500"></div>
 
                   <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white border border-gray-100 group-hover/archive:border-[#2E7D32]/30 flex items-center justify-center mb-8 md:mb-10 text-black group-hover/archive:text-[#2E7D32] transition-all duration-500 shadow-sm group-hover/archive:rotate-3">
-                    <svg v-if="item.type === 'speech'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-7 md:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg v-if="item?.type === 'speech'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-7 md:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                     </svg>
-                    <svg v-else-if="item.type === 'report' || item.type === 'publication'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-7 md:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg v-else-if="item?.type === 'report' || item?.type === 'publication'" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-7 md:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-7 md:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -216,9 +218,9 @@ useHead({
                   
                   <div class="flex-grow relative z-10">
                     <p class="text-[#2E7D32] text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mb-3 md:mb-4">
-                      {{ item.type }} • {{ item.month ? months[item.month - 1] : '' }} {{ item.year || new Date(item.date).getFullYear() }}
+                      {{ item?.type }} • {{ item?.month ? months[item.month - 1] : '' }} {{ item?.year || (item?.date ? new Date(item.date).getFullYear() : '') }}
                     </p>
-                    <h4 class="text-xl md:text-2xl font-black mb-4 tracking-tighter uppercase line-clamp-3 group-hover/archive:text-[#2E7D32] transition-colors leading-tight italic">{{ item.title }}</h4>
+                    <h4 class="text-xl md:text-2xl font-black mb-4 tracking-tighter uppercase line-clamp-3 group-hover/archive:text-[#2E7D32] transition-colors leading-tight italic">{{ item?.title }}</h4>
                   </div>
                   
                   <div class="mt-8 pt-6 border-t border-gray-100 group-hover/archive:border-[#2E7D32]/20 relative z-10">
