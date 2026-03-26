@@ -254,12 +254,12 @@ const handleShare = () => {
             </div>
             <div v-else-if="program" class="space-y-12">
               <div v-if="program?.description">
-                <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-8 opacity-60">Mission Overview</h3>
+                <!-- <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-8 opacity-60">Mission Overview</h3> -->
                 <div class="text-gray-600 leading-[2] text-[16px] font-medium whitespace-pre-wrap lg:pr-10" v-html="program?.description"></div>
               </div>
 
               <div v-if="program?.content" class="pt-12 border-t border-gray-50">
-                <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-10 opacity-60">Systemic Framework</h3>
+                <!-- <h3 class="text-[11px] font-bold text-[#2E7D32] tracking-[0.3em] uppercase mb-10 opacity-60">Systemic Framework</h3> -->
                 <div class="program-content" v-html="program?.content"></div>
               </div>
 
