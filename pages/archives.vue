@@ -3,6 +3,14 @@ import { useFetchArchives } from '@/composables/modules/archives/useFetchArchive
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 import { programs_api } from '@/api_factory/modules/programs'
 
+const showShareModal = ref(false)
+const selectedProgramToShare = ref({})
+
+const openShareModal = (program: any) => {
+  selectedProgramToShare.value = program
+  showShareModal.value = true
+}
+
 const { archives: allArchives, loading: pending } = useFetchArchives()
 const { homeContent } = useHomeContent()
 
@@ -173,28 +181,39 @@ useHead({
 
             <!-- Programme type card (past programmes or archived programmes) -->
             <template v-if="item?._source === 'program' || item?.type === 'programme'">
-              <NuxtLink :to="`/programs/${item?._id}`" class="block h-full">
-                <div class="aspect-[4/5] bg-gray-100 rounded-2xl overflow-hidden mb-6 md:mb-8 shadow-sm relative">
-                  <img v-if="item?.bannerImages?.length" :src="item.bannerImages[0]" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-                  <img v-else-if="item?.imageUrl" :src="item.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-                  <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
-                  
-                  <span class="absolute top-4 right-4 px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">PROGRAMME</span>
-                </div>
-                
-                <div class="space-y-3 md:space-y-4">
-                  <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
-                    {{ item?.date ? new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : (item?.startDate || '') }}
-                  </span>
-                  <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ item?.title }}</h4>
-                  <div class="pt-2 md:pt-4">
-                    <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] border-b-2 border-black pb-1 group-hover:border-[#2E7D32] group-hover:text-[#2E7D32] transition-all inline-flex items-center gap-2">
-                      VIEW DETAILS 
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                    </span>
+              <div class="relative h-full group">
+                <NuxtLink :to="`/programs/${item?._id}`" class="block h-full">
+                  <div class="aspect-[4/5] bg-gray-100 rounded-2xl overflow-hidden mb-6 md:mb-8 shadow-sm relative">
+                    <img v-if="item?.bannerImages?.length" :src="item.bannerImages[0]" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+                    <img v-else-if="item?.imageUrl" :src="item.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+                    <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
+                    
+                    <span class="absolute top-4 right-4 px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">PROGRAMME</span>
                   </div>
-                </div>
-              </NuxtLink>
+                  
+                  <div class="space-y-3 md:space-y-4 relative">
+                    <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                      {{ item?.date ? new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : (item?.startDate || '') }}
+                    </span>
+                    <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ item?.title }}</h4>
+                    <div class="pt-2 md:pt-4">
+                      <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] border-b-2 border-black pb-1 group-hover:border-[#2E7D32] group-hover:text-[#2E7D32] transition-all inline-flex items-center gap-2">
+                        VIEW DETAILS 
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                      </span>
+                    </div>
+                  </div>
+                </NuxtLink>
+                <button 
+                  @click.prevent="openShareModal(item)"
+                  class="absolute bottom-0 right-0 p-2 text-gray-400 hover:text-[#2E7D32] hover:bg-[#2E7D32]/5 rounded-full transition-colors z-20"
+                  title="Share Programme"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  </svg>
+                </button>
+              </div>
             </template>
 
             <!-- Archive type card (speeches, reports, etc.) -->
@@ -246,5 +265,12 @@ useHead({
         message="The intelligence repository for this category is currently being indexed or contains no public records."
       />
     </div>
+
+    <!-- Share Modal -->
+    <ShareModal 
+      :show="showShareModal" 
+      :program="selectedProgramToShare" 
+      @close="showShareModal = false" 
+    />
   </div>
 </template>

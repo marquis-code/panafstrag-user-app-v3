@@ -11,28 +11,12 @@ const route = useRoute()
 const selectedYear = ref(route.query.year as string || 'all')
 const selectedMonth = ref(route.query.month as string || 'all')
 
-const shareProgram = async (program: any) => {
-  const url = `${window.location.origin}/programs/${program._id}`
-  const shareData = {
-    title: program.title || 'PANAFSTRAG Programme',
-    text: program.description
-      ? program.description.replace(/<[^>]*>/g, '').slice(0, 200)
-      : 'Check out this programme on PANAFSTRAG',
-    url,
-  }
+const showShareModal = ref(false)
+const selectedProgramToShare = ref({})
 
-  try {
-    if (navigator.share && navigator.canShare(shareData)) {
-      await navigator.share(shareData)
-    } else {
-      await navigator.clipboard.writeText(url)
-      showToast({ title: 'Copied', message: 'Link copied to clipboard', toastType: 'success' })
-    }
-  } catch (err: any) {
-    if (err.name !== 'AbortError') {
-      console.error('Error sharing:', err.message)
-    }
-  }
+const shareProgram = (program: any) => {
+  selectedProgramToShare.value = program
+  showShareModal.value = true
 }
 
 const years = computed(() => {
@@ -254,6 +238,13 @@ useHead({
         />
       </div>
     </div>
+
+    <!-- Share Modal -->
+    <ShareModal 
+      :show="showShareModal" 
+      :program="selectedProgramToShare" 
+      @close="showShareModal = false" 
+    />
   </div>
 </template>
 

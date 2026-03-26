@@ -11,6 +11,14 @@ const { responsibilities, fetchResponsibilities } = useFetchResponsibilities()
 const { homeContent } = useHomeContent()
 const { activeBanner } = useActiveBanner()
 
+const showShareModal = ref(false)
+const selectedProgramToShare = ref({})
+
+const openShareModal = (program: any) => {
+  selectedProgramToShare.value = program
+  showShareModal.value = true
+}
+
 const bannerProgram = computed(() => activeBanner.value?.programId || null)
 
 const bannerProgramStatus = computed(() => {
@@ -284,13 +292,22 @@ useHead({
               {{ program?.title }}
             </h4>
             
-            <div class="pt-4">
+            <div class="pt-4 flex items-center justify-between">
               <NuxtLink :to="`/programs/${program?._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] border-b-2 border-black pb-1 hover:border-[#2E7D32] hover:text-[#2E7D32] transition-all">
                 READ DETAILS
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </NuxtLink>
+              <button 
+                @click.prevent="openShareModal(program)"
+                class="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-[#2E7D32] hover:text-white transition-all shadow-sm"
+                title="Share Programme"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -320,6 +337,13 @@ useHead({
         </div>
       </div>
     </section>
+
+    <!-- Share Modal -->
+    <ShareModal 
+      :show="showShareModal" 
+      :program="selectedProgramToShare" 
+      @close="showShareModal = false" 
+    />
   </div>
 </template>
 

@@ -61,27 +61,10 @@ const pdfDocuments = computed(() => {
 const selectedPdfIndex = ref(0)
 const { showToast } = useCustomToast()
 
-const handleShare = async () => {
-  const shareData = {
-    title: program.value?.title || 'PANAFSTRAG Programme',
-    text: program.value?.description
-      ? program.value.description.replace(/<[^>]*>/g, '').slice(0, 200)
-      : 'Check out this programme on PANAFSTRAG',
-    url: window.location.href,
-  }
+const showShareModal = ref(false)
 
-  try {
-    if (navigator.share && navigator.canShare(shareData)) {
-      await navigator.share(shareData)
-    } else {
-      await navigator.clipboard.writeText(shareData.url)
-      showToast({ title: 'Copied', message: 'Link copied to clipboard', toastType: 'success' })
-    }
-  } catch (err: any) {
-    if (err.name !== 'AbortError') {
-      console.error('Error sharing:', err.message)
-    }
-  }
+const handleShare = () => {
+  showShareModal.value = true
 }
 </script>
 
@@ -407,6 +390,13 @@ const handleShare = async () => {
 
     <!-- Footer Space -->
     <div class="h-40"></div>
+
+    <!-- Share Modal -->
+    <ShareModal 
+      :show="showShareModal" 
+      :program="program" 
+      @close="showShareModal = false" 
+    />
   </div>
 </template>
 
