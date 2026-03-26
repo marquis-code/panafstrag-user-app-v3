@@ -192,8 +192,10 @@ useHead({
               <!-- Content Area -->
               <div class="p-8 space-y-5">
                 <div class="flex items-center gap-2">
-                  <div class="w-1.5 h-1.5 rounded-full bg-[#2E7D32]"></div>
-                  <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ formatDate(program?.date) || program?.startDate }}</p>
+                  <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-relaxed">
+                    {{ formatDate(program?.date) || program?.startDate }}
+                    <span v-if="program?.startTime" class="inline-block mt-0.5"><br/>{{ program.startTime }} <span v-if="program.endTime">- {{ program.endTime }}</span></span>
+                  </p>
                 </div>
                 
                 <h3 class="text-xl font-bold text-gray-900 leading-snug group-hover:text-[#2E7D32] transition-colors line-clamp-2">

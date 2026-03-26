@@ -131,7 +131,12 @@ const handleShare = () => {
               </div>
               <div>
                 <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Schedule</p>
-                <p class="text-sm font-bold text-gray-900">{{ program?.startDate || formatDate(program?.date) }}</p>
+                <p class="text-sm font-bold text-gray-900">
+                  {{ program?.startDate || formatDate(program?.date) }}
+                  <template v-if="program?.startTime">
+                    <br/><span class="text-[11px] text-gray-500 font-medium mt-1 inline-block">{{ program.startTime }} <span v-if="program.endTime">- {{ program.endTime }}</span></span>
+                  </template>
+                </p>
               </div>
             </div>
             

@@ -192,8 +192,9 @@ useHead({
                   </div>
                   
                   <div class="space-y-3 md:space-y-4 relative">
-                    <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                    <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 leading-relaxed block">
                       {{ item?.date ? new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : (item?.startDate || '') }}
+                      <template v-if="item?.startTime"><br/>{{ item.startTime }} <span v-if="item.endTime">- {{ item.endTime }}</span></template>
                     </span>
                     <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ item?.title }}</h4>
                     <div class="pt-2 md:pt-4">
