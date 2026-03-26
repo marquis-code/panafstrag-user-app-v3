@@ -1,13 +1,39 @@
 <script setup lang="ts">
 import { useFetchPrograms } from '@/composables/modules/programs/useFetchPrograms'
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
+import { useCustomToast } from '@/composables/core/useCustomToast'
 
 const { programs: allPrograms, loading: pending } = useFetchPrograms()
 const { homeContent } = useHomeContent()
+const { showToast } = useCustomToast()
 
 const route = useRoute()
 const selectedYear = ref(route.query.year as string || 'all')
 const selectedMonth = ref(route.query.month as string || 'all')
+
+const shareProgram = async (program: any) => {
+  const url = `${window.location.origin}/programs/${program._id}`
+  const shareData = {
+    title: program.title || 'PANAFSTRAG Programme',
+    text: program.description
+      ? program.description.replace(/<[^>]*>/g, '').slice(0, 200)
+      : 'Check out this programme on PANAFSTRAG',
+    url,
+  }
+
+  try {
+    if (navigator.share && navigator.canShare(shareData)) {
+      await navigator.share(shareData)
+    } else {
+      await navigator.clipboard.writeText(url)
+      showToast({ title: 'Copied', message: 'Link copied to clipboard', toastType: 'success' })
+    }
+  } catch (err: any) {
+    if (err.name !== 'AbortError') {
+      console.error('Error sharing:', err.message)
+    }
+  }
+}
 
 const years = computed(() => {
   const currentYear = new Date().getFullYear()
@@ -203,6 +229,9 @@ useHead({
                   </NuxtLink>
                   
                   <div class="flex gap-2">
+                    <button @click.prevent="shareProgram(program)" class="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-[#2E7D32] hover:text-white transition-all shadow-sm" title="Share">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+                    </button>
                     <a v-if="program?.registerLink" :href="program.registerLink" target="_blank" class="w-9 h-9 rounded-xl bg-[#E8F5E9] flex items-center justify-center text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white transition-all shadow-sm" title="Register">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
                     </a>
