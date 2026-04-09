@@ -69,8 +69,9 @@ const mergedItems = computed(() => {
   const seen = new Set()
   return combined.filter(item => {
     if (!item?._id) return true
-    if (seen.has(item._id)) return false
-    seen.add(item._id)
+    const id = item._id.toString()
+    if (seen.has(id)) return false
+    seen.add(id)
     return true
   })
 })
