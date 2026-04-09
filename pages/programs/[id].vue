@@ -28,9 +28,15 @@ const getYouTubeEmbedUrl = (url: string) => {
   return url
 }
 
-const formatDate = (date: string) => {
-  try { return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }
-  catch { return date }
+const formatDate = (date: any) => {
+  if (!date || date === 'null') return 'TBD'
+  try {
+    const d = new Date(date)
+    if (isNaN(d.getTime())) return date
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  } catch (err) {
+    return date
+  }
 }
 
 useHead({
@@ -132,7 +138,7 @@ const handleShare = () => {
               <div>
                 <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Schedule</p>
                 <p class="text-sm font-bold text-gray-900">
-                  {{ program?.startDate || formatDate(program?.date) }}
+                  {{ formatDate(program?.startDate || program?.date) }}
                   <template v-if="program?.startTime">
                     <br/><span class="text-[11px] text-gray-500 font-medium mt-1 inline-block">{{ program.startTime }} <span v-if="program.endTime">- {{ program.endTime }}</span></span>
                   </template>

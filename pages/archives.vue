@@ -63,7 +63,16 @@ const years = computed(() => {
 const mergedItems = computed(() => {
   const archives = (allArchives.value as any[]) || []
   const programs = pastPrograms.value || []
-  return [...archives, ...programs]
+  const combined = [...archives, ...programs]
+  
+  // De-duplicate by _id
+  const seen = new Set()
+  return combined.filter(item => {
+    if (!item?._id) return true
+    if (seen.has(item._id)) return false
+    seen.add(item._id)
+    return true
+  })
 })
 
 const filterTypes = ['all', 'program', 'speech', 'report', 'publication', 'media']
@@ -71,7 +80,12 @@ const filterTypes = ['all', 'program', 'speech', 'report', 'publication', 'media
 const filteredArchives = computed(() => {
   let items = mergedItems.value
   if (filter.value !== 'all') {
-    items = items.filter(p => p.type === filter.value || (filter.value === 'program' && p._source === 'program'))
+    items = items.filter(p => {
+      if (filter.value === 'program') {
+        return p.type === 'program' || p.type === 'programme' || p._source === 'program'
+      }
+      return p.type === filter.value
+    })
   }
   if (selectedYear.value !== 'all') {
     items = items.filter(p => {
