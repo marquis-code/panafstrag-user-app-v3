@@ -21,6 +21,10 @@ const hasVirtualLinks = computed(() => {
   return program.value?.zoomMeetingUrl || program.value?.googleMeetUrl || program.value?.uploadedVideoUrl
 })
 
+const isArchived = computed(() => {
+  return !!program.value?.isArchived
+})
+
 const getYouTubeEmbedUrl = (url: string) => {
   if (!url) return ''
   const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
@@ -169,7 +173,7 @@ const handleShare = () => {
 
           <!-- Virtual Join Bar (Now Integrated better) -->
           <div v-if="program && hasVirtualLinks" class="bg-[#2E7D32] rounded-[2rem] p-4 flex flex-wrap items-center justify-between gap-4 px-8 shadow-xl shadow-[#2E7D32]/10 animate-fade-in-up delay-[150ms]">
-            <div v-if="program?.status !== 'completed' && program?.type !== 'past'" class="flex items-center gap-3">
+            <div v-if="!isArchived && program?.status !== 'completed' && program?.type !== 'past'" class="flex items-center gap-3">
               <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center animate-pulse">
                 <span class="relative flex h-3 w-3">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
@@ -187,10 +191,10 @@ const handleShare = () => {
             
             <div class="flex flex-wrap items-center gap-3">
               <a v-if="program?.zoomMeetingUrl" :href="program?.zoomMeetingUrl" target="_blank" class="px-6 py-2.5 bg-white text-[#2E7D32] rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-gray-100 transition-all flex items-center gap-2">
-                Join via Zoom
+               Watch Via Zoom
               </a>
               <a v-if="program?.googleMeetUrl" :href="program?.googleMeetUrl" target="_blank" class="px-6 py-2.5 bg-white/15 text-white border border-white/20 rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-white/25 transition-all flex items-center gap-2">
-                Join via Meet
+                Watch Via Meet
               </a>
             </div>
           </div>
@@ -355,7 +359,7 @@ const handleShare = () => {
         <aside class="w-full lg:w-[350px] space-y-6">
           
           <!-- Registration Card -->
-          <div v-if="program?.registerLink" class="bg-[#2E7D32] rounded-[2.5rem] p-8 text-white relative overflow-hidden group shadow-2xl shadow-[#2E7D32]/20 sticky top-10">
+          <div v-if="program?.registerLink && !isArchived" class="bg-[#2E7D32] rounded-[2.5rem] p-8 text-white relative overflow-hidden group shadow-2xl shadow-[#2E7D32]/20 sticky top-10">
             <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-2xl group-hover:w-40 transition-all duration-700"></div>
             
             <h4 class="text-[10px] font-bold tracking-[0.4em] uppercase text-white/50 mb-6 italic">Secure Pass</h4>
