@@ -55,11 +55,11 @@ useHead({
         </div>
         <div>
           <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupMembershipTitle || 'Membership'"></h3>
-          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupMembership || 'Co-Leaders of each Group forward nominees with C.Vs to the Board for ratification. It is open to volunteers ready to offer actionable thoughts and work within PANAFSTRAG Cells.'"></p>
+          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupMembership || 'Co-Leaders of each Group forward nominees with C.Vs to Ubuntu Team for ratification. It is open to volunteers ready to offer actionable thoughts and work within PANAFSTRAG Cells.'"></p>
         </div>
         <div>
           <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupLeadershipTitle || 'Leadership'"></h3>
-          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupLeadership || 'Co-Leaders (1 man & 1 woman) are appointed from the Board, with one from the Continent and the other from the 6th Region. They represent each Group on the Board.'"></p>
+          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupLeadership || 'Co-Leaders (1 man & 1 woman) are appointed from Ubuntu Team, with one from the Continent and the other from the 6th Region. They represent each Group on Ubuntu Team.'"></p>
         </div>
         <div>
           <h3 class="text-xl font-black uppercase italic mb-4" v-html="homeContent.languageGroupFeesTitle || 'Fees'"></h3>

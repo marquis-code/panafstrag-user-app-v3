@@ -6,7 +6,7 @@ const { boardMembers: members, loading: pending } = useFetchBoard()
 const { homeContent } = useHomeContent()
 
 useHead({
-  title: 'The Board | PANAFSTRAG',
+  title: 'Ubuntu Team | PANAFSTRAG',
 })
 </script>
 
@@ -14,7 +14,7 @@ useHead({
   <div class="space-y-16 pt-16 container px-6 lg:px-0 mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
       <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.boardPageTitle || 'Board of <span class=\'not-italic text-gray-400\'>Trustees</span>'"></h1>
-      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.boardPageDescription || 'Our board members are distinguished professionals and scholars dedicated to African development and strategic policy research.'"></p>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.boardPageDescription || 'Our Ubuntu Team members are distinguished professionals and scholars dedicated to African development and strategic policy research.'"></p>
     </div>
 
     <div v-if="pending">
@@ -53,7 +53,7 @@ useHead({
     <div v-else>
       <EmptyState
         title="BOARD VACANT"
-        message="The Board of Trustees registration for this term is currently being finalized."
+        message="Ubuntu Team of Trustees registration for this term is currently being finalized."
       />
     </div>
   </div>

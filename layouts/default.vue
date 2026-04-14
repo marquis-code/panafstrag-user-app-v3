@@ -310,7 +310,7 @@ const instituteItemsRes = computed(() => {
     return homeContent.value.instituteNavItems
   }
   return [
-    { label: 'The Board', path: '/board' },
+    { label: 'The Ubuntu Team', path: '/board' },
     { label: 'Organogram', path: '/organogram' },
     { label: 'Focus Areas', path: '/focus-areas' },
     { label: 'Cells', path: '/cells' },
