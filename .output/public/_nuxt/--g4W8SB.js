@@ -1,0 +1,1 @@
+import{p as e}from"./DIG2lADm.js";import{u as m}from"./DmIKh90W.js";import{f as i}from"./Boz4BwKW.js";const c=()=>{const{data:a,pending:t,error:s,refresh:o}=m("programs-list",async()=>{const r=await e.getPrograms();return r.data?.data??r.data??[]},{initialCache:!0,lazy:!0});return{loading:t,programs:a||i([]),error:s,fetchPrograms:o}};export{c as u};
