@@ -16,9 +16,10 @@ useHead({
       <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.languageGroupsPageDescription || 'PANAFSTRAG Language Groups bring together Africana people sharing common official languages or mother tongues to foster collaboration without linguistic obstacles.'"></p>
     </div>
 
-    <div v-if="pending">
-      <LoadingState />
+    <div v-if="pending" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+      <div v-for="i in 3" :key="i" class="h-48 bg-gray-50 rounded-2xl animate-pulse"></div>
     </div>
+
 
     <div v-else-if="languageGroups?.length" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
       <div v-for="(group, i) in (languageGroups as any[])" :key="group?._id"

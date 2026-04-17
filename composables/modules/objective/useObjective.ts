@@ -1,19 +1,18 @@
 import { objectiveApiFactory } from "@/api_factory/modules/objective";
 
 export const useFetchObjectives = () => {
-  const objectives = ref([]);
-  const loading = ref(false);
-
-  const fetchObjectives = async () => {
-    loading.value = true;
-    try {
+  const { data: objectives, pending: loading, refresh: fetchObjectives } = useAsyncData(
+    'objectives',
+    async () => {
       const res = await objectiveApiFactory.getAll();
-      objectives.value = res.data;
-    } catch (error) {
-    } finally {
-      loading.value = false;
+      return res.data ?? [];
+    },
+    {
+      lazy: true,
+      server: true
     }
-  };
+  );
 
-  return { fetchObjectives, objectives, loading };
+  return { fetchObjectives, objectives: objectives || ref([]), loading };
 };
+

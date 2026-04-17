@@ -1,37 +1,23 @@
-import { ref } from 'vue';
 import { programs_api } from '@/api_factory/modules/programs';
 
 export const useFetchProgram = () => {
-  const loading = ref(false);
-  const program = ref<any>(null);
-  const error = ref<string | null>(null);
   const route = useRoute();
+  const id = computed(() => route.params.id as string);
 
-  const fetchProgram = async (id: string) => {
-    loading.value = true;
-    error.value = null;
-
-    try {
-      const res = await programs_api.getProgram(id) as any;
-
-      if ([200, 201].includes(res?.status)) {
-        program.value = res.data?.data ?? res.data ?? null;
-      }
-
-      return res;
-    } catch (err: any) {
-      error.value = err?.message || 'Failed to fetch program details';
-      throw err;
-    } finally {
-      loading.value = false;
+  const { data: program, pending: loading, error, refresh: fetchProgram } = useAsyncData(
+    `program-${id.value}`,
+    async () => {
+      if (!id.value) return null;
+      const res = await programs_api.getProgram(id.value) as any;
+      return res.data?.data ?? res.data ?? null;
+    },
+    {
+      watch: [id],
+      lazy: true,
+      server: true
     }
-  };
-
-  onMounted(() => {
-    if(route.params.id){
-      fetchProgram(route.params.id as string)
-    }
-  })
+  );
 
   return { loading, program, error, fetchProgram };
 };
+

@@ -4,11 +4,8 @@ import { useFetchBoardMember } from '@/composables/modules/board/useFetchBoardMe
 const route = useRoute()
 const { boardMember, loading, fetchBoardMember } = useFetchBoardMember()
 
-onMounted(() => {
-  if (route.params.id) {
-    fetchBoardMember(route.params.id as string)
-  }
-})
+// Removed onMounted manual fetching as composables now use useAsyncData internally
+
 
 useHead({
   title: computed(() => `${boardMember.value?.name || 'Board Member'} | PANAFSTRAG`),

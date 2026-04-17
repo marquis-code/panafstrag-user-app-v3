@@ -5,11 +5,19 @@ import { useFetchResponsibilities } from '@/composables/modules/responsibility/u
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 import { useActiveBanner } from '@/composables/modules/active-banner/useActiveBanner'
 
-const { programs: allPrograms, loading: pending } = useFetchPrograms()
-const { objectives, fetchObjectives } = useFetchObjectives()
-const { responsibilities, fetchResponsibilities } = useFetchResponsibilities()
-const { homeContent } = useHomeContent()
-const { activeBanner } = useActiveBanner()
+const { programs: allPrograms, loading: programsLoading } = useFetchPrograms()
+const { objectives, loading: objectivesLoading } = useFetchObjectives()
+const { responsibilities, loading: responsibilitiesLoading } = useFetchResponsibilities()
+const { homeContent, loading: homeContentLoading } = useHomeContent()
+const { activeBanner, loading: bannerLoading } = useActiveBanner()
+
+const pending = computed(() => 
+  programsLoading.value || 
+  objectivesLoading.value || 
+  responsibilitiesLoading.value || 
+  homeContentLoading.value || 
+  bannerLoading.value
+)
 
 const showShareModal = ref(false)
 const selectedProgramToShare = ref({})
@@ -35,10 +43,8 @@ const bannerProgramStatus = computed(() => {
   return p.type || 'upcoming'
 })
 
-onMounted(() => {
-  fetchObjectives()
-  fetchResponsibilities()
-})
+// Removed onMounted manual fetching as composables now use useAsyncData internally
+
 
 // Cast to any[] to avoid 'never' errors if the ref is not properly typed in the composable
 const programs = computed(() => {
@@ -212,15 +218,24 @@ useHead({
              <span class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block" v-html="homeContent?.objectivesSubTitle || 'Strategic Alignment'"></span>
              <h2 class="text-3xl md:text-6xl font-black tracking-tighter uppercase italic" v-html="homeContent?.objectivesTitle || 'Institutional <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>Objectives.</span>'"></h2>
            </div>
-           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-16">
-              <div v-for="(obj, i) in (objectives as any[])" :key="i" class="space-y-4 group">
-                <span class="text-[#2E7D32] font-black text-4xl md:text-5xl opacity-20 group-hover:opacity-100 transition-all duration-500">{{ (i+1).toString().padStart(2, '0') }}</span>
-                <p class="text-gray-500 font-bold leading-relaxed text-sm md:text-base tracking-tight" v-html="obj.description"></p>
-              </div>
-              <div v-if="!objectives?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
-                <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Strategic objectives pending...</p>
-              </div>
-           </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-16">
+               <template v-if="objectivesLoading">
+                 <div v-for="i in 3" :key="i" class="space-y-4 animate-pulse">
+                   <div class="h-10 w-16 bg-gray-100 rounded-lg"></div>
+                   <div class="h-4 bg-gray-100 rounded w-full"></div>
+                   <div class="h-4 bg-gray-100 rounded w-5/6"></div>
+                 </div>
+               </template>
+               <template v-else>
+                 <div v-for="(obj, i) in (objectives as any[])" :key="i" class="space-y-4 group">
+                   <span class="text-[#2E7D32] font-black text-4xl md:text-5xl opacity-20 group-hover:opacity-100 transition-all duration-500">{{ (i+1).toString().padStart(2, '0') }}</span>
+                   <p class="text-gray-500 font-bold leading-relaxed text-sm md:text-base tracking-tight" v-html="obj.description"></p>
+                 </div>
+                 <div v-if="!objectives?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
+                   <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Strategic objectives pending...</p>
+                 </div>
+               </template>
+            </div>
         </div>
 
         <!-- Responsibilities -->
@@ -229,14 +244,19 @@ useHead({
              <span class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block text-center md:text-right" v-html="homeContent?.responsibilitiesSubTitle || 'Code of Conduct'"></span>
              <h2 class="text-3xl md:text-6xl font-black tracking-tighter uppercase italic" v-html="homeContent?.responsibilitiesTitle || 'Core <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>Responsibilities.</span>'"></h2>
            </div>
-           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
-              <div v-for="(res, i) in (responsibilities as any[])" :key="i" class="p-8 md:p-12 bg-gray-50 rounded-2xl hover:bg-[#2E7D32] hover:text-white transition-all duration-500 group shadow-sm">
-                <p class="font-bold text-sm md:text-base leading-loose" v-html="res.description"></p>
-              </div>
-              <div v-if="!responsibilities?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
-                <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Commitments under review...</p>
-              </div>
-           </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+               <template v-if="responsibilitiesLoading">
+                 <div v-for="i in 3" :key="i" class="p-8 md:p-12 bg-gray-50 rounded-2xl animate-pulse h-48"></div>
+               </template>
+               <template v-else>
+                 <div v-for="(res, i) in (responsibilities as any[])" :key="i" class="p-8 md:p-12 bg-gray-50 rounded-2xl hover:bg-[#2E7D32] hover:text-white transition-all duration-500 group shadow-sm">
+                   <p class="font-bold text-sm md:text-base leading-loose" v-html="res.description"></p>
+                 </div>
+                 <div v-if="!responsibilities?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
+                   <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Commitments under review...</p>
+                 </div>
+               </template>
+            </div>
         </div>
     </section>
 
@@ -284,9 +304,14 @@ useHead({
 
           <div class="space-y-5 px-2">
             <div class="flex items-center gap-3">
-              <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded">{{ program?.type }}</span>
-              <span class="text-[9px] font-black uppercase tracking-[0.1em] text-gray-400">{{ program?.startDate || program?.date ? new Date(program.date || program.startDate).getFullYear() : '' }}</span>
+              <!-- <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded">{{ program?.type }}</span> -->
+                     <span class="px-4 py-1.5 backdrop-blur-md bg-white/90 text-black text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg border border-white/20">
+                <span class="inline-block w-1.5 h-1.5 rounded-full mr-2" :class="program?.calculatedStatus === 'upcoming' ? 'bg-[#2E7D32] animate-pulse' : 'bg-gray-400'"></span>
+                {{ program?.calculatedStatus }}
+              </span>
+              <span class="text-sm font-black uppercase tracking-[0.1em] text-gray-400">{{ program?.startDate || program?.date ? new Date(program.date || program.startDate).getFullYear() : '' }}</span>
             </div>
+
             
             <h4 class="text-2xl lg:text-3xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-[1.1] italic">
               {{ program?.title }}

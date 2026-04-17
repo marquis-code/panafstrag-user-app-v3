@@ -5,11 +5,8 @@ import { useCustomToast } from "@/composables/core/useCustomToast"
 const route = useRoute()
 const { program, loading, fetchProgram } = useFetchProgram()
 
-onMounted(() => {
-  if (route.params.id) {
-    fetchProgram(route.params.id as string)
-  }
-})
+// Removed onMounted manual fetching as composables now use useAsyncData internally
+
 
 const heroImage = computed(() => {
   if (program.value?.bannerImages?.length) return program.value.bannerImages[0]

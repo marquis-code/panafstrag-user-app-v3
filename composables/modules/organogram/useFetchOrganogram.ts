@@ -1,28 +1,22 @@
 import { organogramApiFactory } from '@/api_factory/modules/organogram'
 
 export const useFetchOrganogram = () => {
-  const loading = ref(false)
-  const organogramNodes = ref([])
-
-  const fetchOrganogram = async () => {
-    loading.value = true
-    try {
+  const { data: organogramNodes, pending: loading, refresh: fetchOrganogram } = useAsyncData(
+    'organogram-nodes',
+    async () => {
       const response = await organogramApiFactory.getOrganogramNodes()
-      organogramNodes.value = response.data
-    } catch (error) {
-      console.error('Error fetching organogram nodes:', error)
-    } finally {
-      loading.value = false
+      return response.data ?? []
+    },
+    {
+      lazy: true,
+      server: true
     }
-  }
-  
-  onMounted(() => {
-    fetchOrganogram()
-  })
+  )
 
   return {
     loading,
-    organogramNodes,
+    organogramNodes: organogramNodes || ref([]),
     fetchOrganogram
   }
 }
+

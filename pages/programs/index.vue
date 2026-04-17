@@ -158,9 +158,17 @@ useHead({
       </div>
 
       <!-- Programmes Grid -->
-      <div v-if="pending" class="py-20 flex justify-center">
-        <LoadingState />
+      <div v-if="pending" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+        <div v-for="i in 6" :key="i" class="bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm animate-pulse">
+          <div class="aspect-[16/10] bg-gray-50"></div>
+          <div class="p-8 space-y-4">
+            <div class="h-4 bg-gray-50 w-1/3 rounded"></div>
+            <div class="h-6 bg-gray-50 w-full rounded"></div>
+            <div class="h-4 bg-gray-50 w-2/3 rounded"></div>
+          </div>
+        </div>
       </div>
+
 
       <div v-else-if="groupedProgramsByYear?.length" class="space-y-32">
         <div v-for="group in groupedProgramsByYear" :key="group.year" class="space-y-12">

@@ -11,32 +11,33 @@ const openShareModal = (program: any) => {
   showShareModal.value = true
 }
 
-const { archives: allArchives, loading: pending } = useFetchArchives()
+const { archives: allArchives, loading: archivesLoading } = useFetchArchives()
 const { homeContent } = useHomeContent()
 
-// Fetch past programmes to merge into archives
-const pastPrograms = ref<any[]>([])
-const pastLoading = ref(false)
-
-onMounted(async () => {
-  pastLoading.value = true
-  try {
-    const res = await programs_api.getPastPrograms() as any
-    if ([200, 201].includes(res?.status)) {
-      pastPrograms.value = (res.data?.data ?? res.data ?? []).map((p: any) => ({
-        ...p,
-        type: 'program',
-        fileUrl: null,
-        _source: 'program'
-      }))
-    }
-  } catch (e) {
-    // Silently fail
-  } finally {
-    pastLoading.value = false
+// Fetch past programmes to merge into archives via useAsyncData for SSR and parallelism
+const { data: pastProgramsData, pending: pastProgramsLoading } = useAsyncData(
+  'past-programs-archive',
+  async () => {
+    try {
+      const res = await programs_api.getPastPrograms() as any
+      if ([200, 201].includes(res?.status)) {
+        return (res.data?.data ?? res.data ?? []).map((p: any) => ({
+          ...p,
+          type: 'program',
+          fileUrl: null,
+          _source: 'program'
+        }))
+      }
+    } catch (e) {}
+    return []
+  },
+  {
+    lazy: true,
+    server: true
   }
-})
+)
 
+const pastPrograms = computed(() => pastProgramsData.value || [])
 const route = useRoute()
 const filter = ref(route.query.type as string || 'all')
 const selectedYear = ref(route.query.year as string || 'all')
@@ -124,7 +125,7 @@ const groupedArchivesByYear = computed(() => {
     }))
 })
 
-const isLoading = computed(() => pending.value || pastLoading.value)
+const isLoading = computed(() => archivesLoading.value || pastProgramsLoading.value)
 
 useHead({
   title: 'Archives | PANAFSTRAG',
@@ -177,8 +178,9 @@ useHead({
       </div>
     </div>
 
-    <div v-if="isLoading">
-      <LoadingState />
+    <!-- Loading Skeletons -->
+    <div v-if="isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14">
+      <div v-for="i in 6" :key="i" class="h-[400px] bg-gray-50 rounded-[1.5rem] animate-pulse"></div>
     </div>
 
     <div v-else-if="groupedArchivesByYear?.length" class="space-y-24">

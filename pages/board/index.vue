@@ -17,9 +17,10 @@ useHead({
       <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.boardPageDescription || 'Our Ubuntu Team members are distinguished professionals and scholars dedicated to African development and strategic policy research.'"></p>
     </div>
 
-    <div v-if="pending">
-      <LoadingState />
+    <div v-if="pending" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+      <div v-for="i in 6" :key="i" class="glass-card animate-pulse h-[500px] bg-gray-50/50"></div>
     </div>
+
 
     <div v-else-if="members?.length" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
       <NuxtLink v-for="(member, i) in (members as any[])" :key="member?._id"

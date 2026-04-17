@@ -30,9 +30,10 @@ useHead({
       <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.focusAreasPageDescription || 'PANAFSTRAG focuses on multi-disciplinary research and strategic evaluations to address the complex challenges of stability and development in Africa.'"></p>
     </div>
 
-    <div v-if="pending">
-      <LoadingState />
+    <div v-if="pending" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+      <div v-for="i in 4" :key="i" class="h-48 bg-gray-50 rounded-3xl animate-pulse"></div>
     </div>
+
 
     <div v-else-if="focusAreas?.length" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
       <div v-for="(area, i) in (focusAreas as any[])" :key="area._id"

@@ -1,31 +1,18 @@
-import { ref } from 'vue';
 import { programs_api } from '@/api_factory/modules/programs';
 
 export const useFetchPrograms = () => {
-  const loading = ref(false);
-  const programs = ref<any[]>([]);
-  const error = ref<string | null>(null);
-
-  const fetchPrograms = async () => {
-    loading.value = true;
-    error.value = null;
-
-    try {
+  const { data: programs, pending: loading, error, refresh: fetchPrograms } = useAsyncData(
+    'programs-list',
+    async () => {
       const res = await programs_api.getPrograms() as any;
-
-      if ([200, 201].includes(res?.status)) {
-        programs.value = res.data?.data ?? res.data ?? [];
-      }
-
-      return res;
-    } catch (err: any) {
-      error.value = err?.message || 'Failed to fetch programs';
-    } finally {
-      loading.value = false;
+      return res.data?.data ?? res.data ?? [];
+    },
+    {
+      initialCache: true,
+      lazy: true
     }
-  };
+  );
 
-  onMounted(fetchPrograms);
-
-  return { loading, programs, error, fetchPrograms };
+  return { loading, programs: programs || ref([]), error, fetchPrograms };
 };
+
