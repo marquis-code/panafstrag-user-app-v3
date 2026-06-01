@@ -91,12 +91,15 @@
           </button>
         </div>
 
-        <!-- Mobile Search Trigger (Pill) -->
-        <button @click="isSearchOpen = true" class="md:hidden ml-auto mr-4 p-2 text-black hover:bg-black/5 rounded-full transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </button>
+        <!-- Mobile Search & Language Trigger -->
+        <div class="lg:hidden ml-auto mr-4 flex items-center gap-2">
+          <LanguageSwitcher />
+          <button @click="isSearchOpen = true" class="p-2 text-black hover:bg-black/5 rounded-full transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
 
         <!-- Mobile hamburger -->
         <button
