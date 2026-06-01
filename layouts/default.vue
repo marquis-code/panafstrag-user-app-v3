@@ -4,21 +4,21 @@
     <!-- ═══ NAVBAR ═══ -->
     <header
       class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-      :class="scrolled ? 'bg-white/95 backdrop-blur-2xl shadow-[0_1px_0_0_rgba(0,0,0,0.08)]' : 'bg-transparent'"
+      :class="scrolled ? 'bg-white/95 backdrop-blur-2xl shadow-[0_1px_0_0_rgba(0,0,0,0.08)]' : 'bg-white shadow-[0_1px_0_0_rgba(0,0,0,0.04)]'"
     >
       <!-- Top ticker bar -->
       <div
         class="overflow-hidden border-b border-black/5 transition-all duration-500"
         :class="scrolled ? 'h-0 opacity-0' : 'h-8 opacity-100'"
       >
-        <div class="flex items-center justify-between px-6 h-8">
-          <div class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-black animate-pulse"></span>
-            <span class="text-sm font-black text-black/40">
+        <div class="flex items-center justify-between px-4 md:px-6 h-8">
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span class="w-1.5 h-1.5 flex-shrink-0 rounded-full bg-[#2E7D32] animate-pulse"></span>
+            <span class="text-xs md:text-sm font-black text-gray-500 truncate">
               {{ homeContent?.websiteHeaderText || 'Est. 1992 — Panafricana Strategic & Policy Research Group' }}
             </span>
           </div>
-          <span class="text-sm font-black text-black/30 hidden md:block">
+          <span class="text-xs md:text-sm font-black text-gray-400 hidden md:block flex-shrink-0 ml-4">
             {{ currentDate }}
           </span>
         </div>
@@ -92,7 +92,7 @@
         </div>
 
         <!-- Mobile Search & Language Trigger -->
-        <div class="lg:hidden ml-auto mr-4 flex items-center gap-2">
+        <div class="lg:hidden ml-auto mr-2 flex items-center gap-1">
           <LanguageSwitcher />
           <button @click="isSearchOpen = true" class="p-2 text-black hover:bg-black/5 rounded-full transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -190,7 +190,7 @@
     </Transition>
 
     <!-- ═══ MAIN CONTENT ═══ -->
-    <main class="pt-[calc(1rem+4rem)] md:pt-[calc(2rem+5rem)]">
+    <main class="pt-[112px]">
       <slot />
     </main>
 

@@ -1,8 +1,12 @@
 <script setup lang="ts">
+
+import { useI18n } from '@/composables/useI18n'
 import { useFetchArchives } from '@/composables/modules/archives/useFetchArchives'
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 import { programs_api } from '@/api_factory/modules/programs'
 
+
+const { t } = useI18n()
 const showShareModal = ref(false)
 const selectedProgramToShare = ref({})
 
@@ -16,7 +20,7 @@ const { homeContent } = useHomeContent()
 
 // Fetch past programmes to merge into archives via useAsyncData for SSR and parallelism
 const { data: pastProgramsData, pending: pastProgramsLoading } = useAsyncData(
-  'past-programs-archive',
+  `past-programs-archive_${typeof window !== 'undefined' ? localStorage.getItem('app-lang') || 'en' : 'en'}`,
   async () => {
     try {
       const res = await programs_api.getPastPrograms() as any
@@ -135,8 +139,8 @@ useHead({
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.archivesPageTitle || 'Institutional <span class=\'not-italic text-gray-400\'>Archives</span>'"></h1>
-      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.archivesPageDescription || 'A comprehensive repository of past programmes, strategic evaluations, policy briefs, and historical documents from PANAFSTRAG operations.'"></p>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.archivesPageTitle || t('Institutional_Archives_HTML')"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.archivesPageDescription || t('Archives_Description')"></p>
     </div>
 
     <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-8 md:mb-16 animate-fade-in-up delay-100 relative z-20">
@@ -148,7 +152,7 @@ useHead({
           class="px-4 md:px-8 py-2 md:py-2.5 rounded-full text-sm md:text-sm font-black transition-all whitespace-nowrap"
           :class="filter === f ? 'bg-black text-white' : 'text-gray-400 hover:text-black'"
         >
-          {{ f === 'program' ? 'PAST PROGRAMMES' : f }}
+          {{ f === 'program' ? t('PAST_PROGRAMMES') : t(f) }}
         </button>
       </div>
 
@@ -157,8 +161,8 @@ useHead({
         <div class="w-40 lg:w-48">
           <CustomDropdown
             v-model="selectedYear"
-            :options="[{ label: 'ALL YEARS', value: 'all' }, ...years]"
-            placeholder="SELECT YEAR"
+            :options="[{ label: t('ALL_YEARS'), value: 'all' }, ...years]"
+            :placeholder="t('SELECT_YEAR')"
           />
         </div>
         
@@ -170,8 +174,8 @@ useHead({
           <div v-if="selectedYear !== 'all'" class="w-40 lg:w-48">
             <CustomDropdown
               v-model="selectedMonth"
-              :options="[{ label: 'ALL MONTHS', value: 'all' }, ...monthOptions]"
-              placeholder="SELECT MONTH"
+              :options="[{ label: t('ALL_MONTHS'), value: 'all' }, ...monthOptions]"
+              :placeholder="t('SELECT_MONTH')"
             />
           </div>
         </Transition>
@@ -187,7 +191,7 @@ useHead({
       <div v-for="group in groupedArchivesByYear" :key="group.year" class="space-y-12">
         <div class="border-b border-gray-100 pb-4">
           <h2 class="text-3xl font-black">
-            Archive Year: <span class=" text-gray-400">{{ group.year }}</span>
+            {{ t('Archive_Year') }} <span class=" text-gray-400">{{ group.year }}</span>
           </h2>
         </div>
 
@@ -205,7 +209,7 @@ useHead({
                     <img v-else-if="item?.imageUrl" :src="item.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
                     <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
                     
-                    <span class="absolute top-4 right-4 px-3 py-1 bg-[#2E7D32] text-white text-sm font-black rounded-full shadow-lg">PROGRAMME</span>
+                    <span class="absolute top-4 right-4 px-3 py-1 bg-[#2E7D32] text-white text-sm font-black rounded-full shadow-lg">{{ t('PROGRAMME') }}</span>
                   </div>
                   
                   <div class="space-y-3 md:space-y-4 relative">
@@ -216,7 +220,7 @@ useHead({
                     <h4 class="text-xl md:text-2xl font-black group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight">{{ item?.title }}</h4>
                     <div class="pt-2 md:pt-4">
                       <span class="text-sm md:text-sm font-black border-b-2 border-black pb-1 group-hover:border-[#2E7D32] group-hover:text-[#2E7D32] transition-all inline-flex items-center gap-2">
-                        VIEW DETAILS 
+                        {{ t('VIEW_DETAILS') }} 
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                       </span>
                     </div>
@@ -255,14 +259,14 @@ useHead({
                   
                   <div class="flex-grow relative z-10">
                     <p class="text-[#2E7D32] text-sm md:text-sm font-black mb-3 md:mb-4">
-                      {{ item?.type }} • {{ item?.month ? months[item.month - 1] : '' }} {{ item?.year || (item?.date ? new Date(item.date).getFullYear() : '') }}
+                      {{ t(item?.type) }} • {{ item?.month ? months[item.month - 1] : '' }} {{ item?.year || (item?.date ? new Date(item.date).getFullYear() : '') }}
                     </p>
                     <h4 class="text-xl md:text-2xl font-black mb-4 line-clamp-3 group-hover/archive:text-[#2E7D32] transition-colors leading-tight">{{ item?.title }}</h4>
                   </div>
                   
                   <div class="mt-8 pt-6 border-t border-gray-100 group-hover/archive:border-[#2E7D32]/20 relative z-10">
                     <span class="inline-flex items-center gap-2 text-sm md:text-sm font-black border-b-2 border-transparent pb-1 group-hover/archive:border-[#2E7D32] text-gray-500 group-hover/archive:text-[#2E7D32] transition-all">
-                      DOWNLOAD RESOURCE
+                      {{ t('DOWNLOAD_RESOURCE') }}
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 group-hover/archive:-translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                       </svg>
@@ -279,8 +283,8 @@ useHead({
     <!-- Empty State -->
     <div v-else>
       <EmptyState
-        title="ARCHIVES EMPTY"
-        message="The intelligence repository for this category is currently being indexed or contains no public records."
+        :title="t('ARCHIVES_EMPTY')"
+        :message="t('ARCHIVES_EMPTY_MSG')"
       />
     </div>
 

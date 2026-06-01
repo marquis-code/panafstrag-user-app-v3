@@ -1,7 +1,11 @@
 <script setup lang="ts">
+
+import { useI18n } from '@/composables/useI18n'
 import { useFetchBoard } from '@/composables/modules/board/useFetchBoard'
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 
+
+const { t } = useI18n()
 const { boardMembers: members, loading: pending } = useFetchBoard()
 const { homeContent } = useHomeContent()
 
@@ -13,8 +17,8 @@ useHead({
 <template>
   <div class="space-y-16 pt-16 container px-6 lg:px-0 mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.boardPageTitle || 'Board of <span class=\'not-italic text-gray-400\'>Trustees</span>'"></h1>
-      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.boardPageDescription || 'Our Ubuntu Team members are distinguished professionals and scholars dedicated to African development and strategic policy research.'"></p>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.boardPageTitle || t('Board_Of_Trustees_HTML')"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.boardPageDescription || t('Board_Description')"></p>
     </div>
 
     <div v-if="pending" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -42,7 +46,7 @@ useHead({
         </p>
 
         <div class="flex items-center justify-between pt-6 border-t border-gray-100 mt-auto">
-          <span class="text-sm font-black text-black">View Profile —></span>
+          <span class="text-sm font-black text-black">{{ t('View_Profile') }} —></span>
           <div class="flex gap-2" v-if="member?.duties?.length">
             <div v-for="n in Math.min(member?.duties?.length || 0, 3)" :key="n" class="w-1.5 h-1.5 rounded-full bg-gray-100 group-hover:bg-black transition-colors"></div>
           </div>
@@ -53,8 +57,8 @@ useHead({
     <!-- Empty State -->
     <div v-else>
       <EmptyState
-        title="BOARD VACANT"
-        message="Ubuntu Team of Trustees registration for this term is currently being finalized."
+        :title="t('BOARD_VACANT')"
+        :message="t('BOARD_VACANT_MSG')"
       />
     </div>
   </div>

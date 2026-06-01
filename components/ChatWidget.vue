@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed z-[100] flex flex-col items-end"
+    class="fixed z-[100] flex flex-col items-end pointer-events-none"
     :style="isFullScreen ? { top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' } : { bottom: widgetPos.y + 'px', right: widgetPos.x + 'px' }"
   >
     <!-- Chat Window -->
@@ -14,11 +14,15 @@
     >
       <div
         v-if="isOpen"
-        :class="[ 'bg-white flex flex-col overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-black/5 transition-all duration-500', isFullScreen ? 'fixed inset-0 w-full h-full rounded-full z-[200]' : 'fixed bottom-4 right-4 left-4 top-4 sm:relative sm:inset-auto sm:w-[24rem] sm:h-[36rem] rounded-3xl sm:mb-6 sm:z-auto' ]"
+        :class="[ 'bg-white flex flex-col overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-black/5 transition-all duration-500 pointer-events-auto', isFullScreen ? 'fixed inset-0 w-full h-full rounded-none z-[200]' : 'fixed inset-0 w-full h-full rounded-none z-[200] sm:relative sm:inset-auto sm:w-[24rem] sm:h-[36rem] sm:rounded-3xl sm:mb-6 sm:z-auto' ]"
       >
         <!-- ========== VIEW 1: Welcome / Call or Chat ========== -->
         <template v-if="currentView === 'welcome'">
           <div class="flex-1 flex flex-col items-center justify-center bg-gradient-to-b from-[#075e54] to-[#128c7e] text-white p-8 text-center relative overflow-hidden">
+            <!-- Close button for welcome view -->
+            <button @click="isOpen = false; isFullScreen = false" class="absolute top-4 right-4 p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors z-20">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
             <div class="absolute inset-0 bg-black/10 pointer-events-none"></div>
             <div class="relative z-10 flex flex-col items-center">
               <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl mb-5">
@@ -46,14 +50,20 @@
 
         <!-- ========== VIEW 2: Identification Form ========== -->
         <template v-else-if="currentView === 'identify'">
-          <div class="px-5 py-4 bg-[#075e54] text-white flex items-center gap-3 shadow-md">
-            <button @click="currentView = 'welcome'" class="p-1 hover:bg-white/10 rounded-full transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </button>
-            <div class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center border border-white/10">
-              <span class="text-sm font-black">P</span>
+          <div class="px-5 py-4 bg-[#075e54] text-white flex items-center justify-between shadow-md">
+            <div class="flex items-center gap-3">
+              <button @click="currentView = 'welcome'" class="p-1 hover:bg-white/10 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+              </button>
+              <div class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center border border-white/10">
+                <span class="text-sm font-black">P</span>
+              </div>
+              <h3 class="font-bold text-sm">{{ t('Chat with us now') }}</h3>
             </div>
-            <h3 class="font-bold text-sm">{{ t('Chat with us now') }}</h3>
+            <!-- Close button for identify view -->
+            <button @click="isOpen = false; isFullScreen = false" class="p-2 hover:bg-white/10 rounded-full transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
           </div>
           <div class="flex-1 p-6 space-y-4 bg-gray-50 overflow-y-auto">
             <input v-model="guest.name" :placeholder="t('Enter your name (required)')" class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-[#075e54] focus:ring-1 focus:ring-[#075e54]/20 transition-all" />
@@ -93,8 +103,9 @@
                 <svg v-if="!isFullScreen" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
                 <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9V4.5M9 9H4.5M9 9L3.5 3.5M9 15v4.5M9 15H4.5M9 15l-5.5 5.5M15 9h4.5M15 9V4.5M15 9l5.5-5.5M15 15h4.5M15 15v4.5m0-4.5l5.5 5.5" /></svg>
               </button>
+              <!-- Close button for chat view -->
               <button @click="isOpen = false; isFullScreen = false" class="p-2 hover:bg-white/10 rounded-full transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
           </div>
@@ -164,19 +175,20 @@
     >
       <div 
         v-if="showTooltip && !isOpen && !isFullScreen" 
-        class="mb-4 mr-2 bg-white px-6 py-4 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.15)] border border-gray-100 max-w-[280px] relative animate-float pointer-events-auto cursor-pointer group"
+        class="mb-4 mr-2 bg-white px-4 py-3 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.15)] border border-gray-100 max-w-[240px] relative animate-float pointer-events-auto cursor-pointer group"
         @click="openFromTooltip"
       >
         <div class="absolute -bottom-2 right-6 w-4 h-4 bg-white rotate-45 border-r border-b border-gray-100"></div>
-        <div class="flex items-center gap-3 mb-2">
-          <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-          <span class="text-sm font-black text-[#075e54]">{{ t('Panafstrag Support') }}</span>
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+            <span class="text-xs font-black text-[#075e54]">{{ t('Support') }}</span>
+          </div>
+          <button @click.stop="showTooltip = false" class="text-gray-400 hover:text-gray-600 p-1">
+             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
         </div>
-        <p class="text-sm text-gray-700 font-medium leading-relaxed line-clamp-2">"{{ tooltipMessage }}"</p>
-        <div class="mt-2 flex items-center gap-1 text-sm font-black text-gray-400 group-hover:text-[#075e54] transition-colors">
-          {{ t('Click to reply') }}
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-        </div>
+        <p class="text-xs text-gray-700 font-medium leading-relaxed line-clamp-2">"{{ tooltipMessage }}"</p>
       </div>
     </Transition>
 
@@ -186,7 +198,7 @@
       @mousedown="startDrag"
       @touchstart.passive="startDrag"
       @click.prevent="handleTriggerClick"
-      class="w-16 h-16 bg-[#25d366] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all group relative z-[101] cursor-grab active:cursor-grabbing select-none"
+      class="w-16 h-16 bg-[#25d366] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all group relative z-[101] cursor-grab active:cursor-grabbing select-none pointer-events-auto"
     >
       <div class="absolute inset-0 bg-white/20 animate-ping rounded-full" v-if="!isOpen"></div>
       <svg v-if="!isOpen" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 relative z-10" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.438 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884 0 2.225.569 3.807 1.258 5.275l-.547 2.001 2.115-.555-.227-.12z" /></svg>

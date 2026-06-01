@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { useI18n } from '@/composables/useI18n'
 import { useFetchFocusAreas } from '@/composables/modules/focusAreas/useFetchFocusAreas'
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 
+const { t } = useI18n()
 const { fetchFocusAreas, focusAreas, loading: pending } = useFetchFocusAreas()
 const { homeContent } = useHomeContent()
 
@@ -26,8 +28,8 @@ useHead({
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.focusAreasPageTitle || 'Strategic <span class=\'not-italic text-gray-400\'>Focus Areas</span>'"></h1>
-      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.focusAreasPageDescription || 'PANAFSTRAG focuses on multi-disciplinary research and strategic evaluations to address the complex challenges of stability and development in Africa.'"></p>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.focusAreasPageTitle || t('Strategic_Focus_Areas_HTML')"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.focusAreasPageDescription || t('Focus_Areas_Desc')"></p>
     </div>
 
     <div v-if="pending" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -47,7 +49,7 @@ useHead({
           <h3 class="text-xl md:text-2xl font-black group-hover:text-[#2E7D32] transition-colors leading-tight mb-3 md:mb-4">{{ area?.name }}</h3>
           <p v-if="area?.description" class="text-gray-500 group-hover:text-gray-400 text-sm md:text-sm font-medium leading-relaxed line-clamp-2" v-html="area?.description"></p>
           <div class="mt-6 flex items-center gap-2 text-sm font-black transform transition-transform group-hover:translate-x-2">
-            Explore Intelligence —>
+            {{ t('Explore_Intelligence') }}
           </div>
         </div>
       </div>
@@ -56,8 +58,8 @@ useHead({
     <!-- Empty State -->
     <div v-else>
       <EmptyState
-        title="NO FOCUS AREAS"
-        message="Research priorities are currently being updated."
+        :title="t('NO_FOCUS_AREAS')"
+        :message="t('NO_FOCUS_AREAS_MSG')"
       />
     </div>
 
@@ -73,7 +75,7 @@ useHead({
             <!-- Left Side: Visual/Color Block -->
             <div class="w-full md:w-1/3 bg-[#2E7D32] p-12 text-white flex flex-col justify-between relative overflow-hidden">
                <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-               <span class="text-sm font-black opacity-60">STRATEGIC SECTOR</span>
+               <span class="text-sm font-black opacity-60">{{ t('STRATEGIC_SECTOR') }}</span>
                <div class="text-9xl font-black opacity-10">FS</div>
             </div>
 
@@ -87,22 +89,22 @@ useHead({
 
               <div class="space-y-10">
                 <div>
-                   <span class="text-sm font-black text-[#2E7D32] mb-4 block">Focus Area Details</span>
+                   <span class="text-sm font-black text-[#2E7D32] mb-4 block">{{ t('Focus_Area_Details') }}</span>
                    <h2 class="text-4xl md:text-6xl font-black leading-none">{{ selectedArea?.name }}</h2>
                 </div>
                 
                 <div class="h-1 w-20 bg-[#2E7D32]"></div>
 
                 <div class="space-y-6">
-                   <h4 class="text-sm font-black text-gray-400">In-Depth Analysis</h4>
+                   <h4 class="text-sm font-black text-gray-400">{{ t('In_Depth_Analysis') }}</h4>
                    <p class="text-lg text-gray-800 font-medium leading-relaxed" v-html="selectedArea?.description"></p>
                 </div>
 
                 <!-- Strategic Points (Placeholder/Static for now if not in schema) -->
                 <div class="grid grid-cols-1 gap-6 pt-8">
                   <div class="p-6 bg-gray-50 border-l-4 border-[#2E7D32]">
-                    <p class="text-sm font-black text-[#2E7D32] mb-2">Policy Implication</p>
-                    <p class="text-sm font-bold text-gray-500 leading-relaxed">Actionable research targeting legislative frameworks and regional security protocols.</p>
+                    <p class="text-sm font-black text-[#2E7D32] mb-2">{{ t('Policy_Implication') }}</p>
+                    <p class="text-sm font-bold text-gray-500 leading-relaxed">{{ t('Policy_Implication_Desc') }}</p>
                   </div>
                 </div>
               </div>

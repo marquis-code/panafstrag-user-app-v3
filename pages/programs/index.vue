@@ -1,8 +1,12 @@
 <script setup lang="ts">
+
+import { useI18n } from '@/composables/useI18n'
 import { useFetchPrograms } from '@/composables/modules/programs/useFetchPrograms'
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 
+
+const { t } = useI18n()
 const { programs: allPrograms, loading: pending } = useFetchPrograms()
 const { homeContent } = useHomeContent()
 const { showToast } = useCustomToast()
@@ -124,8 +128,8 @@ useHead({
       
       <div class="container mx-auto px-6 relative z-10">
         <div class="max-w-3xl mx-auto text-center animate-fade-in">
-          <h1 class="text-4xl lg:text-7xl font-bold mb-8 text-white" v-html="homeContent?.programsPageTitle || 'Strategic <span class=\'text-white/40\'>Programmes</span>'"></h1>
-          <p class="text-white/60 text-lg font-medium leading-relaxed" v-html="homeContent?.programsPageDescription || 'Explore our latest initiatives, strategic research projects, and policy recommendation programmes across the continent.'"></p>
+          <h1 class="text-4xl lg:text-7xl font-bold mb-8 text-white" v-html="homeContent?.programsPageTitle || t('Strategic_Programmes_HTML')"></h1>
+          <p class="text-white/60 text-lg font-medium leading-relaxed" v-html="homeContent?.programsPageDescription || t('Programs_Description')"></p>
         </div>
       </div>
     </section>
@@ -135,22 +139,22 @@ useHead({
       <!-- Filter Toolbar -->
       <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-20 animate-fade-in-up">
         <div class="flex items-center gap-3 px-6 py-3 bg-white/90 backdrop-blur-xl rounded-[1.5rem] border border-white shadow-xl shadow-black/[0.03">
-          <span class="text-sm font-black text-[#2E7D32] ">Filter Year:</span>
+          <span class="text-sm font-black text-[#2E7D32] ">{{ t('Filter_Year') }}</span>
           <div class="w-40">
             <CustomDropdown
               v-model="selectedYear"
-              :options="[{ label: 'ALL YEARS', value: 'all' }, ...years]"
+              :options="[{ label: t('ALL_YEARS'), value: 'all' }, ...years]"
               variant="flat"
             />
           </div>
         </div>
 
         <div v-if="selectedYear !== 'all'" class="flex items-center gap-3 px-6 py-3 bg-white/90 backdrop-blur-xl rounded-[1.5rem] border border-white shadow-xl shadow-black/[0.03">
-          <span class="text-sm font-black text-[#2E7D32] ">Month:</span>
+          <span class="text-sm font-black text-[#2E7D32] ">{{ t('Month') }}</span>
           <div class="w-40">
             <CustomDropdown
               v-model="selectedMonth"
-              :options="[{ label: 'ALL MONTHS', value: 'all' }, ...monthOptions]"
+              :options="[{ label: t('ALL_MONTHS'), value: 'all' }, ...monthOptions]"
               variant="flat"
             />
           </div>
@@ -192,7 +196,7 @@ useHead({
                 <!-- Status Badge -->
                 <div class="absolute top-5 left-5">
                   <span class="px-4 py-1.5 backdrop-blur-md rounded-full text-sm font-bold shadow-lg" :class="getStatusColor(program?.calculatedStatus)">
-                    {{ program?.calculatedStatus }}
+                    {{ t(program?.calculatedStatus) }}
                   </span>
                 </div>
               </div>
@@ -218,7 +222,7 @@ useHead({
 
                 <div class="pt-6 border-t border-gray-50 flex items-center justify-between">
                   <NuxtLink :to="`/programs/${program?._id}`" class="text-sm font-bold text-[#2E7D32] flex items-center gap-2 group/btn">
-                    Details 
+                    {{ t('Details') }} 
                     <span class="inline-block transform group-hover/btn:translate-x-1 transition-transform">→</span>
                   </NuxtLink>
                   
@@ -243,8 +247,8 @@ useHead({
       <!-- Empty State -->
       <div v-else class="py-32">
         <EmptyState
-          title="NO PROGRAMMES FOUND"
-          message="We couldn't find any strategic Programmes for the selected criteria. Please try adjusting your filters."
+          :title="t('NO_PROGRAMMES_FOUND')"
+          :message="t('NO_PROGRAMMES_MSG')"
         />
       </div>
     </div>

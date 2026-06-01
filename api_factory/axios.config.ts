@@ -65,7 +65,10 @@ instanceArray.forEach((instance) => {
     if (token.value) {
       config.headers.Authorization = `Bearer ${token.value}`;
     }
-    const lang = localStorage.getItem('app-lang') || 'en';
+    let lang = 'en';
+    if (typeof window !== 'undefined') {
+      lang = localStorage.getItem('app-lang') || 'en';
+    }
     if (config.headers) {
       config.headers['x-lang'] = lang;
     }

@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { useI18n } from '@/composables/useI18n'
 import { useFetchCells } from '@/composables/modules/cells/useFetchCells'
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 
+const { t } = useI18n()
 const { fetchCells, cells, loading: pending } = useFetchCells()
 const { homeContent } = useHomeContent()
 
@@ -13,8 +15,8 @@ useHead({
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.cellsPageTitle || 'Institutional <span class=\'not-italic text-gray-400\'>Cells</span>'"></h1>
-      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.cellsPageDescription || 'Our specialized cells focus on regional and thematic research areas, ensuring localized expertise and global relevance in strategic policy.'"></p>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.cellsPageTitle || t('Institutional_Cells_HTML')"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.cellsPageDescription || t('Cells_Desc')"></p>
     </div>
 
     <div v-if="pending">
@@ -33,7 +35,7 @@ useHead({
         </div>
         <div class="p-10 flex-1 space-y-6">
           <div class="flex items-center gap-4">
-            <span class="px-3 py-1 bg-black text-white text-sm font-black">Active Cell</span>
+            <span class="px-3 py-1 bg-black text-white text-sm font-black">{{ t('Active_Cell') }}</span>
             <span class="text-gray-400 text-sm font-black">{{ cell.location }}</span>
           </div>
           <h3 class="text-2xl font-black group-hover:text-gray-500 transition-colors leading-tight">{{ cell.name }}</h3>
@@ -45,8 +47,8 @@ useHead({
     <!-- Empty State -->
     <div v-else>
       <EmptyState
-        title="NO CELLS"
-        message="The organizational research network is currently being restructured or modernized."
+        :title="t('NO_CELLS')"
+        :message="t('NO_CELLS_MSG')"
       />
     </div>
   </div>

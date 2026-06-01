@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useI18n } from '@/composables/useI18n'
 import { useFetchLanguageGroups } from '@/composables/modules/languageGroups/useFetchLanguageGroups'
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
+const { t } = useI18n()
 const { fetchLanguageGroups, languageGroups, loading: pending } = useFetchLanguageGroups()
 const { homeContent } = useHomeContent()
 
@@ -12,8 +14,8 @@ useHead({
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.languageGroupsPageTitle || 'Language <span class=\'not-italic text-gray-400\'>Groups</span>'"></h1>
-      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.languageGroupsPageDescription || 'PANAFSTRAG Language Groups bring together Africana people sharing common official languages or mother tongues to foster collaboration without linguistic obstacles.'"></p>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.languageGroupsPageTitle || t('Language_Groups_HTML')"></h1>
+      <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.languageGroupsPageDescription || t('Language_Groups_Desc')"></p>
     </div>
 
     <div v-if="pending" class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -34,7 +36,7 @@ useHead({
           </div>
           <p class="text-gray-500 text-sm font-medium leading-relaxed" v-html="group?.description"></p>
           <div v-if="group?.url" class="pt-4">
-             <a :href="group.url" target="_blank" class="text-sm font-black border-b-2 border-black inline-block pb-1 hover:border-gray-300 transition-all">Visit Platform →</a>
+             <a :href="group.url" target="_blank" class="text-sm font-black border-b-2 border-black inline-block pb-1 hover:border-gray-300 transition-all">{{ t('Visit_Platform') }}</a>
           </div>
         </div>
       </div>
@@ -43,28 +45,28 @@ useHead({
     <!-- Empty State -->
     <div v-else>
       <EmptyState
-        title="NO GROUPS"
-        message="The linguistic collaboration network is currently being restructured."
+        :title="t('NO_GROUPS')"
+        :message="t('NO_GROUPS_MSG')"
       />
     </div>
 
     <div v-if="homeContent" class="max-w-4xl mx-auto mt-32 space-y-12 bg-gray-50 p-12 rounded-2xl border border-gray-100">
       <div class="grid md:grid-cols-2 gap-12">
         <div>
-          <h3 class="text-xl font-black mb-4" v-html="homeContent.languageGroupFunctionTitle || 'Function'"></h3>
-          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupFunction || 'The Group provides a platform for easy production of knowledge and ideas without language obstacles. It provides a common linguistic, Ourstory, economic, social and cultural platform for Africana people in all official languages.'"></p>
+          <h3 class="text-xl font-black mb-4" v-html="homeContent?.languageGroupFunctionTitle || t('Function_Title')"></h3>
+          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent?.languageGroupFunction || t('Function_Desc')"></p>
         </div>
         <div>
-          <h3 class="text-xl font-black mb-4" v-html="homeContent.languageGroupMembershipTitle || 'Membership'"></h3>
-          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupMembership || 'Co-Leaders of each Group forward nominees with C.Vs to Ubuntu Team for ratification. It is open to volunteers ready to offer actionable thoughts and work within PANAFSTRAG Cells.'"></p>
+          <h3 class="text-xl font-black mb-4" v-html="homeContent?.languageGroupMembershipTitle || t('Membership_Title')"></h3>
+          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent?.languageGroupMembership || t('Membership_Desc')"></p>
         </div>
         <div>
-          <h3 class="text-xl font-black mb-4" v-html="homeContent.languageGroupLeadershipTitle || 'Leadership'"></h3>
-          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupLeadership || 'Co-Leaders (1 man & 1 woman) are appointed from Ubuntu Team, with one from the Continent and the other from the 6th Region. They represent each Group on Ubuntu Team.'"></p>
+          <h3 class="text-xl font-black mb-4" v-html="homeContent?.languageGroupLeadershipTitle || t('Leadership_Title')"></h3>
+          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent?.languageGroupLeadership || t('Leadership_Desc')"></p>
         </div>
         <div>
-          <h3 class="text-xl font-black mb-4" v-html="homeContent.languageGroupFeesTitle || 'Fees'"></h3>
-          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent.languageGroupFees || 'No fees are payable but donations for projects and activities of the Cells are encouraged. Language Groups organize activities through the Cells.'"></p>
+          <h3 class="text-xl font-black mb-4" v-html="homeContent?.languageGroupFeesTitle || t('Fees_Title')"></h3>
+          <p class="text-gray-600 text-sm leading-relaxed" v-html="homeContent?.languageGroupFees || t('Fees_Desc')"></p>
         </div>
       </div>
     </div>
