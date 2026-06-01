@@ -124,7 +124,7 @@ useHead({
       
       <div class="container mx-auto px-6 relative z-10">
         <div class="max-w-3xl mx-auto text-center animate-fade-in">
-          <h1 class="text-4xl lg:text-7xl font-bold mb-8 tracking-tight text-white" v-html="homeContent?.programsPageTitle || 'Strategic <span class=\'text-white/40\'>Programmes</span>'"></h1>
+          <h1 class="text-4xl lg:text-7xl font-bold mb-8 text-white" v-html="homeContent?.programsPageTitle || 'Strategic <span class=\'text-white/40\'>Programmes</span>'"></h1>
           <p class="text-white/60 text-lg font-medium leading-relaxed" v-html="homeContent?.programsPageDescription || 'Explore our latest initiatives, strategic research projects, and policy recommendation programmes across the continent.'"></p>
         </div>
       </div>
@@ -134,8 +134,8 @@ useHead({
     <div class="container mx-auto px-6 -mt-20 relative z-20">
       <!-- Filter Toolbar -->
       <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-20 animate-fade-in-up">
-        <div class="flex items-center gap-3 px-6 py-3 bg-white/90 backdrop-blur-xl rounded-[1.5rem] border border-white shadow-xl shadow-black/[0.03]">
-          <span class="text-[10px] font-black text-[#2E7D32] uppercase tracking-[0.2em]">Filter Year:</span>
+        <div class="flex items-center gap-3 px-6 py-3 bg-white/90 backdrop-blur-xl rounded-[1.5rem] border border-white shadow-xl shadow-black/[0.03">
+          <span class="text-sm font-black text-[#2E7D32] ">Filter Year:</span>
           <div class="w-40">
             <CustomDropdown
               v-model="selectedYear"
@@ -145,8 +145,8 @@ useHead({
           </div>
         </div>
 
-        <div v-if="selectedYear !== 'all'" class="flex items-center gap-3 px-6 py-3 bg-white/90 backdrop-blur-xl rounded-[1.5rem] border border-white shadow-xl shadow-black/[0.03]">
-          <span class="text-[10px] font-black text-[#2E7D32] uppercase tracking-[0.2em]">Month:</span>
+        <div v-if="selectedYear !== 'all'" class="flex items-center gap-3 px-6 py-3 bg-white/90 backdrop-blur-xl rounded-[1.5rem] border border-white shadow-xl shadow-black/[0.03">
+          <span class="text-sm font-black text-[#2E7D32] ">Month:</span>
           <div class="w-40">
             <CustomDropdown
               v-model="selectedMonth"
@@ -174,7 +174,7 @@ useHead({
         <div v-for="group in groupedProgramsByYear" :key="group.year" class="space-y-12">
           <!-- Year Divider -->
           <div class="flex items-center gap-6">
-            <h2 class="text-4xl md:text-5xl font-bold tracking-tighter text-gray-900">{{ group.year }}</h2>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900">{{ group.year }}</h2>
             <div class="h-0.5 flex-1 bg-gray-100"></div>
           </div>
 
@@ -191,7 +191,7 @@ useHead({
 
                 <!-- Status Badge -->
                 <div class="absolute top-5 left-5">
-                  <span class="px-4 py-1.5 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase shadow-lg" :class="getStatusColor(program?.calculatedStatus)">
+                  <span class="px-4 py-1.5 backdrop-blur-md rounded-full text-sm font-bold shadow-lg" :class="getStatusColor(program?.calculatedStatus)">
                     {{ program?.calculatedStatus }}
                   </span>
                 </div>
@@ -200,7 +200,7 @@ useHead({
               <!-- Content Area -->
               <div class="p-8 space-y-5">
                 <div class="flex items-center gap-2">
-                  <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-relaxed">
+                  <p class="text-sm font-bold text-gray-400 leading-relaxed">
                     {{ formatDate(program?.date) || program?.startDate }}
                     <span v-if="program?.startTime" class="inline-block mt-0.5"><br/>{{ program.startTime }} <span v-if="program.endTime">- {{ program.endTime }}</span></span>
                   </p>
@@ -210,14 +210,14 @@ useHead({
                   {{ program?.title }}
                 </h3>
                 
-                <p v-if="program?.theme" class="text-xs font-semibold text-gray-400 leading-relaxed italic line-clamp-2 border-l-2 border-gray-100 pl-4 py-1">
+                <p v-if="program?.theme" class="text-sm font-semibold text-gray-400 leading-relaxed line-clamp-2 border-l-2 border-gray-100 pl-4 py-1">
                   "{{ program.theme }}"
                 </p>
 
                 <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 font-medium" v-html="program?.description"></p>
 
                 <div class="pt-6 border-t border-gray-50 flex items-center justify-between">
-                  <NuxtLink :to="`/programs/${program?._id}`" class="text-[11px] font-bold text-[#2E7D32] tracking-widest uppercase flex items-center gap-2 group/btn">
+                  <NuxtLink :to="`/programs/${program?._id}`" class="text-sm font-bold text-[#2E7D32] flex items-center gap-2 group/btn">
                     Details 
                     <span class="inline-block transform group-hover/btn:translate-x-1 transition-transform">→</span>
                   </NuxtLink>

@@ -90,28 +90,28 @@ const shareWhatsApp = () => {
               <div class="w-12 h-12 rounded-full bg-[#25D366]/10 text-[#25D366] flex items-center justify-center group-hover:bg-[#25D366] group-hover:text-white transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
               </div>
-              <span class="text-xs font-medium text-gray-600 group-hover:text-gray-900">WhatsApp</span>
+              <span class="text-sm font-medium text-gray-600 group-hover:text-gray-900">WhatsApp</span>
             </button>
 
             <button @click="shareTwitter" class="flex flex-col items-center gap-2 group">
               <div class="w-12 h-12 rounded-full bg-black/5 text-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg>
               </div>
-              <span class="text-xs font-medium text-gray-600 group-hover:text-gray-900">X (Twitter)</span>
+              <span class="text-sm font-medium text-gray-600 group-hover:text-gray-900">X (Twitter)</span>
             </button>
 
             <button @click="shareLinkedIn" class="flex flex-col items-center gap-2 group">
               <div class="w-12 h-12 rounded-full bg-[#0A66C2]/10 text-[#0A66C2] flex items-center justify-center group-hover:bg-[#0A66C2] group-hover:text-white transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
               </div>
-              <span class="text-xs font-medium text-gray-600 group-hover:text-gray-900">LinkedIn</span>
+              <span class="text-sm font-medium text-gray-600 group-hover:text-gray-900">LinkedIn</span>
             </button>
 
             <button @click="shareFacebook" class="flex flex-col items-center gap-2 group">
               <div class="w-12 h-12 rounded-full bg-[#1877F2]/10 text-[#1877F2] flex items-center justify-center group-hover:bg-[#1877F2] group-hover:text-white transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
               </div>
-              <span class="text-xs font-medium text-gray-600 group-hover:text-gray-900">Facebook</span>
+              <span class="text-sm font-medium text-gray-600 group-hover:text-gray-900">Facebook</span>
             </button>
           </div>
 
@@ -121,11 +121,11 @@ const shareWhatsApp = () => {
                 type="text" 
                 readonly 
                 :value="shareUrl" 
-                class="flex-1 bg-transparent border-none text-xs text-gray-500 focus:ring-0 truncate"
+                class="flex-1 bg-transparent border-none text-sm text-gray-500 focus:ring-0 truncate"
               >
               <button 
                 @click="copyLink"
-                class="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+                class="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 text-sm font-bold rounded-full hover:bg-gray-50 transition-colors shadow-sm"
               >
                 Copy
               </button>

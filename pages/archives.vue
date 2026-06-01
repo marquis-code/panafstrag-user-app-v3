@@ -135,7 +135,7 @@ useHead({
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.archivesPageTitle || 'Institutional <span class=\'not-italic text-gray-400\'>Archives</span>'"></h1>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.archivesPageTitle || 'Institutional <span class=\'not-italic text-gray-400\'>Archives</span>'"></h1>
       <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.archivesPageDescription || 'A comprehensive repository of past programmes, strategic evaluations, policy briefs, and historical documents from PANAFSTRAG operations.'"></p>
     </div>
 
@@ -145,7 +145,7 @@ useHead({
         <button
           v-for="f in filterTypes" :key="f"
           @click="filter = f"
-          class="px-4 md:px-8 py-2 md:py-2.5 rounded-lg text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap"
+          class="px-4 md:px-8 py-2 md:py-2.5 rounded-full text-sm md:text-sm font-black transition-all whitespace-nowrap"
           :class="filter === f ? 'bg-black text-white' : 'text-gray-400 hover:text-black'"
         >
           {{ f === 'program' ? 'PAST PROGRAMMES' : f }}
@@ -186,8 +186,8 @@ useHead({
     <div v-else-if="groupedArchivesByYear?.length" class="space-y-24">
       <div v-for="group in groupedArchivesByYear" :key="group.year" class="space-y-12">
         <div class="border-b border-gray-100 pb-4">
-          <h2 class="text-3xl font-black uppercase tracking-tighter italic">
-            Archive Year: <span class="not-italic text-gray-400">{{ group.year }}</span>
+          <h2 class="text-3xl font-black">
+            Archive Year: <span class=" text-gray-400">{{ group.year }}</span>
           </h2>
         </div>
 
@@ -205,17 +205,17 @@ useHead({
                     <img v-else-if="item?.imageUrl" :src="item.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
                     <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-60 group-hover:opacity-100" />
                     
-                    <span class="absolute top-4 right-4 px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">PROGRAMME</span>
+                    <span class="absolute top-4 right-4 px-3 py-1 bg-[#2E7D32] text-white text-sm font-black rounded-full shadow-lg">PROGRAMME</span>
                   </div>
                   
                   <div class="space-y-3 md:space-y-4 relative">
-                    <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 leading-relaxed block">
+                    <span class="text-sm md:text-sm font-black text-gray-500 leading-relaxed block">
                       {{ item?.date ? new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) : (item?.startDate || '') }}
                       <template v-if="item?.startTime"><br/>{{ item.startTime }} <span v-if="item.endTime">- {{ item.endTime }}</span></template>
                     </span>
-                    <h4 class="text-xl md:text-2xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight italic">{{ item?.title }}</h4>
+                    <h4 class="text-xl md:text-2xl font-black group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-tight">{{ item?.title }}</h4>
                     <div class="pt-2 md:pt-4">
-                      <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] border-b-2 border-black pb-1 group-hover:border-[#2E7D32] group-hover:text-[#2E7D32] transition-all inline-flex items-center gap-2">
+                      <span class="text-sm md:text-sm font-black border-b-2 border-black pb-1 group-hover:border-[#2E7D32] group-hover:text-[#2E7D32] transition-all inline-flex items-center gap-2">
                         VIEW DETAILS 
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                       </span>
@@ -254,14 +254,14 @@ useHead({
                   </div>
                   
                   <div class="flex-grow relative z-10">
-                    <p class="text-[#2E7D32] text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mb-3 md:mb-4">
+                    <p class="text-[#2E7D32] text-sm md:text-sm font-black mb-3 md:mb-4">
                       {{ item?.type }} • {{ item?.month ? months[item.month - 1] : '' }} {{ item?.year || (item?.date ? new Date(item.date).getFullYear() : '') }}
                     </p>
-                    <h4 class="text-xl md:text-2xl font-black mb-4 tracking-tighter uppercase line-clamp-3 group-hover/archive:text-[#2E7D32] transition-colors leading-tight italic">{{ item?.title }}</h4>
+                    <h4 class="text-xl md:text-2xl font-black mb-4 line-clamp-3 group-hover/archive:text-[#2E7D32] transition-colors leading-tight">{{ item?.title }}</h4>
                   </div>
                   
                   <div class="mt-8 pt-6 border-t border-gray-100 group-hover/archive:border-[#2E7D32]/20 relative z-10">
-                    <span class="inline-flex items-center gap-2 text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] border-b-2 border-transparent pb-1 group-hover/archive:border-[#2E7D32] text-gray-500 group-hover/archive:text-[#2E7D32] transition-all">
+                    <span class="inline-flex items-center gap-2 text-sm md:text-sm font-black border-b-2 border-transparent pb-1 group-hover/archive:border-[#2E7D32] text-gray-500 group-hover/archive:text-[#2E7D32] transition-all">
                       DOWNLOAD RESOURCE
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 group-hover/archive:-translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

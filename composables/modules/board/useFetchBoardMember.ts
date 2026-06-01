@@ -13,7 +13,7 @@ export const useFetchBoardMember = () => {
     },
     {
       watch: [id],
-      lazy: true,
+      
       server: true
     }
   );

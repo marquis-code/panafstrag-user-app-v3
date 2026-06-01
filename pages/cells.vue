@@ -13,7 +13,7 @@ useHead({
 <template>
   <div class="space-y-16 px-6 lg:px-0 pt-16 container mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.cellsPageTitle || 'Institutional <span class=\'not-italic text-gray-400\'>Cells</span>'"></h1>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.cellsPageTitle || 'Institutional <span class=\'not-italic text-gray-400\'>Cells</span>'"></h1>
       <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.cellsPageDescription || 'Our specialized cells focus on regional and thematic research areas, ensuring localized expertise and global relevance in strategic policy.'"></p>
     </div>
 
@@ -25,18 +25,18 @@ useHead({
       <div v-for="(cell, i) in (cells as any[])" :key="cell._id"
         class="flex flex-col md:flex-row group glass-card overflow-hidden animate-fade-in-up"
         :class="`delay-${(i % 2 + 1) * 100}`">
-        <div class="md:w-1/3 aspect-video md:aspect-auto bg-gray-50 overflow-hidden border-r border-gray-100 italic">
+        <div class="md:w-1/3 aspect-video md:aspect-auto bg-gray-50 overflow-hidden border-r border-gray-100">
           <img v-if="cell.imageUrl" :src="cell.imageUrl" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-          <div v-else class="w-full h-full flex items-center justify-center text-4xl font-black text-gray-200 uppercase">
+          <div v-else class="w-full h-full flex items-center justify-center text-4xl font-black text-gray-200">
              {{ cell.name.charAt(0) }}
           </div>
         </div>
         <div class="p-10 flex-1 space-y-6">
           <div class="flex items-center gap-4">
-            <span class="px-3 py-1 bg-black text-white text-[9px] font-black uppercase tracking-widest">Active Cell</span>
-            <span class="text-gray-400 text-[10px] font-black uppercase tracking-widest">{{ cell.location }}</span>
+            <span class="px-3 py-1 bg-black text-white text-sm font-black">Active Cell</span>
+            <span class="text-gray-400 text-sm font-black">{{ cell.location }}</span>
           </div>
-          <h3 class="text-2xl font-black tracking-tighter uppercase group-hover:text-gray-500 transition-colors leading-tight italic">{{ cell.name }}</h3>
+          <h3 class="text-2xl font-black group-hover:text-gray-500 transition-colors leading-tight">{{ cell.name }}</h3>
           <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-3" v-html="cell.description"></p>
         </div>
       </div>

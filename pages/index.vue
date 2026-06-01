@@ -4,8 +4,10 @@ import { useFetchObjectives } from '@/composables/modules/objective/useObjective
 import { useFetchResponsibilities } from '@/composables/modules/responsibility/useResponsibility'
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 import { useActiveBanner } from '@/composables/modules/active-banner/useActiveBanner'
+import { useI18n } from '@/composables/useI18n'
 
 const { programs: allPrograms, loading: programsLoading } = useFetchPrograms()
+const { t } = useI18n()
 const { objectives, loading: objectivesLoading } = useFetchObjectives()
 const { responsibilities, loading: responsibilitiesLoading } = useFetchResponsibilities()
 const { homeContent, loading: homeContentLoading } = useHomeContent()
@@ -133,16 +135,16 @@ useHead({
           <div class="p-6 md:p-10 lg:p-12 flex flex-col justify-center order-1 lg:order-2 space-y-6 md:space-y-8 relative z-10">
             <div>
               <div class="flex flex-wrap items-center gap-3 mb-6">
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#2E7D32] text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg shadow-[#2E7D32]/20">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#2E7D32] text-white text-sm font-black rounded-full shadow-lg shadow-[#2E7D32]/20">
                   <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                   Active Selection
                 </div>
-                <span v-if="bannerProgramStatus" class="px-3 py-1 border border-white/10 text-gray-400 text-[9px] font-black uppercase tracking-[0.2em] rounded-full">
+                <span v-if="bannerProgramStatus" class="px-3 py-1 border border-white/10 text-gray-400 text-sm font-black rounded-full">
                   {{ bannerProgramStatus }}
                 </span>
               </div>
 
-              <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tighter italic leading-[1.1] mb-6 group-hover:text-[#2E7D32] transition-colors duration-500">
+              <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] mb-6 group-hover:text-[#2E7D32] transition-colors duration-500">
                 {{ bannerProgram?.title }}
               </h2>
 
@@ -153,22 +155,22 @@ useHead({
 
             <div class="grid grid-cols-2 gap-6 py-6 border-y border-white/5">
               <div v-if="bannerProgram?.date" class="space-y-1">
-                <span class="text-[8px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Event Date</span>
+                <span class="text-sm font-black text-[#2E7D32] ">Event Date</span>
                 <p class="text-white text-sm font-bold">{{ new Date(bannerProgram.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</p>
               </div>
               <div v-if="bannerProgram?.location" class="space-y-1">
-                <span class="text-[8px] font-black text-[#2E7D32] uppercase tracking-[0.3em]">Location</span>
+                <span class="text-sm font-black text-[#2E7D32] ">Location</span>
                 <p class="text-white text-sm font-bold line-clamp-1">{{ bannerProgram?.location }}</p>
               </div>
             </div>
 
             <div class="flex items-center gap-6">
-              <NuxtLink :to="`/programs/${bannerProgram?._id}`" class="group/btn relative px-8 py-4 bg-white text-black font-black text-[9px] tracking-[0.3em] uppercase rounded-lg overflow-hidden transition-all hover:scale-105 active:scale-95">
+              <NuxtLink :to="`/programs/${bannerProgram?._id}`" class="group/btn relative px-8 py-4 bg-white text-black font-black text-sm rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95">
                 <span class="relative z-10">ENGAGE DETAILS</span>
                 <div class="absolute inset-0 bg-[#2E7D32] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
               </NuxtLink>
               
-              <NuxtLink v-if="bannerProgram?.registerLink" :to="bannerProgram.registerLink" target="_blank" class="text-white text-[9px] font-black uppercase tracking-[0.2em] border-b border-[#2E7D32] pb-1 hover:text-[#2E7D32] transition-all">
+              <NuxtLink v-if="bannerProgram?.registerLink" :to="bannerProgram.registerLink" target="_blank" class="text-white text-sm font-black border-b border-[#2E7D32] pb-1 hover:text-[#2E7D32] transition-all">
                 JOIN VIRTUAL ROOM
               </NuxtLink>
             </div>
@@ -181,8 +183,8 @@ useHead({
     <section v-if="homeContent" class="container mx-auto px-6">
       <div class="max-w-4xl mx-auto text-center space-y-10 md:space-y-14 animate-fade-in-up">
         <div class="border-b border-gray-100 pb-8 md:pb-10">
-          <span class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block">{{ homeContent.aboutUsSubTitle || 'Who We Are' }}</span>
-          <h2 class="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-tight" v-html="homeContent.aboutUsTitle || 'About <span class=\'not-italic text-gray-400\'>PANAFSTRAG</span>'"></h2>
+          <span class="text-sm font-black text-[#2E7D32] mb-4 block">{{ homeContent.aboutUsSubTitle || 'Who We Are' }}</span>
+          <h2 class="text-4xl md:text-6xl font-black leading-tight" v-html="homeContent.aboutUsTitle || 'About <span class=\'not-italic text-gray-400\'>PANAFSTRAG</span>'"></h2>
         </div>
         
         <div class="max-w-3xl mx-auto">
@@ -197,12 +199,12 @@ useHead({
         <div v-for="(feature, i) in features" :key="i"
           class="glass-card group animate-fade-in-up"
           :class="`delay-${(i + 1) * 100}`">
-          <div class="w-14 h-14 bg-black rounded-lg mb-6 md:mb-8 flex items-center justify-center text-white transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:bg-[#2E7D32]">
+          <div class="w-14 h-14 bg-black rounded-full mb-6 md:mb-8 flex items-center justify-center text-white transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:bg-[#2E7D32]">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="feature.iconPath" />
             </svg>
           </div>
-          <h3 class="text-xl md:text-2xl font-black mb-4 md:mb-6 tracking-tighter uppercase italic">{{ feature.title }}</h3>
+          <h3 class="text-xl md:text-2xl font-black mb-4 md:mb-6">{{ feature.title }}</h3>
           <p class="text-gray-500 leading-relaxed font-medium text-sm md:text-base">
             {{ feature.description }}
           </p>
@@ -215,13 +217,13 @@ useHead({
         <!-- Objectives -->
         <div class="space-y-8 md:space-y-12 animate-fade-in-up">
            <div class="border-b border-gray-100 pb-6 md:pb-12 text-center md:text-left">
-             <span class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block" v-html="homeContent?.objectivesSubTitle || 'Strategic Alignment'"></span>
-             <h2 class="text-3xl md:text-6xl font-black tracking-tighter uppercase italic" v-html="homeContent?.objectivesTitle || 'Institutional <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>Objectives.</span>'"></h2>
+             <span class="text-sm font-black text-[#2E7D32] mb-4 block" v-html="homeContent?.objectivesSubTitle || 'Strategic Alignment'"></span>
+             <h2 class="text-3xl md:text-6xl font-black" v-html="homeContent?.objectivesTitle || 'Institutional <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>Objectives.</span>'"></h2>
            </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-16">
                <template v-if="objectivesLoading">
                  <div v-for="i in 3" :key="i" class="space-y-4 animate-pulse">
-                   <div class="h-10 w-16 bg-gray-100 rounded-lg"></div>
+                   <div class="h-10 w-16 bg-gray-100 rounded-full"></div>
                    <div class="h-4 bg-gray-100 rounded w-full"></div>
                    <div class="h-4 bg-gray-100 rounded w-5/6"></div>
                  </div>
@@ -229,10 +231,10 @@ useHead({
                <template v-else>
                  <div v-for="(obj, i) in (objectives as any[])" :key="i" class="space-y-4 group">
                    <span class="text-[#2E7D32] font-black text-4xl md:text-5xl opacity-20 group-hover:opacity-100 transition-all duration-500">{{ (i+1).toString().padStart(2, '0') }}</span>
-                   <p class="text-gray-500 font-bold leading-relaxed text-sm md:text-base tracking-tight" v-html="obj.description"></p>
+                   <p class="text-gray-500 font-bold leading-relaxed text-sm md:text-base" v-html="obj.description"></p>
                  </div>
                  <div v-if="!objectives?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
-                   <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Strategic objectives pending...</p>
+                   <p class="text-gray-400 font-bold text-sm">Strategic objectives pending...</p>
                  </div>
                </template>
             </div>
@@ -241,8 +243,8 @@ useHead({
         <!-- Responsibilities -->
         <div class="space-y-8 md:space-y-12 animate-fade-in-up">
            <div class="border-b border-gray-100 pb-6 md:pb-12 text-center md:text-right">
-             <span class="text-[10px] font-black uppercase tracking-[0.5em] text-[#2E7D32] mb-4 block text-center md:text-right" v-html="homeContent?.responsibilitiesSubTitle || 'Code of Conduct'"></span>
-             <h2 class="text-3xl md:text-6xl font-black tracking-tighter uppercase italic" v-html="homeContent?.responsibilitiesTitle || 'Core <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>Responsibilities.</span>'"></h2>
+             <span class="text-sm font-black text-[#2E7D32] mb-4 block text-center md:text-right" v-html="homeContent?.responsibilitiesSubTitle || 'Code of Conduct'"></span>
+             <h2 class="text-3xl md:text-6xl font-black" v-html="homeContent?.responsibilitiesTitle || 'Core <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>Responsibilities.</span>'"></h2>
            </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
                <template v-if="responsibilitiesLoading">
@@ -253,7 +255,7 @@ useHead({
                    <p class="font-bold text-sm md:text-base leading-loose" v-html="res.description"></p>
                  </div>
                  <div v-if="!responsibilities?.length" class="col-span-full py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-center">
-                   <p class="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Commitments under review...</p>
+                   <p class="text-gray-400 font-bold text-sm">Commitments under review...</p>
                  </div>
                </template>
             </div>
@@ -264,11 +266,11 @@ useHead({
     <section class="container mx-auto px-6">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 border-b border-gray-100 pb-10 gap-6">
         <div class="space-y-4">
-          <span v-if="homeContent?.programsSubTitle" class="text-[10px] font-black uppercase tracking-[0.4em] text-[#2E7D32] block" v-html="homeContent.programsSubTitle"></span>
-          <h2 class="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-[0.9]" v-html="homeContent?.programsTitle || 'Recent <br /> <span class=\'not-italic text-gray-400\'>Programmes.</span>'"></h2>
+          <span v-if="homeContent?.programsSubTitle" class="text-sm font-black text-[#2E7D32] block" v-html="homeContent.programsSubTitle"></span>
+          <h2 class="text-4xl md:text-6xl font-black leading-[0.9]" v-html="homeContent?.programsTitle || 'Recent <br /> <span class=\'text-gray-400\'>Programmes.</span>'"></h2>
         </div>
-        <NuxtLink to="/programs" class="group flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] hover:text-[#2E7D32] transition-colors pb-1 border-b-2 border-transparent hover:border-[#2E7D32]">
-          VIEW ALL PROGRAMMES
+        <NuxtLink to="/programs" class="group flex items-center gap-3 text-sm font-black hover:text-[#2E7D32] transition-colors pb-1 border-b-2 border-transparent hover:border-[#2E7D32]">
+          {{ t('View all programmes') }}
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
@@ -292,7 +294,7 @@ useHead({
             
             <!-- Status Badge Overlay -->
             <div class="absolute top-6 left-6 z-10">
-              <span class="px-4 py-1.5 backdrop-blur-md bg-white/90 text-black text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg border border-white/20">
+              <span class="px-4 py-1.5 backdrop-blur-md bg-white/90 text-black text-sm font-black rounded-full shadow-lg border border-white/20">
                 <span class="inline-block w-1.5 h-1.5 rounded-full mr-2" :class="program?.calculatedStatus === 'upcoming' ? 'bg-[#2E7D32] animate-pulse' : 'bg-gray-400'"></span>
                 {{ program?.calculatedStatus }}
               </span>
@@ -304,22 +306,22 @@ useHead({
 
           <div class="space-y-5 px-2">
             <div class="flex items-center gap-3">
-              <!-- <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded">{{ program?.type }}</span> -->
-                     <span class="px-4 py-1.5 backdrop-blur-md bg-white/90 text-black text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg border border-white/20">
+              <!-- <span class="text-sm font-black text-[#2E7D32] bg-[#E8F5E9] px-2 py-0.5 rounded">{{ program?.type }}</span> -->
+                     <span class="px-4 py-1.5 backdrop-blur-md bg-white/90 text-black text-sm font-black rounded-full shadow-lg border border-white/20">
                 <span class="inline-block w-1.5 h-1.5 rounded-full mr-2" :class="program?.calculatedStatus === 'upcoming' ? 'bg-[#2E7D32] animate-pulse' : 'bg-gray-400'"></span>
                 {{ program?.calculatedStatus }}
               </span>
-              <span class="text-sm font-black uppercase tracking-[0.1em] text-gray-400">{{ program?.startDate || program?.date ? new Date(program.date || program.startDate).getFullYear() : '' }}</span>
+              <span class="text-sm font-black text-gray-400">{{ program?.startDate || program?.date ? new Date(program.date || program.startDate).getFullYear() : '' }}</span>
             </div>
 
             
-            <h4 class="text-2xl lg:text-3xl font-black uppercase tracking-tighter group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-[1.1] italic">
+            <h4 class="text-2xl lg:text-3xl font-black group-hover:text-[#2E7D32] transition-colors line-clamp-2 leading-[1.1]">
               {{ program?.title }}
             </h4>
             
             <div class="pt-4 flex items-center justify-between">
-              <NuxtLink :to="`/programs/${program?._id}`" class="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] border-b-2 border-black pb-1 hover:border-[#2E7D32] hover:text-[#2E7D32] transition-all">
-                READ DETAILS
+              <NuxtLink :to="`/programs/${program?._id}`" class="inline-flex items-center gap-3 text-sm font-black border-b-2 border-black pb-1 hover:border-[#2E7D32] hover:text-[#2E7D32] transition-all">
+                {{ t('Read details') }}
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
@@ -339,7 +341,7 @@ useHead({
 
         <!-- Empty State -->
         <div v-if="!programs?.length" class="col-span-full py-24 md:py-32 text-center bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-100">
-          <p class="text-gray-400 font-black uppercase tracking-[0.3em] text-[10px]">No recent Intelligence reports found.</p>
+          <p class="text-gray-400 font-black text-sm">{{ t('No recent intelligence reports found.') }}</p>
         </div>
       </div>
     </section>
@@ -349,14 +351,14 @@ useHead({
       <div class="bg-black rounded-[1.5rem] md:rounded-[2rem] p-10 md:p-24 text-center text-white relative overflow-hidden group">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#2E7D32_0%,transparent_100%)] opacity-0 group-hover:opacity-40 transition-opacity duration-1000"></div>
         <div class="relative z-10 max-w-3xl mx-auto">
-          <h2 class="text-3xl md:text-7xl font-black mb-6 md:mb-10 tracking-tighter uppercase italic leading-[0.9]" v-html="homeContent?.ctaTitle || 'Participate in <br class=\'hidden md:block\' /> <span class=\'not-italic text-[#2E7D32]\'>the Future.</span>'"></h2>
-          <p class="text-gray-400 mb-10 md:mb-16 text-base md:text-xl leading-relaxed font-medium uppercase tracking-widest text-[10px]" v-html="homeContent?.ctaDescription || 'Join a network of leading experts dedicated to solving the most pressing strategic challenges facing the African continent today.'"></p>
+          <h2 class="text-3xl md:text-7xl font-black mb-6 md:mb-10 leading-[0.9]" v-html="homeContent?.ctaTitle || 'Participate in <br class=\'hidden md:block\' /> <span class=\'text-[#2E7D32]\'>the Future.</span>'"></h2>
+          <p class="text-gray-400 mb-10 md:mb-16 text-base md:text-xl leading-relaxed font-medium text-sm" v-html="homeContent?.ctaDescription || 'Join a network of leading experts dedicated to solving the most pressing strategic challenges facing the African continent today.'"></p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <button class="btn-secondary !py-3 md:!py-4 !bg-[#2E7D32] !text-white !border-transparent hover:!bg-white hover:!text-black w-full sm:w-auto">
-              GET INVOLVED
+            <button class="btn-secondary !py-3 md:!py-4 !bg-[#2E7D32] !text-white !border-transparent hover:!bg-white hover:!text-black w-full sm:w-auto rounded-full">
+              {{ t('Get involved') }}
             </button>
-            <NuxtLink to="/contact" class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] hover:text-[#2E7D32] transition-colors">
-              CONTACT OUR GROUP —>
+            <NuxtLink to="/contact" class="text-sm md:text-sm font-black hover:text-[#2E7D32] transition-colors">
+              {{ t('Contact our group') }} —>
             </NuxtLink>
           </div>
         </div>

@@ -19,7 +19,7 @@
         >
           <div v-if="show" class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl sm:rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
             <div class="px-6 sm:px-10 py-6 sm:py-8 flex items-center justify-between border-b border-slate-50 dark:border-slate-800">
-              <h3 class="text-xl sm:text-2xl font-black tracking-tight">{{ title }}</h3>
+              <h3 class="text-xl sm:text-2xl font-black">{{ title }}</h3>
               <button @click="$emit('close')" class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

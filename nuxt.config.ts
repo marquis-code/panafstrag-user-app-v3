@@ -1,8 +1,9 @@
 export default defineNuxtConfig({
   ssr: false,
+
   compatibilityDate: '2025-07-15',
   devServer: {
-    port: 3000,
+    port: 3001,
     host: 'localhost' // or '0.0.0.0' to allow external access
   },
   devtools: { enabled: true },

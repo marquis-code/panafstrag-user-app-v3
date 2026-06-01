@@ -13,7 +13,7 @@ useHead({
 <template>
   <div class="space-y-16 pt-16 container px-6 lg:px-0 mx-auto pb-32">
     <div class="max-w-3xl mx-auto text-center mb-24 animate-fade-in-up">
-      <h1 class="text-4xl lg:text-5xl font-black mb-6 tracking-tighter uppercase italic" v-html="homeContent?.boardPageTitle || 'Board of <span class=\'not-italic text-gray-400\'>Trustees</span>'"></h1>
+      <h1 class="text-4xl lg:text-5xl font-black mb-6" v-html="homeContent?.boardPageTitle || 'Board of <span class=\'not-italic text-gray-400\'>Trustees</span>'"></h1>
       <p class="text-gray-500 text-lg font-medium leading-relaxed" v-html="homeContent?.boardPageDescription || 'Our Ubuntu Team members are distinguished professionals and scholars dedicated to African development and strategic policy research.'"></p>
     </div>
 
@@ -29,20 +29,20 @@ useHead({
         :class="`delay-${(i % 3 + 1) * 100}`">
         <div class="aspect-square rounded-xl bg-gray-50 mb-8 overflow-hidden relative border border-gray-100 shadow-inner">
           <img v-if="member?.avatar" :src="member.avatar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-          <div v-else class="w-full h-full flex items-center justify-center text-4xl font-black text-gray-200 italic">
+          <div v-else class="w-full h-full flex items-center justify-center text-4xl font-black text-gray-200">
             {{ member?.name?.charAt(0) || 'B' }}
           </div>
         </div>
-        <h3 class="text-2xl font-black mb-2 tracking-tighter uppercase group-hover:text-gray-500 transition-colors leading-tight italic">{{ member?.name }}</h3>
-        <p class="text-gray-400 font-black mb-1 text-[10px] uppercase tracking-[0.2em]">{{ member?.position }}</p>
-        <p v-if="member?.university" class="text-gray-400 font-medium mb-6 text-[9px] uppercase tracking-widest">{{ member?.university }}</p>
+        <h3 class="text-2xl font-black mb-2 group-hover:text-gray-500 transition-colors leading-tight">{{ member?.name }}</h3>
+        <p class="text-gray-400 font-black mb-1 text-sm ">{{ member?.position }}</p>
+        <p v-if="member?.university" class="text-gray-400 font-medium mb-6 text-sm">{{ member?.university }}</p>
 
         <p class="text-gray-500 text-sm font-medium leading-relaxed mb-10 line-clamp-3">
           {{ member?.bio }}
         </p>
 
         <div class="flex items-center justify-between pt-6 border-t border-gray-100 mt-auto">
-          <span class="text-[9px] font-black uppercase tracking-[0.3em] text-black">View Profile —></span>
+          <span class="text-sm font-black text-black">View Profile —></span>
           <div class="flex gap-2" v-if="member?.duties?.length">
             <div v-for="n in Math.min(member?.duties?.length || 0, 3)" :key="n" class="w-1.5 h-1.5 rounded-full bg-gray-100 group-hover:bg-black transition-colors"></div>
           </div>

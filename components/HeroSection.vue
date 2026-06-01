@@ -44,12 +44,12 @@
             <div class="max-w-4xl mx-auto text-center">
               <div v-if="establishedText || $slots.established" class="inline-flex items-center gap-2 px-4 py-2 mb-10 border border-white/10 bg-white/5 backdrop-blur-md rounded-full animate-fade-in-up">
                 <span class="w-1.5 h-1.5 rounded-full bg-[#2E7D32] animate-pulse"></span>
-                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300">
+                <span class="text-sm font-black text-gray-300">
                   <slot name="established">{{ establishedText || 'ESTABLISHED 1992' }}</slot>
                 </span>
               </div>
 
-              <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black mb-6 md:mb-10 leading-[0.85] tracking-tighter text-white animate-fade-in-up delay-100 italic uppercase">
+              <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black mb-6 md:mb-10 leading-[0.85] text-white animate-fade-in-up delay-100">
                 {{ slide.title }}
               </h1>
 
@@ -58,11 +58,11 @@
               </p>
 
               <div class="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 animate-fade-in-up delay-300">
-                <NuxtLink to="/programs" class="group relative px-10 py-5 bg-[#2E7D32] text-white font-black text-[10px] tracking-[0.3em] uppercase rounded-xl overflow-hidden transition-all hover:scale-105 active:scale-95">
+                <NuxtLink to="/programs" class="group relative px-10 py-5 bg-[#2E7D32] text-white font-black text-sm rounded-xl overflow-hidden transition-all hover:scale-105 active:scale-95">
                   <span class="relative z-10">EXPLORE PROGRAMMES</span>
                   <div class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                 </NuxtLink>
-                <NuxtLink to="/archives" class="px-10 py-5 border border-white/20 text-white font-black text-[10px] tracking-[0.3em] uppercase rounded-xl hover:bg-white hover:text-black transition-all">
+                <NuxtLink to="/archives" class="px-10 py-5 border border-white/20 text-white font-black text-sm rounded-xl hover:bg-white hover:text-black transition-all">
                   VIEW ARCHIVES
                 </NuxtLink>
               </div>

@@ -14,11 +14,11 @@
         <div class="flex items-center justify-between px-6 h-8">
           <div class="flex items-center gap-2">
             <span class="w-1.5 h-1.5 rounded-full bg-black animate-pulse"></span>
-            <span class="text-[9px] font-black uppercase tracking-[0.4em] text-black/40">
+            <span class="text-sm font-black text-black/40">
               {{ homeContent?.websiteHeaderText || 'Est. 1992 — Panafricana Strategic & Policy Research Group' }}
             </span>
           </div>
-          <span class="text-[9px] font-black uppercase tracking-[0.3em] text-black/30 hidden md:block">
+          <span class="text-sm font-black text-black/30 hidden md:block">
             {{ currentDate }}
           </span>
         </div>
@@ -35,27 +35,27 @@
 
         <!-- Desktop nav links -->
         <div class="hidden lg:flex items-center gap-2">
-          <NuxtLink to="/" class="nav-link group relative px-5 py-2 text-[11px] font-black uppercase tracking-[0.25em] transition-colors duration-200 hover:text-black/50" active-class="!text-black">
-            Home
+          <NuxtLink to="/" class="nav-link group relative px-5 py-2 text-sm font-black transition-colors duration-200 hover:text-black/50" active-class="!text-black">
+            {{ t('Home') }}
             <span class="absolute bottom-0 left-5 right-5 h-[1.5px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
           </NuxtLink>
 
           <!-- Dropdown: The Institute -->
           <div class="relative group" @mouseenter="instituteHover = true" @mouseleave="instituteHover = false">
-            <button class="nav-link group relative px-5 py-2 text-[11px] font-black uppercase tracking-[0.25em] transition-colors duration-200 hover:text-black/50 flex items-center gap-1">
-              The Institute
+            <button class="nav-link group relative px-5 py-2 text-sm font-black transition-colors duration-200 hover:text-black/50 flex items-center gap-1 rounded-full">
+              {{ t('The Institute') }}
               <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 transition-transform duration-300" :class="instituteHover ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
               </svg>
               <span class="absolute bottom-0 left-5 right-5 h-[1.5px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             </button>
-            <div class="absolute top-[calc(100%-8px)] left-0 w-64 bg-black text-white p-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] opacity-0 translate-y-6 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50 border border-white/10">
+            <div class="absolute top-full pt-4 left-0 w-64 bg-black text-white p-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] opacity-0 translate-y-6 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) z-50 border border-white/10">
               <div class="mb-4 flex items-center gap-3">
                 <div class="h-[1px] w-4 bg-white/30"></div>
-                <span class="text-[8px] font-black uppercase tracking-[0.4em] text-white/30 italic">Organization</span>
+                <span class="text-sm font-black text-white/30">{{ t('Organization') }}</span>
               </div>
               <div class="flex flex-col gap-4">
-                <NuxtLink v-for="item in instituteItemsRes" :key="item.path" :to="item.path" class="text-[10px] font-black uppercase tracking-[0.2em] hover:text-gray-400 transition-all duration-300 py-2 border-b border-white/5 last:border-0 hover:pl-2">
+                <NuxtLink v-for="item in instituteItemsRes" :key="item.path" :to="item.path" class="text-sm font-black hover:text-gray-400 transition-all duration-300 py-2 border-b border-white/5 last:border-0 hover:pl-2">
                   {{ item.label }}
                 </NuxtLink>
               </div>
@@ -66,19 +66,21 @@
             v-for="item in primaryItemsRes"
             :key="item.path"
             :to="item.path"
-            class="nav-link group relative px-5 py-2 text-[11px] font-black uppercase tracking-[0.25em] transition-colors duration-200 hover:text-black/50"
+            class="nav-link group relative px-5 py-2 text-sm font-black transition-colors duration-200 hover:text-black/50"
             active-class="!text-black"
           >
             <span class="absolute bottom-0 left-5 right-5 h-[1.5px] bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
             {{ item.label }}
           </NuxtLink>
 
+          <LanguageSwitcher class="ml-4" />
+
           <!-- CTA pill -->
           <NuxtLink
             to="/contact"
-            class="ml-8 px-6 py-2.5 bg-black text-white text-[10px] font-black uppercase tracking-[0.25em] hover:bg-black/80 active:scale-95 transition-all duration-200 rounded-none shadow-[0_10px_20px_-10px_rgba(0,0,0,0.5)]"
+            class="ml-8 px-6 py-2.5 bg-black text-white text-sm font-black hover:bg-black/80 active:scale-95 transition-all duration-200 rounded-full shadow-[0_10px_20px_-10px_rgba(0,0,0,0.5)]"
           >
-            Contact →
+            {{ t('Contact') }} →
           </NuxtLink>
 
           <!-- Desktop Search Trigger -->
@@ -90,7 +92,7 @@
         </div>
 
         <!-- Mobile Search Trigger (Pill) -->
-        <button @click="isSearchOpen = true" class="md:hidden ml-auto mr-4 p-2 text-black hover:bg-black/5 rounded-lg transition-colors">
+        <button @click="isSearchOpen = true" class="md:hidden ml-auto mr-4 p-2 text-black hover:bg-black/5 rounded-full transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -139,30 +141,30 @@
         <!-- Nav items -->
         <div class="flex-1 flex flex-col justify-center px-10 pt-28 pb-16 relative z-10 overflow-y-auto">
           <div class="mb-10 flex items-center justify-between">
-            <span class="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">Intelligence Network</span>
+            <span class="text-sm font-black text-white/30">{{ t('Intelligence Network') }}</span>
             <div class="h-[1px] flex-1 bg-white/10 ml-6"></div>
           </div>
 
           <!-- Section: Principal -->
           <div class="grid md:grid-cols-2 gap-12">
             <div class="space-y-8">
-              <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 italic">01. Principal</h3>
+              <h3 class="text-sm font-black text-gray-500">01. {{ t('Principal') }}</h3>
               <nav class="flex flex-col gap-4">
-                <NuxtLink to="/" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors">Home</NuxtLink>
-                <NuxtLink v-for="item in primaryItemsRes" :key="item.path" :to="item.path" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors">
+                <NuxtLink to="/" @click="isMobileOpen = false" class="text-4xl font-black hover:text-gray-400 transition-colors">{{ t('Home') }}</NuxtLink>
+                <NuxtLink v-for="item in primaryItemsRes" :key="item.path" :to="item.path" @click="isMobileOpen = false" class="text-4xl font-black hover:text-gray-400 transition-colors">
                   {{ item.label }}
                 </NuxtLink>
-                <NuxtLink to="/contact" @click="isMobileOpen = false" class="text-4xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors flex items-center gap-3 italic">
-                  Contact <span class="text-lg">→</span>
+                <NuxtLink to="/contact" @click="isMobileOpen = false" class="text-4xl font-black hover:text-gray-400 transition-colors flex items-center gap-3">
+                  {{ t('Contact') }} <span class="text-lg">→</span>
                 </NuxtLink>
               </nav>
             </div>
 
             <!-- Section: The Institute -->
             <div class="space-y-8">
-              <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 italic">02. The Institute</h3>
+              <h3 class="text-sm font-black text-gray-500">02. {{ t('The Institute') }}</h3>
               <nav class="flex flex-col gap-4">
-                <NuxtLink v-for="item in instituteItemsRes" :key="item.path" :to="item.path" @click="isMobileOpen = false" class="text-2xl font-black uppercase tracking-tight hover:text-gray-400 transition-colors opacity-60 hover:opacity-100">
+                <NuxtLink v-for="item in instituteItemsRes" :key="item.path" :to="item.path" @click="isMobileOpen = false" class="text-2xl font-black hover:text-gray-400 transition-colors opacity-60 hover:opacity-100">
                   {{ item.label }}
                 </NuxtLink>
               </nav>
@@ -172,12 +174,12 @@
           <!-- Bottom info row -->
           <div class="mt-24 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 opacity-30">
             <div class="flex flex-col gap-1">
-              <span class="text-[9px] font-black uppercase tracking-[0.4em]">Established</span>
+              <span class="text-sm font-black ">{{ t('Established') }}</span>
               <span class="text-2xl font-black">1992</span>
             </div>
             <div class="flex gap-6">
-              <a href="#" class="text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Twitter</a>
-              <a href="#" class="text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">LinkedIn</a>
+              <a href="#" class="text-sm font-black hover:text-white transition-colors">Twitter</a>
+              <a href="#" class="text-sm font-black hover:text-white transition-colors">LinkedIn</a>
             </div>
           </div>
         </div>
@@ -205,7 +207,7 @@
             </p>
             <div class="flex items-center gap-4">
               <span class="w-2 h-2 rounded-full bg-[#2E7D32] animate-pulse"></span>
-              <span class="text-[9px] font-black uppercase tracking-[0.4em] text-gray-500">Global Coverage</span>
+              <span class="text-sm font-black text-gray-500">{{ t('Global Coverage') }}</span>
             </div>
           </div>
 
@@ -213,10 +215,10 @@
           <div class="col-span-1 lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-10">
             <!-- Organization -->
             <div class="flex flex-col gap-6">
-              <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Organization</h4>
+              <h4 class="text-sm font-black text-[#2E7D32] border-b border-white/10 pb-4">{{ t('Organization') }}</h4>
               <nav class="flex flex-col gap-4">
                 <NuxtLink v-for="item in instituteItemsRes" :key="item.path" :to="item.path"
-                  class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 relative group inline-flex max-w-max">
+                  class="text-sm font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 relative group inline-flex max-w-max">
                   <span class="relative z-10">{{ item.label }}</span>
                   <span class="absolute left-0 -bottom-1 w-full h-px bg-[#2E7D32] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
                 </NuxtLink>
@@ -225,10 +227,10 @@
 
             <!-- Focus Areas -->
             <div class="flex flex-col gap-6">
-              <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Activities</h4>
+              <h4 class="text-sm font-black text-[#2E7D32] border-b border-white/10 pb-4">{{ t('Activities') }}</h4>
               <nav class="flex flex-col gap-4">
                 <NuxtLink v-for="item in primaryItemsRes" :key="item.path" :to="item.path"
-                  class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 relative group inline-flex max-w-max">
+                  class="text-sm font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 relative group inline-flex max-w-max">
                   <span class="relative z-10">{{ item.label }}</span>
                   <span class="absolute left-0 -bottom-1 w-full h-px bg-[#2E7D32] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
                 </NuxtLink>
@@ -237,20 +239,20 @@
 
             <!-- Socials -->
             <div class="flex flex-col gap-6">
-              <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Connect</h4>
+              <h4 class="text-sm font-black text-[#2E7D32] border-b border-white/10 pb-4">{{ t('Connect') }}</h4>
               <nav class="flex flex-col gap-4">
                 <template v-if="homeContent?.contactSocialLinks?.length">
-                  <a v-for="link in homeContent.contactSocialLinks" :key="link.platform" :href="link.url" target="_blank" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
+                  <a v-for="link in homeContent.contactSocialLinks" :key="link.platform" :href="link.url" target="_blank" class="text-sm font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
                     <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
                     {{ link.platform }}
                   </a>
                 </template>
                 <template v-else>
-                  <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
+                  <a href="#" class="text-sm font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
                     <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
                     Twitter (X)
                   </a>
-                  <a href="#" class="text-xs font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
+                  <a href="#" class="text-sm font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
                     <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
                     LinkedIn
                   </a>
@@ -260,10 +262,10 @@
 
             <!-- Get Involved (CTA) -->
             <div class="flex flex-col gap-6">
-              <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-white/10 pb-4">Participate</h4>
-              <p class="text-xs text-gray-400 leading-relaxed font-medium">Join our strategic network of thinkers and leaders.</p>
-              <NuxtLink to="/contact" class="mt-2 text-[10px] font-black uppercase text-center tracking-[0.2em] bg-white text-black py-4 px-6 hover:bg-[#2E7D32] hover:text-white transition-colors duration-500 w-full shadow-[0_0_20px_rgba(46,125,50,0.2)] hover:shadow-[0_0_30px_rgba(46,125,50,0.5)]">
-                JOIN NOW
+              <h4 class="text-sm font-black text-[#2E7D32] border-b border-white/10 pb-4">{{ t('Participate') }}</h4>
+              <p class="text-sm text-gray-400 leading-relaxed font-medium">Join our strategic network of thinkers and leaders.</p>
+              <NuxtLink to="/contact" class="mt-2 text-sm font-black text-center bg-white text-black py-4 px-6 hover:bg-[#2E7D32] hover:text-white transition-colors duration-500 w-full shadow-[0_0_20px_rgba(46,125,50,0.2)] hover:shadow-[0_0_30px_rgba(46,125,50,0.5)]">
+                {{ t('JOIN NOW') }}
               </NuxtLink>
             </div>
           </div>
@@ -274,12 +276,12 @@
 
         <!-- Bottom Bar -->
         <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-          <p class="text-gray-600 text-[10px] font-black uppercase tracking-[0.3em]">
+          <p class="text-gray-600 text-sm font-black ">
             © {{ new Date().getFullYear() }} PANAFSTRAG. All Rights Reserved.
           </p>
           <div class="flex gap-6">
-            <NuxtLink to="/privacy-policy" class="text-gray-600 text-[9px] font-black uppercase tracking-[0.2em] hover:text-white transition-colors">Privacy Policy</NuxtLink>
-            <NuxtLink to="/terms" class="text-gray-600 text-[9px] font-black uppercase tracking-[0.2em] hover:text-white transition-colors">Terms of Service</NuxtLink>
+            <NuxtLink to="/privacy-policy" class="text-gray-600 text-sm font-black hover:text-white transition-colors">{{ t('Privacy Policy') }}</NuxtLink>
+            <NuxtLink to="/terms" class="text-gray-600 text-sm font-black hover:text-white transition-colors">{{ t('Terms of Service') }}</NuxtLink>
           </div>
         </div>
       </div>
@@ -296,8 +298,10 @@
 
 <script setup lang="ts">
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
+import { useI18n } from '@/composables/useI18n'
 
 const { homeContent } = useHomeContent()
+const { t } = useI18n()
 
 const isMobileOpen = ref(false)
 const scrolled = ref(false)

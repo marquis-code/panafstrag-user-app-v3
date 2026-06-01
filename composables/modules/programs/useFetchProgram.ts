@@ -13,7 +13,7 @@ export const useFetchProgram = () => {
     },
     {
       watch: [id],
-      lazy: true,
+      
       server: true
     }
   );

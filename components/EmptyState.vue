@@ -14,10 +14,10 @@ defineProps<{
       </svg>
     </div>
     
-    <h3 class="text-2xl font-black uppercase tracking-tighter italic mb-4">
-      {{ title || 'NO RECORDS' }} <span class="not-italic text-gray-400">FOUND.</span>
+    <h3 class="text-2xl font-black mb-4">
+      {{ title || 'NO RECORDS' }} <span class=" text-gray-400">FOUND.</span>
     </h3>
-    <p class="text-gray-400 max-w-xs mx-auto text-sm font-medium leading-relaxed uppercase tracking-widest text-[10px]">
+    <p class="text-gray-400 max-w-xs mx-auto text-sm font-medium leading-relaxed text-sm">
       {{ message || 'The requested data sector is currently empty or has been restricted.' }}
     </p>
 

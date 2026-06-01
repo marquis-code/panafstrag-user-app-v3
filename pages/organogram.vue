@@ -25,8 +25,8 @@ useHead({
     <section class="pt-24 pb-16 border-b border-gray-100 bg-white">
       <div class="container mx-auto px-6">
         <div class="text-center max-w-4xl mx-auto">
-          <span class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400 mb-4 block">Institutional Structure</span>
-          <h1 class="text-[5vw] lg:text-7xl font-black tracking-tighter uppercase italic leading-none" v-html="homeContent?.organogramPageTitle || 'ORGANO<span class=\'not-italic text-gray-400\'>GRAM</span>'">
+          <span class="text-sm font-black text-gray-400 mb-4 block">Institutional Structure</span>
+          <h1 class="text-[5vw] lg:text-7xl font-black leading-none" v-html="homeContent?.organogramPageTitle || 'ORGANO<span class=\'not-italic text-gray-400\'>GRAM</span>'">
           </h1>
         </div>
       </div>
@@ -43,8 +43,8 @@ useHead({
         <!-- Tier 1: Governance -->
         <div v-for="node in tier1" :key="node._id" class="flex flex-col items-center w-full relative">
           <div class="node-governance p-8 text-center min-w-[400px] shadow-2xl relative z-20 animate-fade-in-up">
-            <h2 class="text-xl font-black uppercase tracking-tight mb-2">{{ node?.title }}</h2>
-            <p class="text-[11px] font-black leading-relaxed whitespace-pre-line opacity-80 uppercase" v-html="node?.description"></p>
+            <h2 class="text-xl font-black mb-2">{{ node?.title }}</h2>
+            <p class="text-sm font-black leading-relaxed whitespace-pre-line opacity-80" v-html="node?.description"></p>
           </div>
 
           <!-- Vertical Line with Arrow connecting T1 to T2 -->
@@ -56,8 +56,8 @@ useHead({
           <!-- Tier 2: Secretariat -->
           <div v-for="sec in tier2" :key="sec._id" class="flex flex-col items-center w-full relative">
             <div class="node-secretariat p-6 text-left min-w-[300px] shadow-xl relative z-20 animate-fade-in-up delay-100">
-              <h3 class="text-lg font-black uppercase tracking-tight mb-2">{{ sec?.title }}:</h3>
-              <p class="text-[11px] font-black leading-relaxed whitespace-pre-line opacity-90 uppercase" v-html="sec?.description"></p>
+              <h3 class="text-lg font-black mb-2">{{ sec?.title }}:</h3>
+              <p class="text-sm font-black leading-relaxed whitespace-pre-line opacity-90" v-html="sec?.description"></p>
             </div>
 
             <!-- Vertical Line with Arrow connecting T2 to Horizontal branch -->
@@ -81,7 +81,7 @@ useHead({
                    </div>
 
                    <div class="node-hub px-8 py-4 shadow-lg mb-12 animate-fade-in-up" :style="{ animationDelay: `${200 + hIndex * 100}ms` }">
-                     <h4 class="text-sm font-black tracking-[0.2em] uppercase">{{ hub?.title }}</h4>
+                     <h4 class="text-sm font-black ">{{ hub?.title }}</h4>
                    </div>
 
                    <!-- Horizontal Branching for Leaf Nodes -->
@@ -95,8 +95,8 @@ useHead({
                           class="node-leaf p-4 text-center shadow-md animate-fade-in-up hover:scale-105 transition-transform border border-black/10 flex flex-col items-center"
                         >
                           <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[6px] border-t-white/30 mb-2"></div>
-                          <span class="text-[10px] font-black leading-tight uppercase line-clamp-4">{{ leaf?.title }}</span>
-                          <p v-if="leaf?.description" class="text-[9px] mt-2 opacity-80 leading-relaxed font-semibold uppercase" v-html="leaf?.description"></p>
+                          <span class="text-sm font-black leading-tight line-clamp-4">{{ leaf?.title }}</span>
+                          <p v-if="leaf?.description" class="text-sm mt-2 opacity-80 leading-relaxed font-semibold" v-html="leaf?.description"></p>
                         </div>
                       </div>
                    </div>

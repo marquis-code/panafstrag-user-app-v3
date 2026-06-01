@@ -14,12 +14,7 @@
     >
       <div
         v-if="isOpen"
-        :class="[
-          'bg-white flex flex-col overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-black/5 transition-all duration-500',
-          isFullScreen
-            ? 'fixed inset-0 w-full h-full rounded-none z-[200]'
-            : 'fixed bottom-4 right-4 left-4 top-4 sm:relative sm:inset-auto sm:w-[24rem] sm:h-[36rem] rounded-3xl sm:mb-6 sm:z-auto'
-        ]"
+        :class="[ 'bg-white flex flex-col overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-black/5 transition-all duration-500', isFullScreen ? 'fixed inset-0 w-full h-full rounded-full z-[200]' : 'fixed bottom-4 right-4 left-4 top-4 sm:relative sm:inset-auto sm:w-[24rem] sm:h-[36rem] rounded-3xl sm:mb-6 sm:z-auto' ]"
       >
         <!-- ========== VIEW 1: Welcome / Call or Chat ========== -->
         <template v-if="currentView === 'welcome'">
@@ -27,10 +22,10 @@
             <div class="absolute inset-0 bg-black/10 pointer-events-none"></div>
             <div class="relative z-10 flex flex-col items-center">
               <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl mb-5">
-                <span class="text-3xl font-black text-[#075e54] italic">P</span>
+                <span class="text-3xl font-black text-[#075e54]">P</span>
               </div>
               <h3 class="text-lg font-bold mb-2">PANAFSTRAG</h3>
-              <p class="text-sm text-white/80 leading-relaxed max-w-[16rem]">We are here to help you! Call or chat to connect with us right away.</p>
+              <p class="text-sm text-white/80 leading-relaxed max-w-[16rem]">{{ t('We are here to help you! Call or chat to connect with us right away.') }}</p>
             </div>
           </div>
           <div class="p-6 bg-white flex items-center justify-center gap-10">
@@ -38,13 +33,13 @@
               <div class="w-14 h-14 bg-[#075e54] rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
               </div>
-              <span class="text-xs font-bold text-gray-600 uppercase tracking-wider">Call</span>
+              <span class="text-sm font-bold text-gray-600">{{ t('Call') }}</span>
             </button>
             <button @click="currentView = 'identify'" class="flex flex-col items-center gap-2 group">
               <div class="w-14 h-14 bg-[#25d366] rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
               </div>
-              <span class="text-xs font-bold text-gray-600 uppercase tracking-wider">Chat</span>
+              <span class="text-sm font-bold text-gray-600">{{ t('Chat') }}</span>
             </button>
           </div>
         </template>
@@ -56,20 +51,20 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
             </button>
             <div class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center border border-white/10">
-              <span class="text-sm font-black italic">P</span>
+              <span class="text-sm font-black">P</span>
             </div>
-            <h3 class="font-bold text-sm">Chat with us now</h3>
+            <h3 class="font-bold text-sm">{{ t('Chat with us now') }}</h3>
           </div>
           <div class="flex-1 p-6 space-y-4 bg-gray-50 overflow-y-auto">
-            <input v-model="guest.name" placeholder="Enter your name (required)" class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-[#075e54] focus:ring-1 focus:ring-[#075e54]/20 transition-all" />
-            <input v-model="guest.email" type="email" placeholder="Enter your email address (required)" class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-[#075e54] focus:ring-1 focus:ring-[#075e54]/20 transition-all" />
-            <input v-model="guest.phone" placeholder="Enter your phone number (optional)" class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-[#075e54] focus:ring-1 focus:ring-[#075e54]/20 transition-all" />
-            <textarea v-model="firstMessage" rows="3" placeholder="Type your message..." class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-[#075e54] focus:ring-1 focus:ring-[#075e54]/20 transition-all resize-none"></textarea>
+            <input v-model="guest.name" :placeholder="t('Enter your name (required)')" class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-[#075e54] focus:ring-1 focus:ring-[#075e54]/20 transition-all" />
+            <input v-model="guest.email" type="email" :placeholder="t('Enter your email address (required)')" class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-[#075e54] focus:ring-1 focus:ring-[#075e54]/20 transition-all" />
+            <input v-model="guest.phone" :placeholder="t('Enter your phone number (optional)')" class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-[#075e54] focus:ring-1 focus:ring-[#075e54]/20 transition-all" />
+            <textarea v-model="firstMessage" rows="3" :placeholder="t('Type your message...')" class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-[#075e54] focus:ring-1 focus:ring-[#075e54]/20 transition-all resize-none"></textarea>
           </div>
           <div class="p-4 bg-white border-t border-gray-100">
             <button @click="startChatSession" :disabled="!guest.name || !guest.email || !firstMessage" class="w-full py-3.5 bg-[#075e54] text-white text-sm font-bold rounded-xl hover:bg-[#054c44] transition-all shadow-lg active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
-              Start Chat
+              {{ t('Start Chat') }}
             </button>
           </div>
         </template>
@@ -82,13 +77,13 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
               </button>
               <div class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center border border-white/10 relative">
-                <span class="text-sm font-black italic">P</span>
+                <span class="text-sm font-black">P</span>
                 <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 border-2 border-[#075e54] rounded-full"></div>
               </div>
               <div>
                 <h3 class="font-bold text-sm leading-tight">PANAFSTRAG</h3>
-                <p class="text-[10px] text-white/70 font-medium">
-                  {{ isTyping ? `${isTyping.name} is typing...` : 'Online' }}
+                <p class="text-sm text-white/70 font-medium">
+                  {{ isTyping ? `${isTyping.name} ${t('is typing...')}` : t('Online') }}
                 </p>
               </div>
             </div>
@@ -108,31 +103,30 @@
           <div ref="messageContainer" class="flex-1 overflow-y-auto p-4 space-y-2 relative custom-scrollbar bg-[#e5ddd5]">
             <div class="absolute inset-0 opacity-[0.04] pointer-events-none bg-[url('https://i.pinimg.com/736x/8c/98/99/8c98994518b575bfd8d974919620ba25.jpg')] bg-repeat"></div>
             <div v-for="(msg, index) in displayMessages" :key="msg._id || index" :class="['flex relative z-10', isOwnMessage(msg) ? 'justify-end' : 'justify-start']">
-              <div :class="['max-w-[85%] sm:max-w-[65%] px-3 py-2 rounded-lg shadow-sm relative',
-                isOwnMessage(msg) ? 'bg-[#d9fdd3] rounded-tr-none' : 'bg-white rounded-tl-none']">
+              <div :class="['max-w-[85%] sm:max-w-[65%] px-3 py-2 rounded-full shadow-sm relative', isOwnMessage(msg) ? 'bg-[#d9fdd3] rounded-tr-none' : 'bg-white rounded-tl-none']">
                 <div v-if="isOwnMessage(msg)" class="absolute top-0 -right-2 w-0 h-0 border-t-[8px] border-t-[#d9fdd3] border-r-[8px] border-r-transparent"></div>
                 <div v-else class="absolute top-0 -left-2 w-0 h-0 border-t-[8px] border-t-white border-l-[8px] border-l-transparent"></div>
-                <p v-if="!isOwnMessage(msg) && msg.isBot" class="text-[11px] font-semibold text-[#075e54] mb-0.5">🤖 PANAFSTRAG Bot</p>
-                <p v-else-if="!isOwnMessage(msg)" class="text-[11px] font-semibold text-[#075e54] mb-0.5">PANAFSTRAG Admin</p>
-                <div v-if="msg.type === 'image'" class="mb-1 rounded-md overflow-hidden">
+                <p v-if="!isOwnMessage(msg) && msg.isBot" class="text-sm font-semibold text-[#075e54] mb-0.5">🤖 PANAFSTRAG Bot</p>
+                <p v-else-if="!isOwnMessage(msg)" class="text-sm font-semibold text-[#075e54] mb-0.5">PANAFSTRAG Admin</p>
+                <div v-if="msg.type === 'image'" class="mb-1 rounded-full overflow-hidden">
                   <img :src="msg.imageUrl" alt="Attachment" class="max-w-full h-auto cursor-pointer hover:opacity-90 transition-opacity" @click="openImage(msg.imageUrl)" />
                 </div>
                 <p class="text-[14px] text-gray-800 leading-snug">{{ msg.content }}</p>
                 <!-- Quick reply buttons for bot -->
                 <div v-if="msg.quickReplies && msg.quickReplies.length" class="flex flex-wrap gap-2 mt-2">
-                  <button v-for="qr in msg.quickReplies" :key="qr" @click="sendQuickReply(qr)" class="px-3 py-1.5 bg-[#075e54]/10 text-[#075e54] text-xs font-semibold rounded-full border border-[#075e54]/20 hover:bg-[#075e54] hover:text-white transition-all">
+                  <button v-for="qr in msg.quickReplies" :key="qr" @click="sendQuickReply(qr)" class="px-3 py-1.5 bg-[#075e54]/10 text-[#075e54] text-sm font-semibold rounded-full border border-[#075e54]/20 hover:bg-[#075e54] hover:text-white transition-all">
                     {{ qr }}
                   </button>
                 </div>
                 <div class="flex items-center justify-end gap-1 mt-1">
-                  <span class="text-[11px] text-gray-500">{{ formatTime(msg.createdAt || new Date().toISOString()) }}</span>
+                  <span class="text-sm text-gray-500">{{ formatTime(msg.createdAt || new Date().toISOString()) }}</span>
                   <svg v-if="isOwnMessage(msg)" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-[#53bdeb]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                 </div>
               </div>
             </div>
             <!-- Typing indicator -->
             <div v-if="botTyping" class="flex justify-start relative z-10">
-              <div class="bg-white rounded-lg rounded-tl-none px-4 py-3 shadow-sm">
+              <div class="bg-white rounded-full rounded-tl-none px-4 py-3 shadow-sm">
                 <div class="flex gap-1">
                   <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
                   <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
@@ -149,7 +143,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
               </button>
               <input type="file" ref="fileInput" class="hidden" accept="image/*" @change="handleImageUpload" />
-              <input v-model="newMessage" @keypress="handleTyping" @keyup.enter="handleSend" placeholder="Type a message..." class="flex-1 px-2 py-1 bg-transparent text-sm focus:ring-0 outline-none font-medium" />
+              <input v-model="newMessage" @keypress="handleTyping" @keyup.enter="handleSend" :placeholder="t('Type a message...')" class="flex-1 px-2 py-1 bg-transparent text-sm focus:ring-0 outline-none font-medium" />
             </div>
             <button @click="handleSend" :disabled="!newMessage.trim()" class="w-11 h-11 bg-[#075e54] text-white rounded-full flex items-center justify-center hover:bg-[#054c44] transition-all active:scale-95 shadow-lg disabled:opacity-20">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
@@ -176,11 +170,11 @@
         <div class="absolute -bottom-2 right-6 w-4 h-4 bg-white rotate-45 border-r border-b border-gray-100"></div>
         <div class="flex items-center gap-3 mb-2">
           <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-          <span class="text-[10px] font-black uppercase tracking-widest text-[#075e54]">Panafstrag Support</span>
+          <span class="text-sm font-black text-[#075e54]">{{ t('Panafstrag Support') }}</span>
         </div>
-        <p class="text-xs text-gray-700 font-medium leading-relaxed italic line-clamp-2">"{{ tooltipMessage }}"</p>
-        <div class="mt-2 flex items-center gap-1 text-[9px] font-black text-gray-400 uppercase tracking-widest group-hover:text-[#075e54] transition-colors">
-          Click to reply
+        <p class="text-sm text-gray-700 font-medium leading-relaxed line-clamp-2">"{{ tooltipMessage }}"</p>
+        <div class="mt-2 flex items-center gap-1 text-sm font-black text-gray-400 group-hover:text-[#075e54] transition-colors">
+          {{ t('Click to reply') }}
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
         </div>
       </div>
@@ -204,11 +198,13 @@
 <script setup lang="ts">
 import { useChat } from '@/composables/useChat'
 import { useUser } from '@/composables/modules/auth/user'
+import { useI18n } from '@/composables/useI18n'
 
 const config = useRuntimeConfig()
 const route = useRoute()
 const { messages, connect, sendMessage, isConnected, isTyping, setTyping } = useChat()
 const { user, token } = useUser()
+const { t } = useI18n()
 
 const isLoggedIn = computed(() => !!token.value)
 const isOpen = ref(false)
@@ -239,7 +235,10 @@ const sessionId = ref('')
 
 const fetchBotConfigs = async () => {
   try {
-    const data = await $fetch<any[]>(`${config.public.apiBase}/chat/bot-configs/active`)
+    const lang = typeof window !== 'undefined' ? localStorage.getItem('app-lang') || 'en' : 'en'
+    const data = await $fetch<any[]>(`${config.public.apiBase}/chat/bot-configs/active`, {
+      headers: { 'x-lang': lang }
+    })
     botConfigs.value = data || []
   } catch (err) { console.error('Failed to fetch bot configs', err) }
 }
@@ -330,7 +329,7 @@ const triggerBotReply = (userContent: string) => {
     // Fallback
     const fallback = botConfigs.value.find(c => c.type === 'fallback')
     if (fallback) addBotMessage(fallback.message, fallback.quickReplies, 1500)
-    else addBotMessage("Thanks for your message! Our team will respond shortly.", [], 1500)
+    else addBotMessage("{{ t('Thanks for your message! Our team will respond shortly.') }}", [], 1500)
   }
 }
 
@@ -447,7 +446,7 @@ const handleTriggerClick = () => {
   }
 }
 
-// ======= Start Chat Session =======
+// ======= {{ t('Start Chat') }} Session =======
 const startChatSession = () => {
   if (!guest.name || !guest.email || !firstMessage.value) return
   guest.email = guest.email.toLowerCase().trim()

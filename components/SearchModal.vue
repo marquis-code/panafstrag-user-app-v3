@@ -22,11 +22,11 @@
             ref="searchInput"
             v-model="searchQuery"
             type="text"
-            class="flex-1 text-2xl font-black bg-transparent border-none outline-none text-black placeholder:text-gray-300 italic uppercase"
+            class="flex-1 text-2xl font-black bg-transparent border-none outline-none text-black placeholder:text-gray-300"
             placeholder="AGGRESSIVE SEARCH..."
             @input="handleInput"
           />
-          <button @click="close" class="p-2 text-gray-400 hover:text-black hover:bg-gray-50 rounded-lg transition-colors">
+          <button @click="close" class="p-2 text-gray-400 hover:text-black hover:bg-gray-50 rounded-full transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -42,7 +42,7 @@
 
            <!-- Empty Initial State -->
            <div v-else-if="!searchQuery" class="text-center py-16">
-             <span class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">Discover Our Network</span>
+             <span class="text-sm font-black text-gray-400">Discover Our Network</span>
              <p class="text-sm text-gray-500 mt-4 leading-relaxed font-medium max-w-sm mx-auto">
                 Type any keyword to aggressively scan through all programs, objectives, focus areas, and archives.
              </p>
@@ -50,15 +50,15 @@
 
            <!-- No Results -->
            <div v-else-if="results.length === 0" class="text-center py-16">
-             <span class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">NO RESULTS FOUND</span>
+             <span class="text-sm font-black text-gray-400">NO RESULTS FOUND</span>
              <p class="text-sm text-gray-500 mt-4 leading-relaxed font-medium">Try broader terms or different keywords.</p>
-             <p class="font-black italic uppercase text-lg mt-2 opacity-50">"{{ searchQuery }}"</p>
+             <p class="font-black text-lg mt-2 opacity-50">"{{ searchQuery }}"</p>
            </div>
 
            <!-- Grouped Results -->
            <div v-else v-for="(group, type) in groupedResults" :key="type" class="animate-fade-in-up">
-              <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E7D32] border-b border-gray-200 pb-2 mb-4">
-                {{ type }} <span class="text-xs text-black/30 ml-2">({{ group.length }})</span>
+              <h3 class="text-sm font-black text-[#2E7D32] border-b border-gray-200 pb-2 mb-4">
+                {{ type }} <span class="text-sm text-black/30 ml-2">({{ group.length }})</span>
               </h3>
               <div class="space-y-3">
                  <NuxtLink
@@ -70,10 +70,10 @@
                  >
                    <div class="flex items-start justify-between gap-4">
                      <div>
-                       <h4 class="font-black text-sm uppercase italic line-clamp-1 group-hover/link:text-[#2E7D32] transition-colors">{{ item.title }}</h4>
-                       <p class="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed font-medium" v-html="item.description"></p>
+                       <h4 class="font-black text-sm line-clamp-1 group-hover/link:text-[#2E7D32] transition-colors">{{ item.title }}</h4>
+                       <p class="text-sm text-gray-500 mt-1 line-clamp-2 leading-relaxed font-medium" v-html="item.description"></p>
                      </div>
-                     <span class="flex-shrink-0 text-[8px] font-black text-white bg-[#2E7D32] px-2 py-1 uppercase tracking-widest rounded-md opacity-0 group-hover/link:opacity-100 transition-opacity">
+                     <span class="flex-shrink-0 text-sm font-black text-white bg-[#2E7D32] px-2 py-1 rounded-full opacity-0 group-hover/link:opacity-100 transition-opacity">
                         VIEW
                      </span>
                    </div>
@@ -84,7 +84,7 @@
         
         <!-- Footer Info -->
         <div class="p-4 bg-black text-center relative z-10">
-           <span class="text-[9px] font-black uppercase tracking-[0.4em] text-gray-500">Global Search Intelligence</span>
+           <span class="text-sm font-black text-gray-500">Global Search Intelligence</span>
         </div>
       </div>
     </div>
