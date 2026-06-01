@@ -45,7 +45,7 @@ const switchLanguage = async (code) => {
   isLoading.value = true;
   await setLocale(code);
   localStorage.setItem('app-lang', code);
-  await refreshNuxtData();
+  window.location.reload();
   
   setTimeout(() => {
     isLoading.value = false;

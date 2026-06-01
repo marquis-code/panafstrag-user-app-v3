@@ -98,8 +98,8 @@ useHead({
       :establishedText="homeContent?.heroEstablishedText"
       :carousels="homeContent?.carousels || [
         {
-          title: 'Strategic Research',
-          description: 'Providing deep strategic insights and policy recommendations to foster sustainable development and security across the African continent.',
+          title: t('Strategic Research'),
+          description: t('Providing deep strategic insights and policy recommendations to foster sustainable development and security across the African continent.'),
           imgUrl: ''
         }
       ]" 
@@ -183,12 +183,12 @@ useHead({
     <section v-if="homeContent" class="container mx-auto px-6">
       <div class="max-w-4xl mx-auto text-center space-y-10 md:space-y-14 animate-fade-in-up">
         <div class="border-b border-gray-100 pb-8 md:pb-10">
-          <span class="text-sm font-black text-[#2E7D32] mb-4 block">{{ homeContent.aboutUsSubTitle || 'Who We Are' }}</span>
-          <h2 class="text-4xl md:text-6xl font-black leading-tight" v-html="homeContent.aboutUsTitle || 'About <span class=\'not-italic text-gray-400\'>PANAFSTRAG</span>'"></h2>
+          <span class="text-sm font-black text-[#2E7D32] mb-4 block">{{ homeContent.aboutUsSubTitle || t('Who We Are') }}</span>
+          <h2 class="text-4xl md:text-6xl font-black leading-tight" v-html="homeContent.aboutUsTitle || t('About') + ' <span class=\'not-italic text-gray-400\'>PANAFSTRAG</span>'"></h2>
         </div>
         
         <div class="max-w-3xl mx-auto">
-          <p class="text-gray-500 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-line" v-html="homeContent.aboutUsDescription || 'Panafricana Strategic & Policy Research Group was founded in 1992 to provide an in-depth study and analysis of the challenges of political stability, safety and development in Africa and propose policy options and strategies for these issues while synergising the potentials of its diaspora for executing these policies.'"></p>
+          <p class="text-gray-500 text-lg md:text-xl font-medium leading-relaxed whitespace-pre-line" v-html="homeContent.aboutUsDescription || t('Panafricana Strategic & Policy Research Group was founded in 1992 to provide an in-depth study and analysis of the challenges of political stability, safety and development in Africa and propose policy options and strategies for these issues while synergising the potentials of its diaspora for executing these policies.')"></p>
         </div>
       </div>
     </section>
@@ -217,8 +217,8 @@ useHead({
         <!-- Objectives -->
         <div class="space-y-8 md:space-y-12 animate-fade-in-up">
            <div class="border-b border-gray-100 pb-6 md:pb-12 text-center md:text-left">
-             <span class="text-sm font-black text-[#2E7D32] mb-4 block" v-html="homeContent?.objectivesSubTitle || 'Strategic Alignment'"></span>
-             <h2 class="text-3xl md:text-6xl font-black" v-html="homeContent?.objectivesTitle || 'Institutional <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>Objectives.</span>'"></h2>
+             <span class="text-sm font-black text-[#2E7D32] mb-4 block" v-html="homeContent?.objectivesSubTitle || t('Strategic Alignment')"></span>
+             <h2 class="text-3xl md:text-6xl font-black" v-html="homeContent?.objectivesTitle || t('Institutional') + ' <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>' + t('Objectives.') + '</span>'"></h2>
            </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-16">
                <template v-if="objectivesLoading">
@@ -243,8 +243,8 @@ useHead({
         <!-- Responsibilities -->
         <div class="space-y-8 md:space-y-12 animate-fade-in-up">
            <div class="border-b border-gray-100 pb-6 md:pb-12 text-center md:text-right">
-             <span class="text-sm font-black text-[#2E7D32] mb-4 block text-center md:text-right" v-html="homeContent?.responsibilitiesSubTitle || 'Code of Conduct'"></span>
-             <h2 class="text-3xl md:text-6xl font-black" v-html="homeContent?.responsibilitiesTitle || 'Core <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>Responsibilities.</span>'"></h2>
+             <span class="text-sm font-black text-[#2E7D32] mb-4 block text-center md:text-right" v-html="homeContent?.responsibilitiesSubTitle || t('Code of Conduct')"></span>
+             <h2 class="text-3xl md:text-6xl font-black" v-html="homeContent?.responsibilitiesTitle || t('Core') + ' <br class=\'md:hidden\' /> <span class=\'not-italic text-gray-400\'>' + t('Responsibilities.') + '</span>'"></h2>
            </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
                <template v-if="responsibilitiesLoading">
@@ -267,7 +267,7 @@ useHead({
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 border-b border-gray-100 pb-10 gap-6">
         <div class="space-y-4">
           <span v-if="homeContent?.programsSubTitle" class="text-sm font-black text-[#2E7D32] block" v-html="homeContent.programsSubTitle"></span>
-          <h2 class="text-4xl md:text-6xl font-black leading-[0.9]" v-html="homeContent?.programsTitle || 'Recent <br /> <span class=\'text-gray-400\'>Programmes.</span>'"></h2>
+          <h2 class="text-4xl md:text-6xl font-black leading-[0.9]" v-html="homeContent?.programsTitle || t('Recent') + ' <br /> <span class=\'text-gray-400\'>' + t('Programmes.') + '</span>'"></h2>
         </div>
         <NuxtLink to="/programs" class="group flex items-center gap-3 text-sm font-black hover:text-[#2E7D32] transition-colors pb-1 border-b-2 border-transparent hover:border-[#2E7D32]">
           {{ t('View all programmes') }}
@@ -351,8 +351,8 @@ useHead({
       <div class="bg-black rounded-[1.5rem] md:rounded-[2rem] p-10 md:p-24 text-center text-white relative overflow-hidden group">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#2E7D32_0%,transparent_100%)] opacity-0 group-hover:opacity-40 transition-opacity duration-1000"></div>
         <div class="relative z-10 max-w-3xl mx-auto">
-          <h2 class="text-3xl md:text-7xl font-black mb-6 md:mb-10 leading-[0.9]" v-html="homeContent?.ctaTitle || 'Participate in <br class=\'hidden md:block\' /> <span class=\'text-[#2E7D32]\'>the Future.</span>'"></h2>
-          <p class="text-gray-400 mb-10 md:mb-16 text-base md:text-xl leading-relaxed font-medium text-sm" v-html="homeContent?.ctaDescription || 'Join a network of leading experts dedicated to solving the most pressing strategic challenges facing the African continent today.'"></p>
+          <h2 class="text-3xl md:text-7xl font-black mb-6 md:mb-10 leading-[0.9]" v-html="homeContent?.ctaTitle || t('Participate in') + ' <br class=\'hidden md:block\' /> <span class=\'text-[#2E7D32]\'>' + t('the Future.') + '</span>'"></h2>
+          <p class="text-gray-400 mb-10 md:mb-16 text-base md:text-xl leading-relaxed font-medium text-sm" v-html="homeContent?.ctaDescription || t('Join a network of leading experts dedicated to solving the most pressing strategic challenges facing the African continent today.')"></p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
             <button class="btn-secondary !py-3 md:!py-4 !bg-[#2E7D32] !text-white !border-transparent hover:!bg-white hover:!text-black w-full sm:w-auto rounded-full">
               {{ t('Get involved') }}

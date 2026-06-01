@@ -317,11 +317,11 @@ const instituteItemsRes = computed(() => {
     return homeContent.value.instituteNavItems
   }
   return [
-    { label: 'The Ubuntu Team', path: '/board' },
-    { label: 'Organogram', path: '/organogram' },
-    { label: 'Focus Areas', path: '/focus-areas' },
-    { label: 'Cells', path: '/cells' },
-    { label: 'Language Groups', path: '/language-groups' },
+    { label: t('The Ubuntu Team'), path: '/board' },
+    { label: t('Organogram'), path: '/organogram' },
+    { label: t('Focus Areas'), path: '/focus-areas' },
+    { label: t('Cells'), path: '/cells' },
+    { label: t('Language Groups'), path: '/language-groups' },
   ]
 })
 
@@ -330,8 +330,8 @@ const primaryItemsRes = computed(() => {
     return homeContent.value.primaryNavItems
   }
   return [
-    { label: 'Programmes', path: '/programs' },
-    { label: 'Archives', path: '/archives' },
+    { label: t('Programmes'), path: '/programs' },
+    { label: t('Archives'), path: '/archives' },
   ]
 })
 
