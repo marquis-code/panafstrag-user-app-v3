@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from '@/composables/useI18n';
+const { t } = useI18n();
 import { useRegister } from '@/composables/modules/auth/useRegister'
 const { register } = useRegister()
 const form = reactive({
@@ -38,13 +40,13 @@ definePageMeta({
 
       <div class="text-center mb-12">
         <Logo class="justify-center mb-8" />
-        <h1 class="text-3xl font-black">Request <span class=" text-gray-400">Access.</span></h1>
-        <p class="text-gray-400 text-sm font-black mt-4">Join the research network</p>
+        <h1 class="text-3xl font-black">{{ t('Request') }} <span class=" text-gray-400">{{ t('Access.') }}</span></h1>
+        <p class="text-gray-400 text-sm font-black mt-4">{{ t('Join the research network') }}</p>
       </div>
 
       <form @submit.prevent="handleRegister" class="space-y-8">
         <div class="space-y-2">
-          <label class="block text-sm font-black text-gray-400 ml-1">Full Name</label>
+          <label class="block text-sm font-black text-gray-400 ml-1">{{ t('Full Name') }}</label>
           <input
             v-model="form.name"
             type="text"
@@ -54,7 +56,7 @@ definePageMeta({
           />
         </div>
         <div class="space-y-2">
-          <label class="block text-sm font-black text-gray-400 ml-1">Email Address</label>
+          <label class="block text-sm font-black text-gray-400 ml-1">{{ t('Email Address') }}</label>
           <input
             v-model="form.email"
             type="email"
@@ -64,7 +66,7 @@ definePageMeta({
           />
         </div>
         <div class="space-y-2">
-          <label class="block text-sm font-black text-gray-400 ml-1">Secure Password</label>
+          <label class="block text-sm font-black text-gray-400 ml-1">{{ t('Secure Password') }}</label>
           <input
             v-model="form.password"
             type="password"
@@ -89,8 +91,8 @@ definePageMeta({
 
       <div class="mt-12 text-center border-t border-gray-100 pt-8">
         <p class="text-gray-400 text-sm font-black">
-          Already authorized?
-          <NuxtLink to="/login" class="text-black hover:underline ml-2">Log in here</NuxtLink>
+          {{ t('Already authorized?') }}
+          <NuxtLink to="/login" class="text-black hover:underline ml-2">{{ t('Log in here') }}</NuxtLink>
         </p>
       </div>
     </div>

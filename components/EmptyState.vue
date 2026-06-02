@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from '@/composables/useI18n';
+const { t } = useI18n();
 defineProps<{
   title?: string
   message?: string
@@ -15,7 +17,7 @@ defineProps<{
     </div>
     
     <h3 class="text-2xl font-black mb-4">
-      {{ title || 'NO RECORDS' }} <span class=" text-gray-400">FOUND.</span>
+      {{ title || 'NO RECORDS' }} <span class=" text-gray-400">{{ t('FOUND.') }}</span>
     </h3>
     <p class="text-gray-400 max-w-xs mx-auto text-sm font-medium leading-relaxed text-sm">
       {{ message || 'The requested data sector is currently empty or has been restricted.' }}

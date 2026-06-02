@@ -117,12 +117,12 @@ useHead({
             <img 
               v-if="bannerProgram?.bannerImages?.length" 
               :src="bannerProgram.bannerImages[0]" 
-              class="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+              class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
             />
             <img 
               v-else-if="bannerProgram?.imageUrl" 
               :src="bannerProgram.imageUrl" 
-              class="w-full h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+              class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105"
             />
             <div v-else class="w-full h-full bg-gradient-to-br from-gray-900 via-[#2E7D32]/20 to-black"></div>
             
@@ -137,7 +137,7 @@ useHead({
               <div class="flex flex-wrap items-center gap-3 mb-6">
                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-[#2E7D32] text-white text-sm font-black rounded-full shadow-lg shadow-[#2E7D32]/20">
                   <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                  Active Selection
+                  {{ t('Active Selection') }}
                 </div>
                 <span v-if="bannerProgramStatus" class="px-3 py-1 border border-white/10 text-gray-400 text-sm font-black rounded-full">
                   {{ bannerProgramStatus }}
@@ -155,23 +155,23 @@ useHead({
 
             <div class="grid grid-cols-2 gap-6 py-6 border-y border-white/5">
               <div v-if="bannerProgram?.date" class="space-y-1">
-                <span class="text-sm font-black text-[#2E7D32] ">Event Date</span>
+                <span class="text-sm font-black text-[#2E7D32] ">{{ t('Event Date') }}</span>
                 <p class="text-white text-sm font-bold">{{ new Date(bannerProgram.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</p>
               </div>
               <div v-if="bannerProgram?.location" class="space-y-1">
-                <span class="text-sm font-black text-[#2E7D32] ">Location</span>
+                <span class="text-sm font-black text-[#2E7D32] ">{{ t('Location') }}</span>
                 <p class="text-white text-sm font-bold line-clamp-1">{{ bannerProgram?.location }}</p>
               </div>
             </div>
 
             <div class="flex items-center gap-6">
               <NuxtLink :to="`/programs/${bannerProgram?._id}`" class="group/btn relative px-8 py-4 bg-white text-black font-black text-sm rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95">
-                <span class="relative z-10">ENGAGE DETAILS</span>
+                <span class="relative z-10">{{ t('ENGAGE DETAILS') }}</span>
                 <div class="absolute inset-0 bg-[#2E7D32] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
               </NuxtLink>
               
               <NuxtLink v-if="bannerProgram?.registerLink" :to="bannerProgram.registerLink" target="_blank" class="text-white text-sm font-black border-b border-[#2E7D32] pb-1 hover:text-[#2E7D32] transition-all">
-                JOIN VIRTUAL ROOM
+                {{ t('JOIN VIRTUAL ROOM') }}
               </NuxtLink>
             </div>
           </div>
@@ -184,7 +184,7 @@ useHead({
       <div class="max-w-4xl mx-auto text-center space-y-10 md:space-y-14 animate-fade-in-up">
         <div class="border-b border-gray-100 pb-8 md:pb-10">
           <span class="text-sm font-black text-[#2E7D32] mb-4 block">{{ homeContent.aboutUsSubTitle || t('Who We Are') }}</span>
-          <h2 class="text-4xl md:text-6xl font-black leading-tight" v-html="homeContent.aboutUsTitle || t('About') + ' <span class=\'not-italic text-gray-400\'>PANAFSTRAG</span>'"></h2>
+          <h2 class="text-4xl md:text-6xl font-black leading-tight" v-html="homeContent.aboutUsTitle || t('About') + ' <span class=\'not-italic text-gray-400\'>' + t('PANAFSTRAG') + '</span>'"></h2>
         </div>
         
         <div class="max-w-3xl mx-auto">
@@ -288,9 +288,9 @@ useHead({
           
           <div class="relative aspect-[4/5] bg-gray-50 rounded-[2rem] overflow-hidden mb-8 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-700">
             <!-- Image Logic: bannerImages[0] then imageUrl then placeholder -->
-            <img v-if="program?.bannerImages?.length" :src="program.bannerImages[0]" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
-            <img v-else-if="program?.imageUrl" :src="program.imageUrl" alt="" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
-            <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-100 transition-all duration-700" />
+            <img v-if="program?.bannerImages?.length" :src="program.bannerImages[0]" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" />
+            <img v-else-if="program?.imageUrl" :src="program.imageUrl" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" />
+            <img v-else src="@/assets/images/program-placeholder.png" alt="" class="w-full h-full object-cover opacity-40 group-hover:opacity-100 transition-all duration-700" />
             
             <!-- Status Badge Overlay -->
             <div class="absolute top-6 left-6 z-10">

@@ -76,7 +76,7 @@ useHead({
             <div class="w-full md:w-1/3 bg-[#2E7D32] p-12 text-white flex flex-col justify-between relative overflow-hidden">
                <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                <span class="text-sm font-black opacity-60">{{ t('STRATEGIC_SECTOR') }}</span>
-               <div class="text-9xl font-black opacity-10">FS</div>
+               <div class="text-9xl font-black opacity-10">{{ t('FS') }}</div>
             </div>
 
             <!-- Right Side: Data -->

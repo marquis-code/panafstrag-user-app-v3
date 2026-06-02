@@ -5,7 +5,7 @@ import { useFetchProgram } from '@/composables/modules/programs/useFetchProgram'
 import { useCustomToast } from "@/composables/core/useCustomToast"
 
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const { program, loading, fetchProgram } = useFetchProgram()
 
@@ -38,7 +38,7 @@ const formatDate = (date: any) => {
   try {
     const d = new Date(date)
     if (isNaN(d.getTime())) return date
-    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    return d.toLocaleDateString(locale.value, { year: 'numeric', month: 'long', day: 'numeric' })
   } catch (err) {
     return date
   }
@@ -85,8 +85,8 @@ const handleShare = () => {
     <section class="relative bg-[#1A3A1C] pt-32 pb-60 overflow-hidden">
       <!-- Background Image with Overlay -->
       <div class="absolute inset-0 z-0">
-        <img v-if="heroImage" :src="heroImage" class="w-full h-full object-cover opacity-15 grayscale mix-blend-luminosity" />
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#1A3A1C]/80 to-[#1A3A1C]"></div>
+        <img v-if="heroImage" :src="heroImage" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#1A3A1C] via-[#1A3A1C]/70 to-black/30"></div>
       </div>
 
       <!-- Subtle Decorative Elements -->
@@ -109,19 +109,19 @@ const handleShare = () => {
         <div v-else-if="program" class="space-y-8 animate-fade-in">
           <div class="flex flex-wrap items-center gap-2">
             <span class="px-4 py-1 bg-white/10 backdrop-blur-md rounded-full text-sm font-bold text-white/80 border border-white/10">
-              {{ program?.type }}
+              {{ program?.type ? t(program.type) : '' }}
             </span>
             <span v-if="program?.status" class="px-4 py-1 bg-[#2E7D32]/80 backdrop-blur-md rounded-full text-sm font-bold text-white border border-white/5 shadow-lg">
-              {{ program?.status }}
+              {{ program?.status ? t(program.status) : '' }}
             </span>
           </div>
 
           <h1 class="text-3xl md:text-5xl lg:text-7xl font-bold leading-[1.1] max-w-5xl text-white">
-            {{ program?.title }}
+            {{ program?.title ? t(program.title) : '' }}
           </h1>
 
           <p v-if="program?.theme" class="text-xl md:text-2xl text-white/60 font-medium max-w-3xl leading-relaxed">
-            "{{ program?.theme }}"
+            "{{ program?.theme ? t(program.theme) : '' }}"
           </p>
         </div>
       </div>
@@ -157,7 +157,7 @@ const handleShare = () => {
               </div>
               <div>
                 <p class="text-sm text-gray-400 font-bold">{{ t('Location') }}</p>
-                <p class="text-sm font-bold text-gray-900 truncate max-w-[150px]">{{ program?.location || 'Virtual' }}</p>
+                <p class="text-sm font-bold text-gray-900 truncate max-w-[150px]">{{ program?.location || t('Virtual') }}</p>
               </div>
             </div>
 
@@ -272,11 +272,11 @@ const handleShare = () => {
               </div>
               <div v-else-if="program" class="space-y-12">
                 <div v-if="program?.description">
-                  <div class="text-gray-600 leading-[2] text-[16px] font-medium whitespace-pre-wrap lg:pr-10" v-html="program?.description"></div>
+                  <div class="text-gray-600 leading-[2] text-[16px] font-medium whitespace-pre-wrap lg:pr-10" v-html="program?.description ? t(program.description) : ''"></div>
                 </div>
 
                 <div v-if="program?.content" class="pt-12 border-t border-gray-50">
-                  <div class="program-content" v-html="program?.content"></div>
+                  <div class="program-content" v-html="program?.content ? t(program.content) : ''"></div>
                 </div>
               </div>
             </div>
@@ -333,13 +333,23 @@ const handleShare = () => {
               </div>
             </div>
 
-            <!-- Gallery Section -->
             <section v-if="sectionId === 'gallery' && program?.bannerImages?.length > 1" class="py-24 animate-fade-in-up">
               <div class="container mx-auto px-6 max-w-6xl">
                 <h3 class="text-sm font-bold text-[#2E7D32] mb-12 opacity-60 text-center">{{ t('Programme_Atmosphere') }}</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div v-for="(img, idx) in program?.bannerImages" :key="idx" class="aspect-square rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg">
-                    <img :src="img" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[200px] md:auto-rows-[250px]">
+                  <div v-for="(img, idx) in program?.bannerImages" :key="idx" 
+                       class="rounded-[2rem] overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500"
+                       :class="[
+                          idx % 7 === 0 ? 'col-span-2 row-span-2' : '',
+                          idx % 7 === 1 ? 'col-span-1 row-span-1' : '',
+                          idx % 7 === 2 ? 'col-span-1 row-span-2' : '',
+                          idx % 7 === 3 ? 'col-span-1 row-span-1' : '',
+                          idx % 7 === 4 ? 'col-span-2 row-span-1' : '',
+                          idx % 7 === 5 ? 'col-span-1 row-span-1' : '',
+                          idx % 7 === 6 ? 'col-span-1 row-span-1' : ''
+                       ]"
+                  >
+                    <img :src="img" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" />
                   </div>
                 </div>
               </div>

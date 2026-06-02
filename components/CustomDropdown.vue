@@ -36,7 +36,7 @@
         class="absolute z-[100] mt-2 w-full bg-white border border-gray-100 rounded-2xl shadow-2xl shadow-black/10 overflow-hidden py-1 max-h-60 overflow-y-auto custom-scrollbar"
       >
         <div v-if="options.length === 0" class="px-4 py-3 text-sm text-gray-400">
-          No options available
+          {{ t('No options available') }}
         </div>
         <button
           v-for="option in options"
@@ -64,6 +64,8 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from '@/composables/useI18n';
+const { t } = useI18n();
 interface Option {
   label: string;
   value: string | number;

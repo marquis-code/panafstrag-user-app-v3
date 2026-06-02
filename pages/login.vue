@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from '@/composables/useI18n';
+const { t } = useI18n();
 import { useLogin } from '@/composables/modules/auth/useLogin'
 const { login } = useLogin()
 const form = reactive({
@@ -37,13 +39,13 @@ definePageMeta({
 
       <div class="text-center mb-12">
         <Logo class="justify-center mb-8" />
-        <h1 class="text-3xl font-black">Welcome <span class=" text-gray-400">Back.</span></h1>
-        <p class="text-gray-400 text-sm font-black mt-4">Security Authorized Access Only</p>
+        <h1 class="text-3xl font-black">{{ t('Welcome') }} <span class=" text-gray-400">{{ t('Back.') }}</span></h1>
+        <p class="text-gray-400 text-sm font-black mt-4">{{ t('Security Authorized Access Only') }}</p>
       </div>
 
       <form @submit.prevent="handleLogin" class="space-y-8">
         <div class="space-y-2">
-          <label class="block text-sm font-black text-gray-400 ml-1">Credential ID (Email)</label>
+          <label class="block text-sm font-black text-gray-400 ml-1">{{ t('Credential ID (Email)') }}</label>
           <input
             v-model="form.email"
             type="email"
@@ -53,7 +55,7 @@ definePageMeta({
           />
         </div>
         <div class="space-y-2">
-          <label class="block text-sm font-black text-gray-400 ml-1">Access Key (Password)</label>
+          <label class="block text-sm font-black text-gray-400 ml-1">{{ t('Access Key (Password)') }}</label>
           <input
             v-model="form.password"
             type="password"
@@ -78,8 +80,8 @@ definePageMeta({
 
       <div class="mt-12 text-center border-t border-gray-100 pt-8">
         <p class="text-gray-400 text-sm font-black">
-          New researcher?
-          <NuxtLink to="/register" class="text-black hover:underline ml-2">Request Credentials</NuxtLink>
+          {{ t('New researcher?') }}
+          <NuxtLink to="/register" class="text-black hover:underline ml-2">{{ t('Request Credentials') }}</NuxtLink>
         </p>
       </div>
     </div>

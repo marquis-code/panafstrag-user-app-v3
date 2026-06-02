@@ -18,7 +18,7 @@
           <!-- Shine effect -->
           <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
           
-          <span class="text-5xl font-black text-white tracking-tighter">P</span>
+          <span class="text-5xl font-black text-white tracking-tighter">{{ t('P') }}</span>
         </div>
 
         <!-- Loading Text -->

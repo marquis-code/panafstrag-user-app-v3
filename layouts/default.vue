@@ -15,11 +15,11 @@
           <div class="flex items-center gap-2 overflow-hidden">
             <span class="w-1.5 h-1.5 flex-shrink-0 rounded-full bg-[#2E7D32] animate-pulse"></span>
             <span class="text-xs md:text-sm font-black text-gray-500 truncate">
-              {{ homeContent?.websiteHeaderText || 'Est. 1992 — Panafricana Strategic & Policy Research Group' }}
+              {{ t(homeContent?.websiteHeaderText || 'Est. 1992 — Panafricana Strategic & Policy Research Group') }}
             </span>
           </div>
           <span class="text-xs md:text-sm font-black text-gray-400 hidden md:block flex-shrink-0 ml-4">
-            {{ currentDate }}
+            {{ t(currentDate) }}
           </span>
         </div>
       </div>
@@ -181,8 +181,8 @@
               <span class="text-2xl font-black">1992</span>
             </div>
             <div class="flex gap-6">
-              <a href="#" class="text-sm font-black hover:text-white transition-colors">Twitter</a>
-              <a href="#" class="text-sm font-black hover:text-white transition-colors">LinkedIn</a>
+              <a href="#" class="text-sm font-black hover:text-white transition-colors">{{ t('Twitter') }}</a>
+              <a href="#" class="text-sm font-black hover:text-white transition-colors">{{ t('LinkedIn') }}</a>
             </div>
           </div>
         </div>
@@ -206,7 +206,7 @@
           <div class="col-span-1 lg:col-span-4 flex flex-col items-start lg:pr-10">
             <Logo class="invert brightness-0 mb-8 transform hover:scale-105 transition-transform duration-500 origin-left" />
             <p class="text-gray-400 leading-relaxed text-sm font-medium mb-10 max-w-sm">
-              An independent intelligence network and strategic policy research group dedicated to sustainable development, global positioning, and the strategic security of the African continent and its diaspora.
+              {{ t('An independent intelligence network and strategic policy research group dedicated to sustainable development, global positioning, and the strategic security of the African continent and its diaspora.') }}
             </p>
             <div class="flex items-center gap-4">
               <span class="w-2 h-2 rounded-full bg-[#2E7D32] animate-pulse"></span>
@@ -247,17 +247,17 @@
                 <template v-if="homeContent?.contactSocialLinks?.length">
                   <a v-for="link in homeContent.contactSocialLinks" :key="link.platform" :href="link.url" target="_blank" class="text-sm font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
                     <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
-                    {{ link.platform }}
+                    {{ t(link.platform) }}
                   </a>
                 </template>
                 <template v-else>
                   <a href="#" class="text-sm font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
                     <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
-                    Twitter (X)
+                    {{ t('Twitter (X)') }}
                   </a>
                   <a href="#" class="text-sm font-bold text-gray-400 hover:text-white hover:translate-x-2 transition-all duration-300 inline-flex items-center gap-2 group">
                     <span class="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#2E7D32] transition-colors"></span>
-                    LinkedIn
+                    {{ t('LinkedIn') }}
                   </a>
                 </template>
               </nav>
@@ -266,7 +266,7 @@
             <!-- Get Involved (CTA) -->
             <div class="flex flex-col gap-6">
               <h4 class="text-sm font-black text-[#2E7D32] border-b border-white/10 pb-4">{{ t('Participate') }}</h4>
-              <p class="text-sm text-gray-400 leading-relaxed font-medium">Join our strategic network of thinkers and leaders.</p>
+              <p class="text-sm text-gray-400 leading-relaxed font-medium">{{ t('Join our strategic network of thinkers and leaders.') }}</p>
               <NuxtLink to="/contact" class="mt-2 text-sm font-black text-center bg-white text-black py-4 px-6 hover:bg-[#2E7D32] hover:text-white transition-colors duration-500 w-full shadow-[0_0_20px_rgba(46,125,50,0.2)] hover:shadow-[0_0_30px_rgba(46,125,50,0.5)]">
                 {{ t('JOIN NOW') }}
               </NuxtLink>
@@ -280,7 +280,7 @@
         <!-- Bottom Bar -->
         <div class="flex flex-col md:flex-row justify-between items-center gap-6">
           <p class="text-gray-600 text-sm font-black ">
-            © {{ new Date().getFullYear() }} PANAFSTRAG. All Rights Reserved.
+            © {{ new Date().getFullYear() }} {{ t('PANAFSTRAG. All Rights Reserved.') }}
           </p>
           <div class="flex gap-6">
             <NuxtLink to="/privacy-policy" class="text-gray-600 text-sm font-black hover:text-white transition-colors">{{ t('Privacy Policy') }}</NuxtLink>
@@ -314,7 +314,7 @@ const instituteHover = ref(false)
 
 const instituteItemsRes = computed(() => {
   if (homeContent.value?.instituteNavItems?.length) {
-    return homeContent.value.instituteNavItems
+    return homeContent.value.instituteNavItems.map((item: any) => ({ ...item, label: t(item.label) }))
   }
   return [
     { label: t('The Ubuntu Team'), path: '/board' },
@@ -327,7 +327,7 @@ const instituteItemsRes = computed(() => {
 
 const primaryItemsRes = computed(() => {
   if (homeContent.value?.primaryNavItems?.length) {
-    return homeContent.value.primaryNavItems
+    return homeContent.value.primaryNavItems.map((item: any) => ({ ...item, label: t(item.label) }))
   }
   return [
     { label: t('Programmes'), path: '/programs' },

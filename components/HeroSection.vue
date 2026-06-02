@@ -3,7 +3,7 @@
     class="relative min-h-[90vh] flex items-center overflow-hidden"
     :style="heroSectionStyle"
   >
-    <!-- INSTANT first-slide image: rendered as a raw <img> outside Vue transitions so it paints immediately -->
+    <!-- INSTANT first-slide image: rendered as a raw <img> {{ t('outside Vue transitions so it paints immediately -->') }}
     <img
       v-if="firstSlideImg"
       :src="firstSlideImg"
@@ -45,25 +45,25 @@
               <div v-if="establishedText || $slots.established" class="inline-flex items-center gap-2 px-4 py-2 mb-10 border border-white/10 bg-white/5 backdrop-blur-md rounded-full animate-fade-in-up">
                 <span class="w-1.5 h-1.5 rounded-full bg-[#2E7D32] animate-pulse"></span>
                 <span class="text-sm font-black text-gray-300">
-                  <slot name="established">{{ establishedText || 'ESTABLISHED 1992' }}</slot>
+                  <slot name="established">{{ t(establishedText || 'ESTABLISHED 1992') }}</slot>
                 </span>
               </div>
 
               <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black mb-6 md:mb-10 leading-[0.85] text-white animate-fade-in-up delay-100">
-                {{ slide.title }}
+                {{ slide.title ? t(slide.title) : '' }}
               </h1>
 
               <p class="text-lg md:text-xl text-gray-300 mb-10 md:mb-16 max-w-2xl mx-auto leading-relaxed font-medium animate-fade-in-up delay-200">
-                {{ slide.description }}
+                {{ slide.description ? t(slide.description) : '' }}
               </p>
 
               <div class="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 animate-fade-in-up delay-300">
                 <NuxtLink to="/programs" class="group relative px-10 py-5 bg-[#2E7D32] text-white font-black text-sm rounded-xl overflow-hidden transition-all hover:scale-105 active:scale-95">
-                  <span class="relative z-10">EXPLORE PROGRAMMES</span>
+                  <span class="relative z-10">{{ t('EXPLORE PROGRAMMES') }}</span>
                   <div class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                 </NuxtLink>
                 <NuxtLink to="/archives" class="px-10 py-5 border border-white/20 text-white font-black text-sm rounded-xl hover:bg-white hover:text-black transition-all">
-                  VIEW ARCHIVES
+                  {{ t('VIEW ARCHIVES') }}
                 </NuxtLink>
               </div>
             </div>
@@ -88,6 +88,8 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from '@/composables/useI18n';
+const { t } = useI18n();
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 
 const props = defineProps<{

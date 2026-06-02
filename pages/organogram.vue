@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from '@/composables/useI18n';
+const { t } = useI18n();
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 import { useFetchOrganogram } from '@/composables/modules/organogram/useFetchOrganogram'
 
@@ -25,8 +27,8 @@ useHead({
     <section class="pt-24 pb-16 border-b border-gray-100 bg-white">
       <div class="container mx-auto px-6">
         <div class="text-center max-w-4xl mx-auto">
-          <span class="text-sm font-black text-gray-400 mb-4 block">Institutional Structure</span>
-          <h1 class="text-[5vw] lg:text-7xl font-black leading-none" v-html="homeContent?.organogramPageTitle || 'ORGANO<span class=\'not-italic text-gray-400\'>GRAM</span>'">
+          <span class="text-sm font-black text-gray-400 mb-4 block">{{ t('Institutional Structure') }}</span>
+          <h1 class="text-[5vw] lg:text-7xl font-black leading-none" v-html="homeContent?.organogramPageTitle ? t(homeContent.organogramPageTitle) : t('ORGANO') + '<span class=\'not-italic text-gray-400\'>' + t('GRAM') + '</span>'">
           </h1>
         </div>
       </div>

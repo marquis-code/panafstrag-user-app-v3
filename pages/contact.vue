@@ -50,10 +50,10 @@ useHead({
     <!-- Page Hero -->
     <section class="border-b pt-8 md:pt-16 border-gray-100 py-12 md:py-24">
       <div class="max-w-4xl">
-        <p class="text-sm md:text-sm font-black text-gray-400 mb-4 md:mb-6">Contact</p>
-        <h1 class="text-4xl md:text-8xl font-black leading-none mb-6 md:mb-8" v-html="homeContent?.contactPageTitle || 'Get In<br /><span class=\'text-gray-300\'>Touch</span>'">
+        <p class="text-sm md:text-sm font-black text-gray-400 mb-4 md:mb-6">{{ t('Contact') }}</p>
+        <h1 class="text-4xl md:text-8xl font-black leading-none mb-6 md:mb-8" v-html="homeContent?.contactPageTitle ? t(homeContent.contactPageTitle) : t('Get In') + '<br /><span class=\'text-gray-300\'>' + t('Touch') + '</span>'">
         </h1>
-        <p class="text-gray-500 text-base md:text-lg max-w-xl leading-relaxed" v-html="homeContent?.contactPageDescription || 'Reach out to PANAFSTRAG for research inquiries, partnership opportunities, or media requests.'">
+        <p class="text-gray-500 text-base md:text-lg max-w-xl leading-relaxed" v-html="homeContent?.contactPageDescription ? t(homeContent.contactPageDescription) : t('Reach out to PANAFSTRAG for research inquiries, partnership opportunities, or media requests.')">
         </p>
       </div>
     </section>
@@ -146,7 +146,7 @@ useHead({
                  {{ homeContent.contactEmail }}
               </a>
               <a v-else href="mailto:info@panafstrag.org" class="text-sm md:text-sm font-bold hover:text-gray-400 transition-colors">
-                 info@panafstrag.org
+                 {{ t('info@panafstrag.org') }}
               </a>
             </div>
             <div>
@@ -168,22 +168,22 @@ useHead({
 
         <div>
           <p class="text-sm md:text-sm font-black text-gray-400 mb-6 md:mb-8">{{ t('Location') }}</p>
-          <address class=" text-sm md:text-sm font-bold leading-relaxed text-gray-700 whitespace-pre-line" v-html="homeContent?.contactAddress || 'PANAFSTRAG Secretariat<br />Accra, Ghana<br />West Africa'"></address>
+          <address class=" text-sm md:text-sm font-bold leading-relaxed text-gray-700 whitespace-pre-line" v-html="homeContent?.contactAddress || 'PANAFSTRAG Secretariat<br />' + t('Accra, Ghana') + '<br />West Africa'"></address>
         </div>
 
         <!-- <div>
-          <p class="text-sm md:text-sm font-black text-gray-400 mb-6 md:mb-8">Office Hours</p>
+          <p class="text-sm md:text-sm font-black text-gray-400 mb-6 md:mb-8">{{ t('Office Hours') }}</p>
           <div class="flex flex-col gap-3 text-sm md:text-sm">
             <div class="flex justify-between border-b border-gray-100 pb-3">
-              <span class="font-black text-sm md:text-sm">Mon – Fri</span>
+              <span class="font-black text-sm md:text-sm">{{ t('Mon – Fri') }}</span>
               <span class="font-bold text-gray-500">{{ homeContent?.contactOfficeHoursMonFri || '8:00 AM – 5:00 PM' }}</span>
             </div>
             <div class="flex justify-between border-b border-gray-100 pb-3">
-              <span class="font-black text-sm md:text-sm">Saturday</span>
+              <span class="font-black text-sm md:text-sm">{{ t('Saturday') }}</span>
               <span class="font-bold text-gray-500">{{ homeContent?.contactOfficeHoursSat || '9:00 AM – 1:00 PM' }}</span>
             </div>
             <div class="flex justify-between border-b border-gray-100 pb-3">
-              <span class="font-black text-sm md:text-sm">Sunday</span>
+              <span class="font-black text-sm md:text-sm">{{ t('Sunday') }}</span>
               <span class="font-bold text-gray-500">{{ homeContent?.contactOfficeHoursSun || 'Closed' }}</span>
             </div>
           </div>
@@ -193,7 +193,7 @@ useHead({
           <p class="text-sm md:text-sm font-black text-gray-400 mb-6 md:mb-8">{{ t('Connect') }}</p>
           <div class="flex flex-wrap gap-4">
             <a v-for="link in homeContent.contactSocialLinks" :key="link.platform" :href="link.url" target="_blank" class="px-4 py-2 border border-gray-200 text-sm font-black hover:bg-black hover:text-white transition-all rounded-full">
-              {{ link.platform }}
+              {{ t(link.platform) }}
             </a>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { useHomeContent } from '@/composables/modules/home-content/useHomeConten
 import { useCustomToast } from '@/composables/core/useCustomToast'
 
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { programs: allPrograms, loading: pending } = useFetchPrograms()
 const { homeContent } = useHomeContent()
 const { showToast } = useCustomToast()
@@ -109,7 +109,7 @@ const getStatusColor = (status: string) => {
 const formatDate = (date: string) => {
   if (!date) return ''
   try {
-    return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    return new Date(date).toLocaleDateString(locale.value, { year: 'numeric', month: 'long', day: 'numeric' })
   } catch {
     return date
   }
@@ -211,14 +211,14 @@ useHead({
                 </div>
                 
                 <h3 class="text-xl font-bold text-gray-900 leading-snug group-hover:text-[#2E7D32] transition-colors line-clamp-2">
-                  {{ program?.title }}
+                  {{ program?.title ? t(program.title) : '' }}
                 </h3>
                 
                 <p v-if="program?.theme" class="text-sm font-semibold text-gray-400 leading-relaxed line-clamp-2 border-l-2 border-gray-100 pl-4 py-1">
-                  "{{ program.theme }}"
+                  "{{ program.theme ? t(program.theme) : '' }}"
                 </p>
 
-                <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 font-medium" v-html="program?.description"></p>
+                <p class="text-gray-500 text-sm leading-relaxed line-clamp-3 font-medium" v-html="program?.description ? t(program.description) : ''"></p>
 
                 <div class="pt-6 border-t border-gray-50 flex items-center justify-between">
                   <NuxtLink :to="`/programs/${program?._id}`" class="text-sm font-bold text-[#2E7D32] flex items-center gap-2 group/btn">

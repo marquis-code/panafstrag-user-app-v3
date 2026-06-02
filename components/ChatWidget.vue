@@ -26,9 +26,9 @@
             <div class="absolute inset-0 bg-black/10 pointer-events-none"></div>
             <div class="relative z-10 flex flex-col items-center">
               <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl mb-5">
-                <span class="text-3xl font-black text-[#075e54]">P</span>
+                <span class="text-3xl font-black text-[#075e54]">{{ t('P') }}</span>
               </div>
-              <h3 class="text-lg font-bold mb-2">PANAFSTRAG</h3>
+              <h3 class="text-lg font-bold mb-2">{{ t('PANAFSTRAG') }}</h3>
               <p class="text-sm text-white/80 leading-relaxed max-w-[16rem]">{{ t('We are here to help you! Call or chat to connect with us right away.') }}</p>
             </div>
           </div>

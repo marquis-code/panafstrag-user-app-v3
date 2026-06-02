@@ -23,7 +23,7 @@
             v-model="searchQuery"
             type="text"
             class="flex-1 text-2xl font-black bg-transparent border-none outline-none text-black placeholder:text-gray-300"
-            placeholder="AGGRESSIVE SEARCH..."
+            :placeholder="t('AGGRESSIVE SEARCH...')"
             @input="handleInput"
           />
           <button @click="close" class="p-2 text-gray-400 hover:text-black hover:bg-gray-50 rounded-full transition-colors">
@@ -42,23 +42,23 @@
 
            <!-- Empty Initial State -->
            <div v-else-if="!searchQuery" class="text-center py-16">
-             <span class="text-sm font-black text-gray-400">Discover Our Network</span>
+             <span class="text-sm font-black text-gray-400">{{ t('Discover Our Network') }}</span>
              <p class="text-sm text-gray-500 mt-4 leading-relaxed font-medium max-w-sm mx-auto">
-                Type any keyword to aggressively scan through all programs, objectives, focus areas, and archives.
+                {{ t('Type any keyword to aggressively scan through all programs, objectives, focus areas, and archives.') }}
              </p>
            </div>
 
            <!-- No Results -->
            <div v-else-if="results.length === 0" class="text-center py-16">
-             <span class="text-sm font-black text-gray-400">NO RESULTS FOUND</span>
-             <p class="text-sm text-gray-500 mt-4 leading-relaxed font-medium">Try broader terms or different keywords.</p>
+             <span class="text-sm font-black text-gray-400">{{ t('NO RESULTS FOUND') }}</span>
+             <p class="text-sm text-gray-500 mt-4 leading-relaxed font-medium">{{ t('Try broader terms or different keywords.') }}</p>
              <p class="font-black text-lg mt-2 opacity-50">"{{ searchQuery }}"</p>
            </div>
 
            <!-- Grouped Results -->
            <div v-else v-for="(group, type) in groupedResults" :key="type" class="animate-fade-in-up">
               <h3 class="text-sm font-black text-[#2E7D32] border-b border-gray-200 pb-2 mb-4">
-                {{ type }} <span class="text-sm text-black/30 ml-2">({{ group.length }})</span>
+                {{ t(type) }} <span class="text-sm text-black/30 ml-2">({{ group.length }})</span>
               </h3>
               <div class="space-y-3">
                  <NuxtLink
@@ -74,7 +74,7 @@
                        <p class="text-sm text-gray-500 mt-1 line-clamp-2 leading-relaxed font-medium" v-html="item.description"></p>
                      </div>
                      <span class="flex-shrink-0 text-sm font-black text-white bg-[#2E7D32] px-2 py-1 rounded-full opacity-0 group-hover/link:opacity-100 transition-opacity">
-                        VIEW
+                        {{ t('VIEW') }}
                      </span>
                    </div>
                  </NuxtLink>
@@ -84,7 +84,7 @@
         
         <!-- Footer Info -->
         <div class="p-4 bg-black text-center relative z-10">
-           <span class="text-sm font-black text-gray-500">Global Search Intelligence</span>
+           <span class="text-sm font-black text-gray-500">{{ t('Global Search Intelligence') }}</span>
         </div>
       </div>
     </div>
@@ -92,6 +92,8 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from '@/composables/useI18n';
+const { t } = useI18n();
 import { ref, computed, watch, nextTick } from 'vue'
 
 const props = defineProps({
