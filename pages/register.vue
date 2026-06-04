@@ -18,14 +18,14 @@ const handleRegister = async () => {
     await register(form)
     navigateTo('/login')
   } catch (err: any) {
-    error.value = err.data?.message || 'Registration failed. Please try again.'
+    error.value = err.data?.message || t('Registration failed. Please try again.')
   } finally {
     loading.value = false
   }
 }
 
 useHead({
-  title: 'Register | PANAFSTRAG',
+  title: t('Register') + ' | PANAFSTRAG',
 })
 
 definePageMeta({
@@ -51,7 +51,7 @@ definePageMeta({
             v-model="form.name"
             type="text"
             required
-            placeholder="Researcher Name"
+            :placeholder="t('Researcher Name')"
             class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-xl focus:border-black focus:ring-0 outline-none transition-all font-medium text-sm placeholder:text-gray-300"
           />
         </div>
@@ -61,7 +61,7 @@ definePageMeta({
             v-model="form.email"
             type="email"
             required
-            placeholder="name@institution.org"
+            :placeholder="t('name@institution.org')"
             class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-xl focus:border-black focus:ring-0 outline-none transition-all font-medium text-sm placeholder:text-gray-300"
           />
         </div>
@@ -71,7 +71,7 @@ definePageMeta({
             v-model="form.password"
             type="password"
             required
-            placeholder="••••••••"
+            :placeholder="t('••••••••')"
             class="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-xl focus:border-black focus:ring-0 outline-none transition-all font-medium text-sm placeholder:text-gray-300"
           />
         </div>
@@ -85,7 +85,7 @@ definePageMeta({
           :disabled="loading"
           class="w-full btn-primary py-5 rounded-xl shadow-none hover:shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 text-sm "
         >
-          {{ loading ? 'PROCESSING REQ...' : 'SUBMIT REQUEST' }}
+          {{ loading ? t('PROCESSING REQ...') : t('SUBMIT REQUEST') }}
         </button>
       </form>
 

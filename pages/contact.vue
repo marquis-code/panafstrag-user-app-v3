@@ -182,7 +182,7 @@ useHead({
                       <input
                         v-model="form.email"
                         type="email"
-                        placeholder="your@email.com"
+                        :placeholder="t('your@email.com')"
                         class="field"
                         required
                       />

@@ -1,1 +1,0 @@
-import{_ as s,o as e,c as t,a as n,Y as a}from"./D3EZJ3wO.js";const c={},_={class:"flex items-center gap-2 group h-full py-1.5 md:py-2"};function r(l,o){return e(),t("div",_,[...o[0]||(o[0]=[n("img",{src:a,class:"h-12 w-auto object-contain drop-shadow-sm",alt:"Logo"},null,-1)])])}const p=Object.assign(s(c,[["render",r]]),{__name:"Logo"});export{p as _};

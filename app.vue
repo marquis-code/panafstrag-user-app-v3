@@ -1,11 +1,16 @@
 <template>
-  <div>
+  <div :key="locale">
     <GlobalLoader />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
   </div>
 </template>
+
+<script setup>
+import { useI18n } from '@/composables/useI18n'
+const { locale } = useI18n()
+</script>
 
 <style>
 .page-enter-active,
