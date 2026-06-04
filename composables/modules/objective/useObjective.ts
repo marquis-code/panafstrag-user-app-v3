@@ -1,15 +1,23 @@
 import { objectiveApiFactory } from "@/api_factory/modules/objective";
+import { useApiCache } from '@/composables/useApiCache';
 
 export const useFetchObjectives = () => {
+  const { readCache, writeCache, getCacheKey } = useApiCache();
+  const baseKey = 'objectives';
+
   const { data: objectives, pending: loading, refresh: fetchObjectives } = useAsyncData(
-    `objectives_${typeof window !== 'undefined' ? localStorage.getItem('app-lang') || 'en' : 'en'}`,
+    getCacheKey(baseKey),
     async () => {
       const res = await objectiveApiFactory.getAll();
-      return res.data ?? [];
+      const parsedData = res.data ?? [];
+      if (parsedData.length > 0) {
+        writeCache(baseKey, parsedData);
+      }
+      return parsedData;
     },
     {
-      
-      server: true
+      server: true,
+      default: () => readCache(baseKey)
     }
   );
 

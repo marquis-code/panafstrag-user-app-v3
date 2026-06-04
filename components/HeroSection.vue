@@ -1,9 +1,9 @@
 <template>
-  <section 
+  <section
     class="relative min-h-[90vh] flex items-center overflow-hidden"
     :style="heroSectionStyle"
   >
-    <!-- INSTANT first-slide image: rendered as a raw <img> {{ t('outside Vue transitions so it paints immediately -->') }}
+    <!-- Instant first-slide image: painted immediately, outside Vue transitions -->
     <img
       v-if="firstSlideImg"
       :src="firstSlideImg"
@@ -11,89 +11,109 @@
       fetchpriority="high"
       loading="eager"
       decoding="sync"
-      class="absolute inset-0 w-full h-full object-contain opacity-60 scale-105 z-0 hero-instant-img"
+      class="absolute inset-0 w-full h-full object-cover opacity-50 z-0 hero-instant-img"
     />
-    <!-- Gradient overlays that sit on top of the instant image -->
-    <div class="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/40 to-black/90 z-[1]"></div>
-    <div class="absolute inset-0 bg-black/20 z-[1]"></div>
+
+    <!-- Layered overlays -->
+    <div class="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/50 to-black/80 z-[1]"></div>
+    <div class="absolute inset-0 z-[1]" style="background-image: radial-gradient(#ffffff08 1px, transparent 1px); background-size: 48px 48px;"></div>
 
     <!-- Carousel Track -->
     <div class="absolute inset-0 z-[2] h-full w-full">
       <TransitionGroup :name="initialized ? 'fade' : ''">
-        <div 
-          v-for="(slide, index) in carousels" 
+        <div
+          v-for="(slide, index) in carousels"
           :key="index"
           v-show="currentIndex === index"
           class="absolute inset-0 w-full h-full"
         >
-          <!-- Background Image & Overlay -->
+          <!-- Slide background image -->
           <div class="absolute inset-0 z-0 h-full w-full">
-            <img 
-              :src="resolveImageUrl(slide.imgUrl)" 
+            <img
+              :src="resolveImageUrl(slide.imgUrl)"
               :fetchpriority="index === 0 ? 'high' : 'low'"
               :loading="index === 0 ? 'eager' : 'lazy'"
               :decoding="index === 0 ? 'sync' : 'async'"
-              class="absolute inset-0 w-full h-full object-contain opacity-60 scale-105 transition-transform duration-[10000ms]"
-              :class="{ 'scale-110': currentIndex === index }"
+              class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-[10000ms]"
+              :class="{ 'scale-105': currentIndex === index }"
             />
-            <div class="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/40 to-black/90"></div>
-            <div class="absolute inset-0 bg-black/20"></div>
+            <div class="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/50 to-black/80"></div>
           </div>
 
-          <div class="container mx-auto px-6 relative z-10 h-full flex items-center">
-            <div class="max-w-4xl mx-auto text-center">
-              <div v-if="establishedText || $slots.established" class="inline-flex items-center gap-2 px-4 py-2 mb-10 border border-white/10 bg-white/5 backdrop-blur-md rounded-full animate-fade-in-up">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#2E7D32] animate-pulse"></span>
-                <span class="text-sm font-black text-gray-300">
+          <!-- Slide content -->
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full flex items-center">
+            <div class="max-w-3xl">
+
+              <!-- Established pill -->
+              <div
+                v-if="establishedText || $slots.established"
+                class="inline-flex items-center gap-2 px-4 py-2 mb-8 bg-white/5 border border-white/10 backdrop-blur-sm rounded-full animate-fade-in-up"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-[#2E7D32] animate-pulse inline-block"></span>
+                <span class="text-[12px] font-semibold text-slate-300 tracking-widest uppercase">
                   <slot name="established">{{ t(establishedText || 'ESTABLISHED 1992') }}</slot>
                 </span>
               </div>
 
-              <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black mb-6 md:mb-10 leading-[0.85] text-white animate-fade-in-up delay-100">
+              <!-- Heading -->
+              <h1 class="text-4xl sm:text-5xl lg:text-[60px] font-bold text-white leading-[1.05] tracking-tight mb-6 animate-fade-in-up delay-100">
                 {{ slide.title ? t(slide.title) : '' }}
               </h1>
 
-              <p class="text-lg md:text-xl text-gray-300 mb-10 md:mb-16 max-w-2xl mx-auto leading-relaxed font-medium animate-fade-in-up delay-200">
+              <!-- Description -->
+              <p class="text-[16px] sm:text-[18px] text-slate-300 leading-relaxed mb-10 max-w-xl font-medium animate-fade-in-up delay-200">
                 {{ slide.description ? t(slide.description) : '' }}
               </p>
 
-              <div class="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 animate-fade-in-up delay-300">
-                <NuxtLink to="/programs" class="group relative px-10 py-5 bg-[#2E7D32] text-white font-black text-sm rounded-xl overflow-hidden transition-all hover:scale-105 active:scale-95">
-                  <span class="relative z-10">{{ t('EXPLORE PROGRAMMES') }}</span>
-                  <div class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+              <!-- CTAs -->
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 animate-fade-in-up delay-300">
+                <NuxtLink
+                  to="/programs"
+                  class="inline-flex items-center gap-2 bg-[#2E7D32] hover:bg-green-800 text-white text-[14px] font-semibold px-7 py-3.5 rounded-xl transition-colors duration-200"
+                >
+                  {{ t('EXPLORE PROGRAMMES') }}
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
                 </NuxtLink>
-                <NuxtLink to="/archives" class="px-10 py-5 border border-white/20 text-white font-black text-sm rounded-xl hover:bg-white hover:text-black transition-all">
+                <NuxtLink
+                  to="/archives"
+                  class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-300 hover:text-white border border-white/20 hover:border-white/40 px-7 py-3.5 rounded-xl transition-all duration-200"
+                >
                   {{ t('VIEW ARCHIVES') }}
                 </NuxtLink>
               </div>
+
             </div>
           </div>
         </div>
       </TransitionGroup>
     </div>
 
-    <!-- Carousel Nav -->
-    <div v-if="carousels.length > 1" class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-4">
-      <button 
-        v-for="(_, i) in carousels" :key="i"
+    <!-- Carousel dot nav -->
+    <div v-if="carousels.length > 1" class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+      <button
+        v-for="(_, i) in carousels"
+        :key="i"
         @click="currentIndex = i"
-        class="w-12 h-1 transition-all duration-500"
-        :class="currentIndex === i ? 'bg-[#2E7D32] w-20' : 'bg-white/20'"
+        :aria-label="`${t('Go to slide')} ${i + 1}`"
+        class="h-1 rounded-full transition-all duration-500"
+        :class="currentIndex === i ? 'bg-[#2E7D32] w-8' : 'bg-white/25 w-4 hover:bg-white/40'"
       ></button>
     </div>
 
-    <!-- Subtle Grid Pattern Overlay -->
-    <div class="absolute inset-0 z-[3] opacity-[0.05] pointer-events-none" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 60px 60px;"></div>
+    <!-- Subtle bottom fade to white -->
+    <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/10 to-transparent z-[3] pointer-events-none"></div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { useI18n } from '@/composables/useI18n';
-const { t } = useI18n();
-import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
+import { useI18n } from '@/composables/useI18n'
+const { t } = useI18n()
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 
 const props = defineProps<{
-  carousels: any[],
+  carousels: any[]
   establishedText?: string
 }>()
 
@@ -103,12 +123,6 @@ let timer: any = null
 
 const HERO_IMG_CACHE_KEY = 'panafstrag_hero_img_cache'
 
-// ────────── Image Caching Helpers ──────────
-
-/**
- * Read a cached image URL from localStorage.
- * We store { [originalUrl]: base64DataUrl } map.
- */
 const getCachedImageMap = (): Record<string, string> => {
   if (typeof window === 'undefined') return {}
   try {
@@ -117,9 +131,6 @@ const getCachedImageMap = (): Record<string, string> => {
   } catch { return {} }
 }
 
-/**
- * Cache an image as a base64 data URL in localStorage.
- */
 const cacheImageBlob = async (url: string): Promise<string | null> => {
   if (!url || url.startsWith('data:') || url.startsWith('/')) return null
   try {
@@ -133,9 +144,7 @@ const cacheImageBlob = async (url: string): Promise<string | null> => {
           const map = getCachedImageMap()
           map[url] = base64
           localStorage.setItem(HERO_IMG_CACHE_KEY, JSON.stringify(map))
-        } catch {
-          // Storage full — that's fine, the normal img will work
-        }
+        } catch { /* storage full */ }
         resolve(base64)
       }
       reader.onerror = () => resolve(null)
@@ -144,37 +153,25 @@ const cacheImageBlob = async (url: string): Promise<string | null> => {
   } catch { return null }
 }
 
-// ────────── Image Resolution ──────────
-
-/**
- * For a given image URL, return the cached base64 version if available,
- * otherwise return the original URL.
- */
 const resolveImageUrl = (url: string | undefined): string => {
   if (!url) return '/hero.jpeg'
   const map = getCachedImageMap()
   return map[url] || url
 }
 
-// Compute the first slide's resolved image for instant paint
 const firstSlideImg = computed(() => {
   const url = props.carousels?.[0]?.imgUrl
   return resolveImageUrl(url)
 })
 
-// CSS background-image on the section for absolute first-frame coverage
-const heroSectionStyle = computed(() => {
-  const url = firstSlideImg.value
-  return {
-    backgroundImage: `url(${url})`,
-    backgroundSize: 'contain',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundColor: '#1a1a1a',
-  }
-})
+const heroSectionStyle = computed(() => ({
+  backgroundImage: `url(${firstSlideImg.value})`,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
+  backgroundColor: '#0d1a0f',
+}))
 
-// Preload first image in <head>
 useHead({
   link: [
     {
@@ -186,8 +183,6 @@ useHead({
   ],
 })
 
-// ────────── Carousel Timer ──────────
-
 const startTimer = () => {
   if (props.carousels.length <= 1) return
   timer = setInterval(() => {
@@ -195,16 +190,10 @@ const startTimer = () => {
   }, 10000)
 }
 
-// ────────── Lifecycle ──────────
-
 onMounted(async () => {
-  // Cache all carousel images in the background for next page load
   for (const slide of props.carousels) {
-    if (slide.imgUrl) {
-      cacheImageBlob(slide.imgUrl)
-    }
+    if (slide.imgUrl) cacheImageBlob(slide.imgUrl)
   }
-
   await nextTick()
   await nextTick()
   initialized.value = true
@@ -217,7 +206,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* The instant background img should never flash — kill any possible transition on it */
 .hero-instant-img {
   transition: none !important;
   animation: none !important;

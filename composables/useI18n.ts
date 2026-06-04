@@ -1,4 +1,4 @@
-import { useState } from '#app';
+import { useState, refreshNuxtData } from '#app';
 // trigger HMR again
 
 export const useI18n = () => {
@@ -19,8 +19,7 @@ export const useI18n = () => {
     locale.value = code;
     if (typeof window !== 'undefined') {
       localStorage.setItem('app-lang', code);
-      // Aggressively force reload the entire app so all state and composables fetch the new language
-      window.location.reload();
+      await refreshNuxtData();
     }
   };
 
@@ -33,7 +32,10 @@ export const useI18n = () => {
     }
 
     try {
-      const response = await fetch('https://get.geojs.io/v1/ip/country.json');
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 seconds timeout
+      const response = await fetch('https://get.geojs.io/v1/ip/country.json', { signal: controller.signal });
+      clearTimeout(timeoutId);
       if (!response.ok) return;
       
       const data = await response.json();
@@ -255,7 +257,64 @@ export const useI18n = () => {
       'Download_Brief': 'Download Brief',
       'Share_Brief': 'Share Brief',
       'Share_Initiative': 'Share Initiative',
-      'Virtual': 'Virtual'
+      'Virtual': 'Virtual',
+      'Strategic Programmes': 'Programas Estratégicos',
+      'Resource Archive': 'Arquivo de Recursos',
+      'Institutional Network': 'Rede Institucional',
+      'Strategic Focus': 'Foco Estratégico',
+      'Strategic Programmes': 'Programas Estratégicos',
+      'Resource Archive': 'Archivo de Recursos',
+      'Institutional Network': 'Red Institucional',
+      'Strategic Focus': 'Enfoque Estratégico',
+      'Strategic Programmes': 'Strategic Programmes',
+      'Resource Archive': 'Resource Archive',
+      'Institutional Network': 'Institutional Network',
+      'Strategic Focus': 'Strategic Focus',
+      'Get In Touch': 'Entrar em contato',
+      'Connect With': 'Conectar com',
+      'Success': 'Sucesso',
+      'Message received': 'Mensagem recebida',
+      'Your message has been submitted. A representative will be in touch shortly.': 'Sua mensagem foi enviada. Um representante entrará em contato em breve.',
+      'Send another message': 'Enviar outra mensagem',
+      'How can we help you?': 'Como podemos ajudar?',
+      'Your full name': 'Seu nome completo',
+      'Your message...': 'Sua mensagem...',
+      'Pan-African Research': 'Pesquisa Pan-Africana',
+      'Engage with our pan-African scientific network': 'Envolva-se com nossa rede científica pan-africana',
+      'Connect with PANAFSTRAG for research collaborations, governance discussions, and strategic partnerships across Africa.': 'Conecte-se com a PANAFSTRAG para colaborações de pesquisa, discussões de governança e parcerias estratégicas em toda a África.',
+      'Direct contact': 'Contato direto',
+      'Connect': 'Conectar',
+      'Follow our work': 'Acompanhe nosso trabalho',
+      'Get In Touch': 'Ponerse en contacto',
+      'Connect With': 'Conectar con',
+      'Success': 'Éxito',
+      'Message received': 'Mensaje recibido',
+      'Your message has been submitted. A representative will be in touch shortly.': 'Su mensaje ha sido enviado. Un representante se pondrá en contacto en breve.',
+      'Send another message': 'Enviar otro mensaje',
+      'How can we help you?': '¿Cómo podemos ayudarle?',
+      'Your full name': 'Su nombre completo',
+      'Your message...': 'Su mensaje...',
+      'Pan-African Research': 'Investigación panafricana',
+      'Engage with our pan-African scientific network': 'Participe en nuestra red científica panafricana',
+      'Connect with PANAFSTRAG for research collaborations, governance discussions, and strategic partnerships across Africa.': 'Conéctese con PANAFSTRAG para colaboraciones de investigación, discusiones sobre gobernanza y asociaciones estratégicas en toda África.',
+      'Direct contact': 'Contacto directo',
+      'Connect': 'Conectar',
+      'Follow our work': 'Siga nuestro trabajo',
+      'Get In Touch': 'Get In Touch',
+      'Connect With': 'Connect With',
+      'Success': 'Success',
+      'Message received': 'Message received',
+      'Your message has been submitted. A representative will be in touch shortly.': 'Your message has been submitted. A representative will be in touch shortly.',
+      'Send another message': 'Send another message',
+      'How can we help you?': 'How can we help you?',
+      'Your full name': 'Your full name',
+      'Your message...': 'Your message...',
+      'Pan-African Research': 'Pan-African Research',
+      'Engage with our pan-African scientific network': 'Engage with our pan-African scientific network',
+      'Connect with PANAFSTRAG for research collaborations, governance discussions, and strategic partnerships across Africa.': 'Connect with PANAFSTRAG for research collaborations, governance discussions, and strategic partnerships across Africa.',
+      'Direct contact': 'Direct contact',
+      'Connect': 'Connect',
+      'Follow our work': 'Follow our work'
     },
     fr: {
       'Language_Groups_HTML': 'Groupes <span class="not-italic text-gray-400">Linguistiques</span>',
@@ -453,7 +512,26 @@ export const useI18n = () => {
       'Download_Brief': 'Télécharger le dossier',
       'Share_Brief': 'Partager le dossier',
       'Share_Initiative': 'Partager l\'initiative',
-      'Virtual': 'Virtuel'
+      'Virtual': 'Virtuel',
+      'Strategic Programmes': 'Programmes Stratégiques',
+      'Resource Archive': 'Archives des ressources',
+      'Institutional Network': 'Réseau Institutionnel',
+      'Strategic Focus': 'Axe Stratégique',
+      'Get In Touch': 'Entrer en contact',
+      'Connect With': 'Se connecter avec',
+      'Success': 'Succès',
+      'Message received': 'Message reçu',
+      'Your message has been submitted. A representative will be in touch shortly.': 'Votre message a été soumis. Un représentant vous contactera sous peu.',
+      'Send another message': 'Envoyer un autre message',
+      'How can we help you?': 'Comment pouvons-nous vous aider ?',
+      'Your full name': 'Votre nom complet',
+      'Your message...': 'Votre message...',
+      'Pan-African Research': 'Recherche panafricaine',
+      'Engage with our pan-African scientific network': 'Engagez-vous avec notre réseau scientifique panafricain',
+      'Connect with PANAFSTRAG for research collaborations, governance discussions, and strategic partnerships across Africa.': 'Connectez-vous avec le PANAFSTRAG pour des collaborations de recherche, des discussions sur la gouvernance et des partenariats stratégiques à travers l\'Afrique.',
+      'Direct contact': 'Contact direct',
+      'Connect': 'Se connecter',
+      'Follow our work': 'Suivez notre travail'
     },
     es: {
       'Language_Groups_HTML': 'Grupos <span class="not-italic text-gray-400">Lingüísticos</span>',

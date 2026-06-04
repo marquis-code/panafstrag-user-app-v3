@@ -36,7 +36,7 @@ export const useHomeContent = () => {
     },
     {
       
-      initialCache: true,
+      initialCache: true, lazy: true, server: false,
       default: () => readCache()
     }
   );

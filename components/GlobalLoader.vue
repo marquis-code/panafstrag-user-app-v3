@@ -14,11 +14,11 @@
         <div class="absolute inset-0 border-4 border-[#2E7D32]/10 rounded-full animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite] scale-110 delay-150"></div>
 
         <!-- Logo Container -->
-        <div class="w-24 h-24 bg-gradient-to-br from-[#1A3A1C] to-[#2E7D32] rounded-3xl flex items-center justify-center shadow-2xl shadow-[#2E7D32]/30 relative z-10 overflow-hidden group">
+        <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center shadow-2xl shadow-[#2E7D32]/30 relative z-10 overflow-hidden group">
           <!-- Shine effect -->
           <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
           
-          <span class="text-5xl font-black text-white tracking-tighter">{{ t('P') }}</span>
+          <img src="@/assets/images/logo.png" alt="Logo" class="w-20 h-20 object-contain relative z-10" />
         </div>
 
         <!-- Loading Text -->

@@ -19,7 +19,7 @@
             </span>
           </div>
           <span class="text-xs md:text-sm font-black text-gray-400 hidden md:block flex-shrink-0 ml-4">
-            {{ t(currentDate) }}
+            {{ currentDate }}
           </span>
         </div>
       </div>
@@ -304,7 +304,7 @@ import { useHomeContent } from '@/composables/modules/home-content/useHomeConten
 import { useI18n } from '@/composables/useI18n'
 
 const { homeContent } = useHomeContent()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const isMobileOpen = ref(false)
 const scrolled = ref(false)
@@ -336,7 +336,7 @@ const primaryItemsRes = computed(() => {
 })
 
 const currentDate = computed(() => {
-  return new Date().toLocaleDateString('en-GB', {
+  return new Date().toLocaleDateString(locale.value === 'en' ? 'en-GB' : locale.value, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
