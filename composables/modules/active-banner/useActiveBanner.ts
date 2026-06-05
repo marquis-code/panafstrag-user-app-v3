@@ -3,8 +3,7 @@ import { useI18n } from '@/composables/useI18n';
 
 export const useActiveBanner = () => {
   const { locale } = useI18n();
-  const { data: activeBanner, pending: loading, refresh: fetchActiveBanner } = useAsyncData(
-    'active-banner',
+  const { data: activeBanner, pending: loading, refresh: fetchActiveBanner } = useAsyncData(`active-banner-${locale.value}`,
     async () => {
       const res = await activeBannerApi.getCurrent() as any;
       if ([200, 201].includes(res?.status)) {

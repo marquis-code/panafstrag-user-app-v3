@@ -25,8 +25,7 @@ const writeCache = (localeStr: string, data: any) => {
 
 export const useHomeContent = () => {
   const { locale } = useI18n();
-  const { data: homeContent, pending: loading, error, refresh: fetchHomeContent } = useAsyncData(
-    'home-content-v2',
+  const { data: homeContent, pending: loading, error, refresh: fetchHomeContent } = useAsyncData(`home-content-v2-${locale.value}`,
     async () => {
       const res = await homeContentApiFactory.getHomeContent() as any;
       if (res?.data) {

@@ -7,8 +7,7 @@ export const useFetchPrograms = () => {
   const { readCache, writeCache, getCacheKey } = useApiCache();
   const baseKey = 'programs-list';
 
-  const { data: programs, pending: loading, error, refresh: fetchPrograms } = useAsyncData(
-    baseKey,
+  const { data: programs, pending: loading, error, refresh: fetchPrograms } = useAsyncData(`${baseKey}-${locale.value}`,
     async () => {
       const res = await programs_api.getPrograms() as any;
       const parsedData = res.data?.data ?? res.data ?? [];

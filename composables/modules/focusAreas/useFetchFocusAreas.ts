@@ -7,8 +7,7 @@ export const useFetchFocusAreas = () => {
   const { readCache, writeCache, getCacheKey } = useApiCache();
   const baseKey = 'focus-areas-list';
 
-  const { data: focusAreas, pending: loading, error, refresh: fetchFocusAreas } = useAsyncData(
-    baseKey,
+  const { data: focusAreas, pending: loading, error, refresh: fetchFocusAreas } = useAsyncData(`${baseKey}-${locale.value}`,
     async () => {
       const res = await focus_areas_api.getFocusAreas() as any;
       const parsedData = res.data?.data ?? res.data ?? [];

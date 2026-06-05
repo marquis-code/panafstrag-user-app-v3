@@ -3,8 +3,7 @@ import { useI18n } from '@/composables/useI18n';
 
 export const useFetchLanguageGroups = () => {
   const { locale } = useI18n();
-  const { data: languageGroups, pending: loading, error, refresh: fetchLanguageGroups } = useAsyncData(
-    'language-groups-list',
+  const { data: languageGroups, pending: loading, error, refresh: fetchLanguageGroups } = useAsyncData(`language-groups-list-${locale.value}`,
     async () => {
       const res = await language_groups_api.getLanguageGroups() as any;
       return res.data?.data ?? res.data ?? [];

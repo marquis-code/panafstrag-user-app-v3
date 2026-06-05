@@ -7,8 +7,7 @@ export const useFetchResponsibilities = () => {
   const { readCache, writeCache, getCacheKey } = useApiCache();
   const baseKey = 'responsibilities';
 
-  const { data: responsibilities, pending: loading, refresh: fetchResponsibilities } = useAsyncData(
-    baseKey,
+  const { data: responsibilities, pending: loading, refresh: fetchResponsibilities } = useAsyncData(`${baseKey}-${locale.value}`,
     async () => {
       const res = await responsibilityApiFactory.getAll();
       const parsedData = res.data ?? [];

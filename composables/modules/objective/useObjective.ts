@@ -7,8 +7,7 @@ export const useFetchObjectives = () => {
   const { readCache, writeCache, getCacheKey } = useApiCache();
   const baseKey = 'objectives';
 
-  const { data: objectives, pending: loading, refresh: fetchObjectives } = useAsyncData(
-    baseKey,
+  const { data: objectives, pending: loading, refresh: fetchObjectives } = useAsyncData(`${baseKey}-${locale.value}`,
     async () => {
       const res = await objectiveApiFactory.getAll();
       const parsedData = res.data ?? [];

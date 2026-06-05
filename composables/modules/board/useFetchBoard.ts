@@ -3,8 +3,7 @@ import { useI18n } from '@/composables/useI18n';
 
 export const useFetchBoard = () => {
   const { locale } = useI18n();
-  const { data: boardMembers, pending: loading, error, refresh: fetchBoard } = useAsyncData(
-    'board-members-list',
+  const { data: boardMembers, pending: loading, error, refresh: fetchBoard } = useAsyncData(`board-members-list-${locale.value}`,
     async () => {
       const res = await board_api.getMembers() as any;
       return res.data?.data ?? res.data ?? [];

@@ -6,8 +6,7 @@ export const useFetchBoardMember = () => {
   const route = useRoute();
   const id = computed(() => route.params.id as string);
 
-  const { data: boardMember, pending: loading, error, refresh: fetchBoardMember } = useAsyncData(
-    `board-member-${id.value}`,
+  const { data: boardMember, pending: loading, error, refresh: fetchBoardMember } = useAsyncData(`board-member-${id.value}-${locale.value}`,
     async () => {
       if (!id.value) return null;
       const res = await board_api.getMember(id.value) as any;
