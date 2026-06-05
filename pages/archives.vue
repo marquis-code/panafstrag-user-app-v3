@@ -268,6 +268,11 @@ useHead({ title: 'Archives | PANAFSTRAG' })
                             class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                           />
                           <img
+                            v-else-if="item?.imageUrl"
+                            :src="item.imageUrl"
+                            class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                          />
+                          <img
                             v-else
                             src="@/assets/images/program-placeholder.png"
                             class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"

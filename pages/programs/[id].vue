@@ -319,11 +319,11 @@ const handleShare = () => {
                 <div v-if="program?.description">
                   <div
                     class="text-slate-600 leading-[1.9] text-[15px] font-medium whitespace-pre-wrap"
-                    v-html="program?.description ? t(program.description) : ''"
+                    v-html="program?.description || ''"
                   ></div>
                 </div>
                 <div v-if="program?.content" class="pt-10 border-t border-slate-100">
-                  <div class="program-content" v-html="program?.content ? t(program.content) : ''"></div>
+                  <div class="program-content" v-html="program?.content || ''"></div>
                 </div>
               </div>
             </div>

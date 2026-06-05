@@ -221,6 +221,11 @@ useHead({
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <img
+                    v-else-if="program?.imageUrl"
+                    :src="program.imageUrl"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <img
                     v-else
                     src="@/assets/images/program-placeholder.png"
                     alt=""
@@ -264,8 +269,9 @@ useHead({
 
                   <!-- Description -->
                   <p
+                    v-if="program?.description"
                     class="text-[13px] text-slate-500 leading-relaxed line-clamp-3 flex-1"
-                    v-html="program?.description ? t(program.description) : ''"
+                    v-html="program?.description || ''"
                   ></p>
 
                   <!-- Footer -->
