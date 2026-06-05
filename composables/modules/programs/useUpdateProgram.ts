@@ -3,6 +3,7 @@ import { programs_api } from '@/api_factory/modules/programs';
 import { useCustomToast } from '../../core/useCustomToast';
 
 export const useUpdateProgram = () => {
+  const { locale } = useI18n();
   const loading = ref(false);
   const { showToast } = useCustomToast();
 

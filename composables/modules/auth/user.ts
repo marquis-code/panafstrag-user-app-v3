@@ -1,4 +1,5 @@
 export const useUser = () => {
+  const { locale } = useI18n();
   const user = useState('auth_user', () => null);
   const token = useCookie('auth_token');
   const userCookie = useCookie('user_data');

@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { cells_api } from '@/api_factory/modules/cells';
 
 export const useFetchCells = () => {
+  const { locale } = useI18n();
   const loading = ref(false);
   const cells = ref<any[]>([]);
   const error = ref<string | null>(null);

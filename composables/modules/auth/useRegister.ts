@@ -3,6 +3,7 @@ import { auth_api } from '@/api_factory/modules/auth';
 import { useCustomToast } from '../../core/useCustomToast';
 
 export const useRegister = () => {
+  const { locale } = useI18n();
   const loading = ref(false);
   const error = ref<string | null>(null);
   const { showToast } = useCustomToast();

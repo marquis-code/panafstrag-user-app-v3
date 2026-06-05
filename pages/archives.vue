@@ -4,7 +4,7 @@ import { useFetchArchives } from '@/composables/modules/archives/useFetchArchive
 import { useHomeContent } from '@/composables/modules/home-content/useHomeContent'
 import { programs_api } from '@/api_factory/modules/programs'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const showShareModal = ref(false)
 const selectedProgramToShare = ref({})
 
@@ -17,7 +17,7 @@ const { archives: allArchives, loading: archivesLoading } = useFetchArchives()
 const { homeContent } = useHomeContent()
 
 const { data: pastProgramsData, pending: pastProgramsLoading } = useAsyncData(
-  `past-programs-archive_${typeof window !== 'undefined' ? localStorage.getItem('app-lang') || 'en' : 'en'}`,
+  'past-programs-archive',
   async () => {
     try {
       const res = await programs_api.getPastPrograms() as any
@@ -32,7 +32,7 @@ const { data: pastProgramsData, pending: pastProgramsLoading } = useAsyncData(
     } catch (e) {}
     return []
   },
-  { lazy: true, server: true }
+  { lazy: true, server: true, watch: [locale] }
 )
 
 const pastPrograms = computed(() => pastProgramsData.value || [])

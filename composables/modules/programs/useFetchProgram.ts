@@ -1,6 +1,8 @@
 import { programs_api } from '@/api_factory/modules/programs';
+import { useI18n } from '@/composables/useI18n';
 
 export const useFetchProgram = () => {
+  const { locale } = useI18n();
   const route = useRoute();
   const id = computed(() => route.params.id as string);
 
@@ -12,8 +14,7 @@ export const useFetchProgram = () => {
       return res.data?.data ?? res.data ?? null;
     },
     {
-      watch: [id],
-      
+      watch: [id, locale],
       server: true
     }
   );

@@ -3,6 +3,7 @@ import { archives_api } from '@/api_factory/modules/archives';
 import { useCustomToast } from '../../core/useCustomToast';
 
 export const useUpdateArchive = () => {
+  const { locale } = useI18n();
   const loading = ref(false);
   const { showToast } = useCustomToast();
 

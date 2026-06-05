@@ -1,14 +1,16 @@
 import { organogramApiFactory } from '@/api_factory/modules/organogram'
 
 export const useFetchOrganogram = () => {
+  const { locale } = useI18n();
   const { data: organogramNodes, pending: loading, refresh: fetchOrganogram } = useAsyncData(
-    `organogram-nodes_${typeof window !== 'undefined' ? localStorage.getItem('app-lang') || 'en' : 'en'}`,
+    'organogram-nodes',
     async () => {
       const response = await organogramApiFactory.getOrganogramNodes()
       return response.data ?? []
     },
     {
       
+      watch: [locale],
       server: true
     }
   )

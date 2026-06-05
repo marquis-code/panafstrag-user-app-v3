@@ -3,6 +3,7 @@ import { board_api } from '@/api_factory/modules/board';
 import { useCustomToast } from '../../core/useCustomToast';
 
 export const useUpdateBoardMember = () => {
+  const { locale } = useI18n();
   const loading = ref(false);
   const { showToast } = useCustomToast();
 

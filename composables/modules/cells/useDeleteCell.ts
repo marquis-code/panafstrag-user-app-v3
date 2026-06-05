@@ -3,6 +3,7 @@ import { cells_api } from '@/api_factory/modules/cells';
 import { useCustomToast } from '../../core/useCustomToast';
 
 export const useDeleteCell = () => {
+  const { locale } = useI18n();
   const loading = ref(false);
   const { showToast } = useCustomToast();
 

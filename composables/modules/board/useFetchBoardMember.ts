@@ -1,6 +1,8 @@
 import { board_api } from '@/api_factory/modules/board';
+import { useI18n } from '@/composables/useI18n';
 
 export const useFetchBoardMember = () => {
+  const { locale } = useI18n();
   const route = useRoute();
   const id = computed(() => route.params.id as string);
 
@@ -12,8 +14,7 @@ export const useFetchBoardMember = () => {
       return res.data?.data ?? res.data ?? null;
     },
     {
-      watch: [id],
-      
+      watch: [id, locale],
       server: true
     }
   );

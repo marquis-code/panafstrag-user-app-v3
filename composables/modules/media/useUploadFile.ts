@@ -3,6 +3,7 @@ import { media_api } from '@/api_factory/modules/media';
 import { useCustomToast } from '@/composables/core/useCustomToast';
 
 export const useUploadFile = () => {
+  const { locale } = useI18n();
   const loading = ref(false);
   const uploadedUrl = ref<string | null>(null);
   const error = ref<string | null>(null);
