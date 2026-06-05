@@ -221,11 +221,6 @@ useHead({
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <img
-                    v-else-if="program?.imageUrl"
-                    :src="program.imageUrl"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <img
                     v-else
                     src="@/assets/images/program-placeholder.png"
                     alt=""

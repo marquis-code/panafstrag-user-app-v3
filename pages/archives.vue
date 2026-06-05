@@ -268,16 +268,10 @@ useHead({ title: 'Archives | PANAFSTRAG' })
                             class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                           />
                           <img
-                            v-else-if="item?.imageUrl"
-                            :src="item.imageUrl"
+                            v-else
+                            src="@/assets/images/program-placeholder.png"
                             class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                           />
-                          <div
-                            v-else
-                            class="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100"
-                          >
-                            <LucideCalendarDays :size="48" class="text-green-300" />
-                          </div>
 
                           <!-- Programme badge -->
                           <span class="absolute top-4 right-4 inline-flex items-center gap-1.5 bg-[#2E7D32] text-white text-[11px] font-bold px-3 py-1.5 rounded-full shadow-sm">
