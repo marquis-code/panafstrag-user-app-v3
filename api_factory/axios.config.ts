@@ -72,6 +72,13 @@ instanceArray.forEach((instance) => {
     if (config.headers) {
       config.headers['x-lang'] = lang;
     }
+    
+    // Aggressively bypass the backend 1-hour cache when a language is selected
+    if (lang !== 'en' && config.method?.toLowerCase() === 'get') {
+      config.params = config.params || {};
+      config.params._lang_cache = `${lang}_${Date.now()}`;
+    }
+    
     return config;
   });
 
