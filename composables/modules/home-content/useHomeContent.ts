@@ -1,9 +1,9 @@
 import { homeContentApiFactory } from "@/api_factory/modules/home-content";
 
 const getCacheKey = () => {
-  if (typeof window === 'undefined') return 'panafstrag_home_content_cache_en';
+  if (typeof window === 'undefined') return 'panafstrag_home_content_cache_v2_en';
   const lang = localStorage.getItem('app-lang') || 'en';
-  return `panafstrag_home_content_cache_${lang}`;
+  return `panafstrag_home_content_cache_v2_${lang}`;
 };
 
 const readCache = (): any | null => {
@@ -26,7 +26,7 @@ const writeCache = (data: any) => {
 
 export const useHomeContent = () => {
   const { data: homeContent, pending: loading, error, refresh: fetchHomeContent } = useAsyncData(
-    `home-content_${typeof window !== 'undefined' ? localStorage.getItem('app-lang') || 'en' : 'en'}`,
+    `home-content-v2_${typeof window !== 'undefined' ? localStorage.getItem('app-lang') || 'en' : 'en'}`,
     async () => {
       const res = await homeContentApiFactory.getHomeContent() as any;
       if (res?.data) {

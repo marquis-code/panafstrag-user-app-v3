@@ -1,8 +1,8 @@
 export const useApiCache = () => {
   const getCacheKey = (baseKey: string) => {
-    if (typeof window === 'undefined') return `${baseKey}_en`;
+    if (typeof window === 'undefined') return `${baseKey}_v2_en`;
     const lang = localStorage.getItem('app-lang') || 'en';
-    return `${baseKey}_${lang}`;
+    return `${baseKey}_v2_${lang}`;
   };
 
   const readCache = (baseKey: string): any | null => {
