@@ -1,8 +1,9 @@
 import { defineNuxtPlugin, useRouter } from '#app'
-import { useGlobalLoader } from '@/composables/useGlobalLoader'
+import { useGlobalLoader, useLanguageSwitching } from '@/composables/useGlobalLoader'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const isLoading = useGlobalLoader()
+  const isLanguageSwitching = useLanguageSwitching()
   const router = useRouter()
 
   // Aggressive overlay on page start
@@ -11,9 +12,9 @@ export default defineNuxtPlugin((nuxtApp) => {
   })
 
   // Remove overlay only when page finishes rendering
+  // BUT NOT during a language switch — the LanguageSwitcher controls dismissal
   nuxtApp.hook('page:finish', () => {
-    // Adding a 400ms delay ensures any API responses and translation interpolations 
-    // are fully painted to the DOM before revealing the page.
+    if (isLanguageSwitching.value) return
     setTimeout(() => {
       isLoading.value = false
     }, 400)
@@ -28,6 +29,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   })
 
   router.afterEach(() => {
+    if (isLanguageSwitching.value) return
     setTimeout(() => {
       isLoading.value = false
     }, 400)

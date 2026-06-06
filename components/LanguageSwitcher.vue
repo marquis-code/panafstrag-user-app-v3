@@ -29,6 +29,7 @@
 import { computed } from 'vue';
 import { useI18n } from '#imports';
 import { refreshNuxtData } from '#imports';
+import { useGlobalLoader, useLanguageSwitching } from '@/composables/useGlobalLoader';
 
 const { locale, locales: i18nLocales, setLocale } = useI18n();
 
@@ -43,13 +44,29 @@ const currentLanguageName = computed(() => {
 const switchLanguage = async (code) => {
   if (currentLocale.value === code) return;
   const isLoading = useGlobalLoader();
+  const isLanguageSwitching = useLanguageSwitching();
+
+  // Lock loader — prevents loading-watcher from auto-dismissing
+  isLanguageSwitching.value = true;
   isLoading.value = true;
-  await setLocale(code);
-  localStorage.setItem('app-lang', code);
-  await refreshNuxtData();
-  
-  setTimeout(() => {
+
+  try {
+    // Set locale state + localStorage
+    locale.value = code;
+    localStorage.setItem('app-lang', code);
+
+    // Await ALL useAsyncData composables to fully re-fetch translated data
+    // refreshNuxtData() returns a Promise that resolves ONLY when every
+    // useAsyncData watcher has completed its fetch cycle end-to-end
+    await refreshNuxtData();
+
+    // Small buffer to let Vue re-render the DOM with new translated content
+    await new Promise(resolve => setTimeout(resolve, 300));
+  } catch (err) {
+    console.error('Language switch failed:', err);
+  } finally {
     isLoading.value = false;
-  }, 400);
+    isLanguageSwitching.value = false;
+  }
 };
 </script>
