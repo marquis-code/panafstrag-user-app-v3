@@ -23,7 +23,7 @@
 
         <!-- Loading Text -->
         <div class="mt-8 flex flex-col items-center gap-2">
-          <p class="text-sm font-black text-gray-900 tracking-[0.2em] uppercase animate-pulse">
+          <p class="text-sm font-black text-gray-900 tracking-[0.2em]  animate-pulse">
             {{ t('Translating') || 'Translating' }}
           </p>
           <div class="flex items-center gap-1.5">

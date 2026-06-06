@@ -124,7 +124,19 @@ const groupedArchivesByYear = computed(() => {
   return Object.keys(groups)
     .map(Number)
     .sort((a, b) => b - a)
-    .map(year => ({ year, items: groups[year] }))
+    .map(year => {
+      const sortedItems = groups[year].sort((a, b) => {
+        const getValidDate = (item: any) => {
+          if (item?.date) return new Date(item.date).getTime()
+          if (item?.startDate && !isNaN(new Date(item.startDate).getTime())) return new Date(item.startDate).getTime()
+          if (item?.year && item?.month) return new Date(item.year, item.month - 1).getTime()
+          if (item?.year) return new Date(item.year, 0).getTime()
+          return 0
+        }
+        return getValidDate(b) - getValidDate(a) // descending order (newest first)
+      })
+      return { year, items: sortedItems }
+    })
 })
 
 const isLoading = computed(() => archivesLoading.value || pastProgramsLoading.value)

@@ -234,7 +234,7 @@ useHead({
         <!-- Header -->
         <div class="mb-12">
           <div class="inline-flex items-center gap-2 bg-white text-green-800 text-xs font-semibold px-4 py-2 rounded-full mb-5 border border-green-100">
-            <span v-html="homeContent?.objectivesSubTitle || t('Strategic Alignment')"></span>
+            <!-- <span v-html="homeContent?.objectivesSubTitle || t('Strategic Alignment')"></span> -->
           </div>
           <h2
             class="text-3xl sm:text-4xl lg:text-[42px] font-bold text-slate-900 leading-[1.1] tracking-tight max-w-lg"
@@ -277,7 +277,7 @@ useHead({
         <div class="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div>
             <div class="inline-flex items-center gap-2 bg-slate-50 text-green-800 text-xs font-semibold px-4 py-2 rounded-full mb-5 border border-green-100">
-              <span v-html="homeContent?.responsibilitiesSubTitle || t('Code of Conduct')"></span>
+              <!-- <span v-html="homeContent?.responsibilitiesSubTitle || t('Code of Conduct')"></span> -->
             </div>
             <h2
               class="text-3xl sm:text-4xl lg:text-[42px] font-bold text-slate-900 leading-[1.1] tracking-tight max-w-lg"
