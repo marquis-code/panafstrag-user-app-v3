@@ -108,34 +108,38 @@ const filteredArchives = computed(() => {
   return items
 })
 
-const groupedArchivesByYear = computed(() => {
+const groupedArchivesByPeriod = computed(() => {
   const items = filteredArchives.value
-  const groups: Record<number, any[]> = {}
+  const groups: Record<string, { year: number; month: number; items: any[] }> = {}
+
+  const getValidDate = (item: any) => {
+    if (item?.date) return new Date(item.date).getTime()
+    if (item?.startDate && !isNaN(new Date(item.startDate).getTime())) return new Date(item.startDate).getTime()
+    if (item?.year && item?.month) return new Date(item.year, item.month - 1).getTime()
+    if (item?.year) return new Date(item.year, 0).getTime()
+    return 0
+  }
+
   for (const item of items) {
     if (!item) continue
-    const year = item?.date
-      ? new Date(item.date).getFullYear()
-      : (item?.startDate && !isNaN(new Date(item.startDate).getTime())
-          ? new Date(item.startDate).getFullYear()
-          : (item?.year || 0))
-    if (!groups[year]) groups[year] = []
-    groups[year].push(item)
+    const dateNum = getValidDate(item)
+    const dateObj = dateNum > 0 ? new Date(dateNum) : new Date()
+    const year = dateObj.getFullYear()
+    const month = dateObj.getMonth() + 1 // 1-12
+    const key = `${year}-${month.toString().padStart(2, '0')}`
+
+    if (!groups[key]) groups[key] = { year, month, items: [] }
+    groups[key].items.push(item)
   }
-  return Object.keys(groups)
-    .map(Number)
-    .sort((a, b) => b - a)
-    .map(year => {
-      const sortedItems = groups[year].sort((a, b) => {
-        const getValidDate = (item: any) => {
-          if (item?.date) return new Date(item.date).getTime()
-          if (item?.startDate && !isNaN(new Date(item.startDate).getTime())) return new Date(item.startDate).getTime()
-          if (item?.year && item?.month) return new Date(item.year, item.month - 1).getTime()
-          if (item?.year) return new Date(item.year, 0).getTime()
-          return 0
-        }
-        return getValidDate(b) - getValidDate(a) // descending order (newest first)
-      })
-      return { year, items: sortedItems }
+
+  return Object.values(groups)
+    .sort((a, b) => {
+      if (b.year !== a.year) return b.year - a.year
+      return b.month - a.month
+    })
+    .map(group => {
+      group.items.sort((a, b) => getValidDate(b) - getValidDate(a))
+      return group
     })
 })
 
@@ -240,19 +244,19 @@ useHead({ title: 'Archives | PANAFSTRAG' })
           </div>
         </div>
 
-        <!-- Grouped by year -->
-        <div v-else-if="groupedArchivesByYear?.length" class="space-y-20">
-          <div v-for="group in groupedArchivesByYear" :key="group.year" class="space-y-10">
+        <!-- Grouped by period -->
+        <div v-else-if="groupedArchivesByPeriod?.length" class="space-y-20">
+          <div v-for="group in groupedArchivesByPeriod" :key="`${group.year}-${group.month}`" class="space-y-10">
 
-            <!-- Year header -->
+            <!-- Period header -->
             <div class="flex items-center gap-4 border-b border-slate-100 pb-5">
               <div class="w-10 h-10 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center flex-shrink-0">
-                <LucideCalendar :size="18" class="text-[#2E7D32]" />
+                <LucideCalendarDays :size="18" class="text-[#2E7D32]" />
               </div>
               <div>
-                <p class="text-[11px] font-semibold text-[#2E7D32] tracking-widest uppercase mb-0.5">{{ t('Archive_Year') }}</p>
-                <h2 class="text-[28px] font-black text-slate-900 leading-none">
-                  {{ group.year }}
+                <p class="text-[11px] font-semibold text-[#2E7D32] tracking-widest uppercase mb-0.5">{{ t('Archive_Period') || t('Archive_Year') }}</p>
+                <h2 class="text-[28px] font-black text-slate-900 leading-none capitalize">
+                  {{ t(months[group.month - 1]) }} {{ group.year }}
                 </h2>
               </div>
             </div>
